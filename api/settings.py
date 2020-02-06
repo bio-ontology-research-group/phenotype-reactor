@@ -48,12 +48,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
     'api'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,6 +83,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api.wsgi.application'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:4200',
+]
+CORS_URLS_REGEX = r'^/api/.*$'
 
 
 # Database
@@ -136,7 +146,7 @@ LOGGING = {
         'disable_existing_loggers': False,
         'formatters': {
             'console': {
-                'format': '%(name)-12s %(levelname)-2s %(message)s'
+                'format': '%(asctime)s %(name)-12s %(levelname)-2s %(message)s'
             },
             'file': {
                 'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
@@ -181,3 +191,5 @@ RDF_STORE_PWD = config['rdf_store']['password']
 
 RDF_DATA_FOLDER = config['datasets']['dir']
 EXPORT_FORMAT = config['datasets']['format']
+RDF_DATA_ARCHIVE_FOLDER = config['datasets']['archive.dir']
+KGE_FOLDER = config['datasets']['kge.dir']
