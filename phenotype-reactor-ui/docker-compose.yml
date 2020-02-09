@@ -1,0 +1,13 @@
+version: "2.2"
+services:
+  phenotype-reactor-ui:
+    build: .
+    container_name: phenotype-reactor-ui
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - esnet
+    restart: unless-stopped
+networks:
+  esnet:
