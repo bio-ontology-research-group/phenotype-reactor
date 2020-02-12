@@ -1,0 +1,17 @@
+<div class="row">
+    <form class="form-inline w-100">
+        <select class="browser-default custom-select default ml-3" color="default" (change)="onSearchModeSelect($event)" [value]=''>
+            <option value="">All</option>
+            <option *ngFor="let type of types" value="{{type.index}}">{{type.name}}</option>
+        </select>
+         <input id="search" type="text" class="form-control ml-3 w-25" (ngModel)="term"
+            [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search" [resultTemplate]="rt"
+            (selectItem)="onTermSelect($event)"/>
+        <button mdbBtn size="md" color="default" class="my-0 waves-light"
+            mdbWavesEffect type="submit">Search</button>
+    </form>
+</div>
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight>
+</ng-template> 
+
