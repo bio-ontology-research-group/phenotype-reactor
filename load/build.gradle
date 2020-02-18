@@ -1,0 +1,51 @@
+plugins {
+    // Apply the groovy plugin to add support for Groovy
+    id 'groovy'
+
+    // // Apply the application plugin to add support for building a CLI application.
+    id 'application'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+dependencies {
+    // Use the latest Groovy version for building this library
+    implementation 'org.codehaus.groovy:groovy-all:2.5.8'
+    implementation 'ch.qos.logback:logback-classic:0.9.27'
+    implementation 'org.eclipse.rdf4j:rdf4j-repository-api:2.4.0'
+
+    // local libraries
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs= ['resources']
+        }
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'loadDataVirtuoso'
+}
+
+task runScript(type: JavaExec) {
+    description 'Run Groovy script'
+ 
+    // Set main property to name of Groovy script class.
+    main = 'loadDataVirtuoso'
+ 
+    // Set classpath for running the Groovy script.
+    classpath = sourceSets.main.runtimeClasspath 
+}
+ 
+defaultTasks 'runScript'

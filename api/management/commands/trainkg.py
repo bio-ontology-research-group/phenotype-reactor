@@ -35,7 +35,8 @@ class Command(BaseCommand):
         parser.add_argument('-l', '--learning_rate', type=str, help='learning rate for embeddings', )
         parser.add_argument('-e', '--num_epochs', type=str, help='number of epochs or iterations', )
         parser.add_argument('-d', '--embedding_dim', type=str, help='number of embedding dimensions', )
-        parser.add_argument('-b', '--batch_size', type=str, help='batch size', )
+        parser.add_argument('-b', '--batch_size', type=str, help='batch size', ) 
+        parser.add_argument('-r', '--device', type=str, help='preferred device', ) 
     
     def stop_subprocesses(self, signum, frame):
         if self.proc.poll() is None:
@@ -47,6 +48,7 @@ class Command(BaseCommand):
         num_epochs = options['num_epochs']
         embedding_dim = options['embedding_dim']
         batch_size = options['batch_size']
+        device = options['device']
 
         if RDF_DATA_ARCHIVE_FOLDER is None or not RDF_DATA_ARCHIVE_FOLDER:
             raise Exception("configuration property 'archive.dir' is required")
@@ -62,7 +64,7 @@ class Command(BaseCommand):
             config[pkc.LEARNING_RATE] = float(learning_rate) if learning_rate else 0.01
             config[pkc.NUM_EPOCHS] = int(num_epochs) if num_epochs else 10
             config[pkc.BATCH_SIZE] = int(embedding_dim) if embedding_dim else 64
-            config[pkc.PREFERRED_DEVICE] = pkc.GPU
+            config[pkc.PREFERRED_DEVICE] = device if device else pkc.GPU
             config[pkc.EMBEDDING_DIM] = int(batch_size) if embedding_dim else 50
             config[pkc.SCORING_FUNCTION_NORM] = 1  # corresponds to L1
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
