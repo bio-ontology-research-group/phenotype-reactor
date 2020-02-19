@@ -189,7 +189,10 @@ RDF_STORE_USER = config['rdf_store']['username']
 RDF_STORE_PWD = config['rdf_store']['password']
 
 
-RDF_DATA_FOLDER = config['datasets']['dir']
+SOURCE_DATA_FOLDER = config['datasets']['source.dir']
+TARGET_DATA_FOLDER = config['datasets']['target.dir']
 EXPORT_FORMAT = config['datasets']['format']
+
+VIRTUOSO_SERVER = config['virtuoso']['server.host']
 RDF_DATA_ARCHIVE_FOLDER = config['datasets']['archive.dir']
 KGE_FOLDER = config['datasets']['kge.dir']

@@ -13,7 +13,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-DATA_FOLDER = getattr(settings, 'RDF_DATA_FOLDER', str(Path.home()) + '/data/phenodb')
+DATA_FOLDER = getattr(settings, 'SOURCE_DATA_FOLDER', str(Path.home()) + '/data/phenodb')
 
 class Command(BaseCommand):
     help = 'Started loading rdf data'

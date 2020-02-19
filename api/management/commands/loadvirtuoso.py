@@ -1,14 +1,15 @@
 from django.core.management.base import BaseCommand, CommandError
-
-import api.transformers.phenotype_association_transformer as transformer
+from django.conf import settings
 
 import signal
 import logging
+import subprocess
+import os
 
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Started transforming data to rdf'
+    help = 'Started loading rdf data'
 
     def __init__(self, *args, **kwargs):
         super(Command, self).__init__(*args, **kwargs)
@@ -26,11 +27,7 @@ class Command(BaseCommand):
         exit(0)
                 
     def handle(self, *args, **options):
-        logger.info("Starting transforming source files to rdf")
-        transformer.transform_disease2phenotype()
-        transformer.transform_drug2phenotype()
-        transformer.transform_gene2phenotype_text_mined()
-        transformer.transform_pathogen2phenotype()
-        transformer.transform_mondo2phenotype_top50()
-        transformer.transform_predictive_gene2phenotype()
-        transformer.transform_metabolites2phenotype()
+        os.chdir('load')
+        process = subprocess.Popen('gradle runScript', stdout=subprocess.PIPE, shell=True)
+        for line in process.stdout:
+            logger.info(line.strip())
