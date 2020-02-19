@@ -22,6 +22,24 @@ HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/l
 HPO_ANNO_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation.tab'
 HPO_ANNO_HPO_TEAM_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation_hpoteam.tab'
 
+HPO_ANNO_COL_NAMES = [
+    "DB",
+    "DbId",
+    "DbName",
+    "Qualifier",
+    "HPO_ID",
+    "DB_Reference",
+    "Evidence_Code",
+    "Onset",
+    "Frequency",
+    "Sex",
+    "Modifier",
+    "Aspect",
+    "BiocurationBy",
+    "unnamed",
+    "unnamed2"
+]
+
 print(DATA_FOLDER, FORMAT)
 
 FORMAT_DIC = {
@@ -54,7 +72,15 @@ OBO = ClosedNamespace(
         #similarity evidence used in automatic assertion
         "ECO_0000251",
         #computational evidence used in automatic assertion (text mining, lexical matching, based on NPMI value)
-        "ECO_0007669"
+        "ECO_0007669",
+        #evidence used in automatic assertion (IEA)
+        "ECO_0000501",
+        # author statement from published clinical study (PCS for published clinical study)
+        "ECO_0006016",
+        # inference based on individual clinical experience (ICS for individual clinical experience)
+        "ECO_0006018",
+        #author statement supported by traceable reference (TAS traceable author statement) 
+        "ECO_0000033"
     ]
 )
 
@@ -81,7 +107,12 @@ def add_association_provenance(store, association, creator=None, created_on=None
     if created_on:
         provenance.add(DCTERMS.created, Literal(created_on))
     if source:
-        provenance.add(DCTERMS.source, Literal(source))
+        if isinstance(source, str):
+            provenance.add(DCTERMS.source, Literal(source))
+        else:
+            for item in source:
+                provenance.add(DCTERMS.source, Literal(item))
+
 
     association.add(DC.provenance, provenance)
     return association
@@ -308,3 +339,51 @@ def print_size(file):
     filePath='{folder}/{file}'
     store.load(filePath)
     print(len(store))
+    
+
+def transform_hpo_annotations(url, output_filename):
+    store = create_graph()
+    df = pd.read_csv(url, sep='\t', names=HPO_ANNO_COL_NAMES) 
+    df.HPO_ID = df.HPO_ID.replace(regex=[':'], value='_')
+    df.DB_Reference = df.DB_Reference.replace(regex=['DECIPHER:'], value='https://decipher.sanger.ac.uk/syndrome/')
+    df.DB_Reference = df.DB_Reference.replace(regex=['OMIM:'], value='https://omim.org/entry/')
+    df.DB_Reference = df.DB_Reference.replace(regex=['PMID:'], value='https://www.ncbi.nlm.nih.gov/pubmed/')
+    df.BiocurationBy = df.BiocurationBy.astype(str)
+    print(df.head(), len(df.columns))
+    
+    for index, row in df.iterrows():
+        disease = store.resource(row.DB_Reference)
+        disease.add(RDF.type, PHENO.Disease)
+        phenotype = store.resource(str(OBO.uri) + row.HPO_ID)
+        phenotype.add(RDF.type, PHENO.Phenotype)
+        association = create_phenotypic_association(store, disease, phenotype)
+        
+        evidence = None
+        if 'IEA' in row.Evidence_Code:
+            evidence = OBO.ECO_0000501
+        elif 'PCS' in row.Evidence_Code:
+            evidence = OBO.ECO_0006016
+        elif 'ICS' in row.Evidence_Code:
+            evidence = OBO.ECO_0006018
+        elif 'TAS' in row.Evidence_Code:
+            evidence = OBO.ECO_0000033
+
+        association.add(OBO.RO_0002558, evidence)
+        row.BiocurationBy = row.BiocurationBy.split(';')
+        creator = []
+        created_on = None
+
+        for creator_field in row.BiocurationBy:
+            creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
+            created_on = (creator_field[creator_field.find('[') - 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
+
+        add_association_provenance(store, association, creator=creator, created_on=created_on,
+        source='https://www.ncbi.nlm.nih.gov/pubmed/30476213')
+    
+
+    store.serialize('{folder}/{filename}.{extension}'.format(
+        folder=TARGET_DATA_FOLDER, filename=output_filename,  extension=FORMAT_DIC[FORMAT]), 
+        format=FORMAT, max_depth=3)
+    print(len(store))
+    store.remove((None, None, None))
+    del df
