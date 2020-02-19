@@ -47,7 +47,7 @@ FORMAT_DIC = {
 }
 
 PHENO = ClosedNamespace(
-    uri=URIRef("http://phenodb.phenomebrowser.net/"),
+    uri=URIRef("http://phenomebrowser.net/"),
     terms=[
         #Classes
         "Disease", "Drug", "Device", "Gene", "Genotype",
@@ -375,7 +375,7 @@ def transform_hpo_annotations(url, output_filename):
 
         for creator_field in row.BiocurationBy:
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
-            created_on = (creator_field[creator_field.find('[') - 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
+            created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
         add_association_provenance(store, association, creator=creator, created_on=created_on,
         source='https://www.ncbi.nlm.nih.gov/pubmed/30476213')
