@@ -159,7 +159,7 @@ try {
     println("Deleting existing graph: " + graph)
     deleteGraph(connection, graph)
     println("Creating load statements")
-    PreparedStatement statement = createLdStatement(connection, sourceDirectory, 'predictive_gene2phenotype-10.rdf', graph)
+    PreparedStatement statement = createLdStatement(connection, sourceDirectory, '*.rdf', graph)
     statement.executeQuery().close();
 
 
