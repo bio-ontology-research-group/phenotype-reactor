@@ -1,0 +1,14 @@
+{
+    "/api": {
+      "target": "http://localhost:8000",
+      "secure": false
+    },
+    "/healthcheck": {
+        "target": "http://localhost:8000",
+        "secure": false
+    },
+    "/sparql": {
+        "target": "http://ontolinator.kaust.edu.sa:8891",
+        "secure": false
+    }
+}

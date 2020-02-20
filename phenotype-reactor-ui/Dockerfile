@@ -9,6 +9,7 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY package-*.json .
 
+RUN npm install -g @angular/cli
 RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
@@ -16,7 +17,7 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 80   
-EXPOSE 443   
-EXPOSE 8891 
-CMD npm run build && npm run start
+EXPOSE 80
+EXPOSE 443
+EXPOSE 8891
+CMD ng build && ng serve --port 80 --host 0.0.0.0 --proxy-config proxy.conf.json --disable-host-check
