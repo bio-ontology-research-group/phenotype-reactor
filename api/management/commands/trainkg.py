@@ -18,7 +18,7 @@ import datetime
 logger = logging.getLogger(__name__)
 
 
-RDF_DATA_ARCHIVE_FOLDER = getattr(settings, 'RDF_DATA_ARCHIVE_FOLDER', None)
+RDF_DATA_ARCHIVE_DIR = getattr(settings, 'RDF_DATA_ARCHIVE_DIR', None)
 KGE_FOLDER = getattr(settings, 'KGE_FOLDER', None)
 
 class Command(BaseCommand):
@@ -50,14 +50,14 @@ class Command(BaseCommand):
         batch_size = options['batch_size']
         device = options['device']
 
-        if RDF_DATA_ARCHIVE_FOLDER is None or not RDF_DATA_ARCHIVE_FOLDER:
+        if RDF_DATA_ARCHIVE_DIR is None or not RDF_DATA_ARCHIVE_DIR:
             raise Exception("configuration property 'archive.dir' is required")
         if KGE_FOLDER is None or not KGE_FOLDER:
             raise Exception("configuration property 'kge.dir' is required")
 
         try: 
             config = dict()
-            config[pkc.TRAINING_SET_PATH] = join(RDF_DATA_ARCHIVE_FOLDER, 'bk-2020-02-03T12:50.nt')
+            config[pkc.TRAINING_SET_PATH] = join(RDF_DATA_ARCHIVE_DIR, 'bk-2020-02-03T12:50.nt')
             config[pkc.EXECUTION_MODE] = pkc.TRAINING_MODE
             config[pkc.KG_EMBEDDING_MODEL_NAME] = pkc.TRANS_E_NAME
             config[pkc.SEED] = 0

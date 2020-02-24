@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 
 import api.transformers.phenotype_association_transformer as transformer
+import api.archive.archive_ds as archive
 
 import signal
 import logging
@@ -27,6 +28,7 @@ class Command(BaseCommand):
                 
     def handle(self, *args, **options):
         logger.info("Starting transforming source files to rdf")
+        transformer.init()
         transformer.transform_disease2phenotype()
         transformer.transform_drug2phenotype()
         transformer.transform_gene2phenotype_text_mined()
@@ -36,3 +38,4 @@ class Command(BaseCommand):
         transformer.transform_metabolites2phenotype()
         transformer.transform_hpo_annotations(transformer.HPO_ANNO_URL, 'disease2phenotype_hpo')
         transformer.transform_hpo_annotations(transformer.HPO_ANNO_HPO_TEAM_URL, 'disease2phenotype_hpoteam')
+        archive.archive()

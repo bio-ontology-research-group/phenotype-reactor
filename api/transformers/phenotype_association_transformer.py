@@ -12,10 +12,12 @@ import pandas as pd
 import json
 import uuid
 import sys
+import os
+import datetime
 
 
-DATA_FOLDER = getattr(settings, 'SOURCE_DATA_FOLDER', str(Path.home()) + '/data/phenodb')
-TARGET_DATA_FOLDER = getattr(settings, 'TARGET_DATA_FOLDER', str(Path.home()) + '/data/phenodb')
+DATA_DIR = getattr(settings, 'SOURCE_DATA_DIR', str(Path.home()) + '/data/phenodb')
+TARGET_DATA_DIR = getattr(settings, 'TARGET_DATA_DIR', str(Path.home()) + '/data/phenodb')
 FORMAT = getattr(settings, 'EXPORT_FORMAT', 'pretty-xml')
 
 HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/'
@@ -40,7 +42,7 @@ HPO_ANNO_COL_NAMES = [
     "unnamed2"
 ]
 
-print(DATA_FOLDER, FORMAT)
+print(DATA_DIR, FORMAT)
 
 FORMAT_DIC = {
     'xml' : 'rdf', 'n3': 'n3', 'turtle': 'ttl', 'nt': 'nt', 'pretty-xml': 'rdf', 'trix': 'trix', 'trig': 'trig', 'nquads':'nquads'
@@ -88,6 +90,13 @@ PUBCHEM = ClosedNamespace(uri=URIRef("https://pubchem.ncbi.nlm.nih.gov/compound/
 MGI = ClosedNamespace(uri=URIRef("http://www.informatics.jax.org/marker/"), terms=[])
 ENTREZ_GENE = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/gene/"), terms=[])
 
+def init():
+    global TARGET_DATA_DIR
+    os.chdir(TARGET_DATA_DIR)
+    data_archive_dir =  'data-' + str(datetime.date.today())
+    os.makedirs(data_archive_dir, exist_ok=True)
+    TARGET_DATA_DIR = TARGET_DATA_DIR + '/' + data_archive_dir
+
 def create_graph():
     store = Graph()
     store.bind("dc", DC)
@@ -127,7 +136,7 @@ def create_phenotypic_association(store, subject, object):
 
 def transform_disease2phenotype():
     store = create_graph()
-    filePath='{folder}/doid_phenotypes_sara.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/doid_phenotypes_sara.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep='\t', names=['disease', 'phenotype']) 
     df.phenotype = df.phenotype.replace(regex=[':'], value='_')
     df.disease = df.disease.replace(regex=[':'], value='_')
@@ -144,14 +153,14 @@ def transform_disease2phenotype():
             source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
     
 
-    store.serialize('{folder}/disease2phenotype.{extension}'.format(folder=TARGET_DATA_FOLDER, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/disease2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
 
 def transform_drug2phenotype():
     store = create_graph()
-    filePath='{folder}/drug_phenotypes_sara.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/drug_phenotypes_sara.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep=' ', names=['drug', 'phenotype']) 
     df.phenotype = df.phenotype.replace(regex=['<'], value='').replace(regex=['>'], value='')
     df.drug = df.drug.replace(regex=['CID'], value='')
@@ -167,14 +176,14 @@ def transform_drug2phenotype():
         add_association_provenance(store, association, creator='Sara Althubaiti', created_on='2019-03-12',
          source="https://www.ncbi.nlm.nih.gov/pubmed/20087340")
 
-    store.serialize('{folder}/drug2phenotype.{extension}'.format(folder=TARGET_DATA_FOLDER, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/drug2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
 
 def transform_gene2phenotype_text_mined():
     store = create_graph()
-    filePath='{folder}/genephenotypes_textmined_senay.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/genephenotypes_textmined_senay.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep='\t', names=['mgi', 'entrez_gene',  'phenotype', 'score']) 
     df.mgi = df.mgi.astype(str).replace(regex=['nan'], value='')
     df[['gene1', 'gene2']] = df.entrez_gene.str.split("_#_", expand = True)
@@ -212,19 +221,19 @@ def transform_gene2phenotype_text_mined():
                 created_on='2019-01-06', source=source)
 
         if index > 0 and index % 150000 == 0:
-            store.serialize('{folder}/gene2phenotype_textmined-{split_count}.{extension}'.format(folder=TARGET_DATA_FOLDER, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+            store.serialize('{folder}/gene2phenotype_textmined-{split_count}.{extension}'.format(folder=TARGET_DATA_DIR, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
             print(len(store))
             store.remove((None, None, None))
             split_count += 1
 
     split_count += 1
-    store.serialize('{folder}/gene2phenotype_textmined-{split_count}.{extension}'.format(folder=TARGET_DATA_FOLDER, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/gene2phenotype_textmined-{split_count}.{extension}'.format(folder=TARGET_DATA_DIR, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     store.remove((None, None, None))
     del df
 
 def transform_pathogen2phenotype():
     store = create_graph()
-    filePath='{folder}/pathogens_phenotypes_shenay.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/pathogens_phenotypes_shenay.txt'.format(folder=DATA_DIR)
     df = pd.read_json(filePath) 
     print(df.head())
     
@@ -251,14 +260,14 @@ def transform_pathogen2phenotype():
             add_association_provenance(store, association, creator='Senay Kafkas', 
                 created_on='2019-06-03', source='https://www.nature.com/articles/s41597-019-0090-x')
 
-    store.serialize('{folder}/pathogen2phenotype.{extension}'.format(folder=TARGET_DATA_FOLDER, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/pathogen2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
 
 def transform_mondo2phenotype_top50():
     store = create_graph()
-    filePath='{folder}/mondo-pheno_shenay.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/mondo-pheno_shenay.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep='\t') 
     df.Phenotype_ID = df.Phenotype_ID.replace(regex=[':'], value='_')
     df.Mondo_ID = df.Mondo_ID.replace(regex=[':'], value='_')
@@ -275,14 +284,14 @@ def transform_mondo2phenotype_top50():
          source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
 
 
-    store.serialize('{folder}/mondo2phenotype_top50.{extension}'.format(folder=TARGET_DATA_FOLDER, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/mondo2phenotype_top50.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
 
 def transform_predictive_gene2phenotype():
     store = create_graph()
-    filePath='{folder}/deeppheno_maxat.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/deeppheno_maxat.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep='\t', names=['gene', 'phenotype', 'score']) 
     df.phenotype = df.phenotype.replace(regex=[':'], value='_')
     df.gene = df.gene.astype(str)
@@ -300,19 +309,19 @@ def transform_predictive_gene2phenotype():
             created_on='2019-10-20', source='https://www.nature.com/articles/s41597-019-0090-x')
 
         if index > 0 and index % 200000 == 0:
-            store.serialize('{folder}/predictive_gene2phenotype-sm-{split_count}.{extension}'.format(folder=TARGET_DATA_FOLDER, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+            store.serialize('{folder}/predictive_gene2phenotype-sm-{split_count}.{extension}'.format(folder=TARGET_DATA_DIR, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
             print(len(store))
             store.remove((None, None, None))
             split_count += 1
 
-    store.serialize('{folder}/predictive_gene2phenotype-sm-{split_count}.{extension}'.format(folder=TARGET_DATA_FOLDER, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/predictive_gene2phenotype-sm-{split_count}.{extension}'.format(folder=TARGET_DATA_DIR, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
 
 def transform_metabolites2phenotype():
     store = create_graph()
-    filePath='{folder}/metabolite_pheno_shenay.txt'.format(folder=DATA_FOLDER)
+    filePath='{folder}/metabolite_pheno_shenay.txt'.format(folder=DATA_DIR)
     df = pd.read_csv(filePath, sep='\t') 
     df.CHEBI_ID = df.CHEBI_ID.replace(regex=[':'], value='_')
     df.Phenotype_ID = df.Phenotype_ID.replace(regex=[':'], value='_')
@@ -329,7 +338,7 @@ def transform_metabolites2phenotype():
          source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
     
 
-    store.serialize('{folder}/metabolite2phenotype.{extension}'.format(folder=TARGET_DATA_FOLDER, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
+    store.serialize('{folder}/metabolite2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))
     del df
@@ -382,7 +391,7 @@ def transform_hpo_annotations(url, output_filename):
     
 
     store.serialize('{folder}/{filename}.{extension}'.format(
-        folder=TARGET_DATA_FOLDER, filename=output_filename,  extension=FORMAT_DIC[FORMAT]), 
+        folder=TARGET_DATA_DIR, filename=output_filename,  extension=FORMAT_DIC[FORMAT]), 
         format=FORMAT, max_depth=3)
     print(len(store))
     store.remove((None, None, None))

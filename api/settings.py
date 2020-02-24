@@ -139,6 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+ARCHIVE_URL = '/archive/'
 
 LOGGING = {
         'version': 1,
@@ -188,10 +189,11 @@ RDF_STORE_USER = config['rdf_store']['username']
 RDF_STORE_PWD = config['rdf_store']['password']
 
 
-SOURCE_DATA_FOLDER = config['datasets']['source.dir']
-TARGET_DATA_FOLDER = config['datasets']['target.dir']
+SOURCE_DATA_DIR = config['datasets']['source.dir']
+TARGET_DATA_DIR = config['datasets']['target.dir']
 EXPORT_FORMAT = config['datasets']['format']
 
-VIRTUOSO_SERVER = config['virtuoso']['server.host']
-RDF_DATA_ARCHIVE_FOLDER = config['datasets']['archive.dir']
+VIRTUOSO_HOST = config['virtuoso']['server.host']
+VIRTUOSO_SPARQL_PORT = config['virtuoso']['server.sparql.port']
+RDF_DATA_ARCHIVE_DIR = config['datasets']['archive.dir']
 KGE_FOLDER = config['datasets']['kge.dir']

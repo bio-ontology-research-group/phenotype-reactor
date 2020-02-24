@@ -16,8 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from api.views import GetLatestDataArchived
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
-]
+    path('archive/latest', GetLatestDataArchived.as_view()),
+] + static(settings.ARCHIVE_URL, document_root=settings.TARGET_DATA_DIR)
