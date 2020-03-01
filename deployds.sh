@@ -23,5 +23,6 @@ docker exec $1 mkdir -p /usr/share/proj
 docker cp . "$1":/usr/share/proj
 echo "completed copying"
 
+cd ..
 rm -rf data-*
 echo "cleaned extracted data"
