@@ -4,12 +4,6 @@ then
 echo "ERROR: container id is required argument"
 fi
 
-if [ "$2" == "" ];
-then
-echo "ERROR: data directory is required argument"
-fi
-
-
 echo "Downloading phenotype data ..."
 curl -L 'http://phenomebrowser.net/archive/latest' --output phenotype-data.tar.gz
 
