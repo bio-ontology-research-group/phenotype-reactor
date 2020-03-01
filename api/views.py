@@ -13,15 +13,22 @@ import os
 
 logger = logging.getLogger(__name__) 
 
-class AssociationList(APIView):
+class FindAssociation(APIView):
     service = Association()
 
     """
     List associations by given criteria
     """
     def get(self, request, format=None):
-        return self.service.findConceptAssociation(None) 
-        
+        try:
+            concept = request.GET.get('concept', None)
+            phenotype = request.GET.get('phenotype', None)
+            concept_type = request.GET.get('type', None)
+
+            response = self.service.find(concept, phenotype) 
+            return Response(response.json())
+        except Exception as e:
+            logger.exception("message")
 
 class GetLatestDataArchived(APIView):
     """
