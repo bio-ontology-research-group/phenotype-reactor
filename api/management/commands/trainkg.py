@@ -133,9 +133,9 @@ class Command(BaseCommand):
             config[pkc.SEED] = 0
             config[pkc.LEARNING_RATE] = float(learning_rate) if learning_rate else 0.01
             config[pkc.NUM_EPOCHS] = int(num_epochs) if num_epochs else 10
-            config[pkc.BATCH_SIZE] = int(embedding_dim) if embedding_dim else 64
+            config[pkc.BATCH_SIZE] = int(batch_size) if batch_size else 64
             config[pkc.PREFERRED_DEVICE] = device if device else pkc.GPU
-            config[pkc.EMBEDDING_DIM] = int(batch_size) if embedding_dim else 50
+            config[pkc.EMBEDDING_DIM] = int(embedding_dim) if embedding_dim else 50
             config[pkc.SCORING_FUNCTION_NORM] = 1  # corresponds to L1
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
