@@ -140,7 +140,7 @@ class Command(BaseCommand):
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
             
-            logger.info("Starting training dataset with settings:" + config)
+            logger.info("Starting training dataset with settings:" + str(config))
             
             results = pykeen.run(
                 config=config,
