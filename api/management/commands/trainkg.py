@@ -4,7 +4,7 @@ from django.conf import settings
 import api.archive.archive_ds as archive
 
 from os import listdir
-from os.path import isfile, join, splitext
+from os.path import isfile, join, splitext, exists
 from pathlib import Path
 
 from rdflib import Graph
@@ -18,6 +18,7 @@ import datetime
 import tarfile
 import os
 import glob
+import shutil
 
 
 logger = logging.getLogger(__name__)
@@ -68,36 +69,41 @@ class Command(BaseCommand):
         store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
         store.remove((None, None, None))
 
-    def rdf2nt(self):
-        ds_dir = os.path.join(settings.KGE_DIR, 'data-*')
-        os.chdir(glob.glob(ds_dir)[0])
-        files = [file for file in os.listdir('.') if os.path.isfile(file)]
+    def rdf2nt(self, ds_path):
+        os.chdir(ds_path)
+        files = [file for file in os.listdir('.') if isfile(file)]
         
         if len(files) < 1:
             raise Exception("no file in dataset exists to process")
 
-        os.makedirs(TRAINING_SET_DIR, exist_ok=True)
+        if exists(TRAINING_SET_DIR):
+            shutil.rmtree(TRAINING_SET_DIR)
+
+        os.makedirs(TRAINING_SET_DIR)
 
         testset_graph = Graph()
         for entry in files:
-            if os.path.isfile(os.path.join(entry)):
+            if isfile(join(entry)):
                 self.generate_nt(testset_graph, entry)
 
 
-        logger.info("Creating test set '{TRAINING_SET_FILE}'".format(file=file))
+        logger.info("Creating test set '{file}'".format(file=TRAINING_SET_FILE))
         testset_graph.serialize(TRAINING_SET_FILE, format='nt')
         testset_graph.remove((None, None, None))
 
     def preprocess_dataset(self):
         file = archive.find_latest_file()
-        file_path = os.path.join(settings.TARGET_DATA_DIR, file.full_name)
-        if os.path.exists(file_path):
+        file_path = join(settings.TARGET_DATA_DIR, file.full_name)
+        if exists(file_path):
             logger.info("Extracting data archive...")
             ds_tar = tarfile.open(file_path)
             ds_tar.extractall(KGE_DIR)
             ds_tar.close()
-            
-        self.rdf2nt()
+        
+        ds_dir = join(settings.KGE_DIR, 'data-*')
+        ds_path = glob.glob(ds_dir)[0]
+        self.rdf2nt(ds_path)
+        shutil.rmtree(ds_path)
         logger.info("Completed dataset preprocessing")
 
                 
