@@ -37,4 +37,8 @@ class Association:
                     ?prov dcterms:source ?source . \
                     OPTIONAL { ?prov dcterms:created ?created . } \
                 }'
+
+        
+        logger.debug("Executing query for search criteria: concept_iri=" 
+            + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
         return virt.execute_sparql(query, self.MIME_TYPE_JSON)

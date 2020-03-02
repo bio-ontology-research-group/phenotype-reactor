@@ -20,6 +20,5 @@ def execute_sparql(query, format):
                     query=parse.quote(query), 
                     format=parse.quote(format), 
                     run=parse.quote('Run Query'))
-    logger.debug("redirect to:" + query_url)
     response = requests.get(query_url)
     return response

@@ -24,24 +24,6 @@ HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/l
 HPO_ANNO_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation.tab'
 HPO_ANNO_HPO_TEAM_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation_hpoteam.tab'
 
-HPO_ANNO_COL_NAMES = [
-    "DB",
-    "DbId",
-    "DbName",
-    "Qualifier",
-    "HPO_ID",
-    "DB_Reference",
-    "Evidence_Code",
-    "Onset",
-    "Frequency",
-    "Sex",
-    "Modifier",
-    "Aspect",
-    "BiocurationBy",
-    "unnamed",
-    "unnamed2"
-]
-
 print(DATA_DIR, FORMAT)
 
 FORMAT_DIC = {
@@ -352,37 +334,38 @@ def print_size(file):
 
 def transform_hpo_annotations(url, output_filename):
     store = create_graph()
-    df = pd.read_csv(url, sep='\t', names=HPO_ANNO_COL_NAMES) 
-    df.HPO_ID = df.HPO_ID.replace(regex=[':'], value='_')
-    df.DB_Reference = df.DB_Reference.replace(regex=['DECIPHER:'], value='https://decipher.sanger.ac.uk/syndrome/')
-    df.DB_Reference = df.DB_Reference.replace(regex=['OMIM:'], value='https://omim.org/entry/')
-    df.DB_Reference = df.DB_Reference.replace(regex=['PMID:'], value='https://www.ncbi.nlm.nih.gov/pubmed/')
-    df.BiocurationBy = df.BiocurationBy.astype(str)
+    df = pd.read_csv(url, sep='\t') 
+    df['HPO-ID'] = df['HPO-ID'].replace(regex=[':'], value='_')
+    df.reference = df.reference.replace(regex=['DECIPHER:'], value='https://decipher.sanger.ac.uk/syndrome/')
+    df.reference = df.reference.replace(regex=['OMIM:'], value='https://omim.org/entry/')
+    df.reference = df.reference.replace(regex=['ORPHA:'], value='https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert=')
+    df.reference = df.reference.replace(regex=['PMID:'], value='https://www.ncbi.nlm.nih.gov/pubmed/')
+    df.curators = df.curators.astype(str)
     print(df.head(), len(df.columns))
     
     for index, row in df.iterrows():
-        disease = store.resource(row.DB_Reference)
+        disease = store.resource(row.reference)
         disease.add(RDF.type, PHENO.Disease)
-        phenotype = store.resource(str(OBO.uri) + row.HPO_ID)
+        phenotype = store.resource(str(OBO.uri) + row['HPO-ID'])
         phenotype.add(RDF.type, PHENO.Phenotype)
         association = create_phenotypic_association(store, disease, phenotype)
         
         evidence = None
-        if 'IEA' in row.Evidence_Code:
+        if 'IEA' in row['evidence-code']:
             evidence = OBO.ECO_0000501
-        elif 'PCS' in row.Evidence_Code:
+        elif 'PCS' in row['evidence-code']:
             evidence = OBO.ECO_0006016
-        elif 'ICS' in row.Evidence_Code:
+        elif 'ICS' in row['evidence-code']:
             evidence = OBO.ECO_0006018
-        elif 'TAS' in row.Evidence_Code:
+        elif 'TAS' in row['evidence-code']:
             evidence = OBO.ECO_0000033
 
         association.add(OBO.RO_0002558, evidence)
-        row.BiocurationBy = row.BiocurationBy.split(';')
+        row.curators = row.curators.split(';')
         creator = []
         created_on = None
 
-        for creator_field in row.BiocurationBy:
+        for creator_field in row.curators:
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
