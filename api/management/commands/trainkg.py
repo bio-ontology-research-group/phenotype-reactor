@@ -100,7 +100,7 @@ class Command(BaseCommand):
             ds_tar.extractall(KGE_DIR)
             ds_tar.close()
         
-        ds_dir = join(settings.KGE_DIR, 'data-*')
+        ds_dir = join(KGE_DIR, 'data-*')
         ds_path = glob.glob(ds_dir)[0]
         self.rdf2nt(ds_path)
         shutil.rmtree(ds_path)
