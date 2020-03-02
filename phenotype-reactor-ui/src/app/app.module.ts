@@ -11,8 +11,10 @@ import { ISparqlComponent } from './isparql/isparql.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { TitleCasePipe } from '@angular/common';
 import { AberowlService } from './aberowl.service';
+import { AssociationService }  from './association.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { ListAssociationComponent } from './list-association/list-association.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
     HomeComponent,
     AboutComponent,
     ISparqlComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    ListAssociationComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
     MDBBootstrapModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [AberowlService, TitleCasePipe],
+  providers: [AberowlService, AssociationService, TitleCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

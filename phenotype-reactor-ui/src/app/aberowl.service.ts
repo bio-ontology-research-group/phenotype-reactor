@@ -28,7 +28,7 @@ export class AberowlService {
   }
 
   findPhenotypes(term) {
-    return this.findClassByNameStartsWith(term, [ONT.HP, ONT.MP])
+    return this.findClassByNameStartsWith(term, [ONT.HP])
   }
 
   findPathogens(term) {

@@ -1,0 +1,30 @@
+<div class="row">
+    <table class="table table-striped">
+    <thead color="default">
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Evidence</th>
+        <th scope="col">Source</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let association of associationsPage; let assocIndex = index">
+        <td>
+            <h6>{{association.concept.value}}</h6><small class="text-muted">ID</small>
+        </td>
+        <td>Disease name</td>
+        <td><span>{{association.evidence.value}}</span></td>
+        <td>{{association.source.value}}</td>
+    </tr>
+    </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+    </ngb-pagination>
+
+    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+        <option [ngValue]="10">10 items per page</option>
+        <option [ngValue]="20">20 items per page</option>
+        <option [ngValue]="50">50 items per page</option>
+    </select>
+</div>

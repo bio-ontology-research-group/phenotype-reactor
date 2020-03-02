@@ -5,7 +5,7 @@
         <app-search-bar (selectedTerm)="onTermSelect($event)"></app-search-bar>
     </div>
 </div>
-<div class="card mb-4 wow fadeIn">
+<div class="card mb-4 wow fadeIn" *ngIf="iri && type">
     <div class="card-body justify-content-between">
         <span>
             <span class="card-title" *ngIf="ontologyClass">{{ontologyClass.label}}</span> 
@@ -15,208 +15,53 @@
         <h6 class="card-subtitle mt-3">
             <span *ngIf="ontologyClass">{{ontologyClass.definition ? ontologyClass.definition[0]: ''}}</span> 
             <span *ngIf="!ontologyClass">Disease Definition</span>  
-        </h6>
-        <div class="row">
-            <ul class="nav nav-tabs profile-tab" role="tablist">
-                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab" aria-selected="true">Phenotype Association</a>
-                </li>
-                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab" aria-selected="false">Genes Association</a>
-                </li>
-                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab" aria-selected="false">Drug Association</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="tab-content">
-        <div class="tab-pane active" id="home" role="tabpanel">
-            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 476px;"><div class="month-table" style="overflow: hidden; width: auto; height: 476px;">
-                <div class="table-responsive mt-3">
-                    <table class="table stylish-table mb-0">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Priority</th>
-                                <th>Source</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <h6>Sunil Joshi</h6><small class="text-muted">Web
-                                        Designer</small>
-                                </td>
-                                <td>Elite Admin</td>
-                                <td><span class="badge badge-success px-2 py-1">Low</span></td>
-                                <td>$3.9K</td>
-                            </tr>
-                            <tr class="active">
-                                <td>
-                                    <h6>Andrew</h6><small class="text-muted">Project Manager</small>
-                                </td>
-                                <td>Real Homes</td>
-                                <td><span class="badge badge-info px-2 py-1">Medium</span></td>
-                                <td>$23.9K</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h6>Bhavesh patel</h6><small class="text-muted">Developer</small>
-                                </td>
-                                <td>MedicalPro Theme</td>
-                                <td><span class="badge badge-primary px-2 py-1">High</span></td>
-                                <td>$12.9K</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h6>Nirav Joshi</h6><small class="text-muted">Frontend
-                                        Eng</small>
-                                </td>
-                                <td>Elite Admin</td>
-                                <td><span class="badge badge-danger px-2 py-1">Low</span></td>
-                                <td>$10.9K</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h6>Micheal Doe</h6><small class="text-muted">Content
-                                        Writer</small>
-                                </td>
-                                <td>Helping Hands</td>
-                                <td><span class="badge badge-warning px-2 py-1">High</span></td>
-                                <td>$12.9K</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h6>Johnathan</h6><small class="text-muted">Graphic</small>
-                                </td>
-                                <td>Digital Agency</td>
-                                <td><span class="badge badge-info px-2 py-1">High</span></td>
-                                <td>$2.6K</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <h6>Sunil Joshi</h6><small class="text-muted">Web
-                                        Designer</small>
-                                </td>
-                                <td>Elite Admin</td>
-                                <td><span class="badge badge-success px-2 py-1">Low</span></td>
-                                <td>$3.9K</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div><div class="slimScrollBar" style="background: rgb(220, 220, 220); width: 5px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 411.209px;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
-        </div>
-        <!--second tab-->
-        <div class="tab-pane" id="profile" role="tabpanel">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-3 col-xs-6 border-right"> <strong>Full Name</strong>
-                        <br>
-                        <p class="text-muted">Johnathan Deo</p>
-                    </div>
-                    <div class="col-md-3 col-xs-6 border-right"> <strong>Mobile</strong>
-                        <br>
-                        <p class="text-muted">(123) 456 7890</p>
-                    </div>
-                    <div class="col-md-3 col-xs-6 border-right"> <strong>Email</strong>
-                        <br>
-                        <p class="text-muted">johnathan@admin.com</p>
-                    </div>
-                    <div class="col-md-3 col-xs-6"> <strong>Location</strong>
-                        <br>
-                        <p class="text-muted">London</p>
-                    </div>
-                </div>
-                <hr>
-                <p class="mt-4">Donec pede justo, fringilla vel, aliquet nec, vulputate eget,
-                    arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.
-                    Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus.
-                    Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo
-                    ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the
-                    1500s, when an unknown printer took a galley of type and scrambled it to
-                    make a type specimen book. It has survived not only five centuries </p>
-                <p>It was popularised in the 1960s with the release of Letraset sheets
-                    containing Lorem Ipsum passages, and more recently with desktop publishing
-                    software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                <h4 class="font-medium mt-4">Skill Set</h4>
-                <hr>
-                <h5 class="mt-4">Wordpress <span class="pull-right">80%</span></h5>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:80%; height:6px;">
-                        <span class="sr-only">50% Complete</span> </div>
-                </div>
-                <h5 class="mt-4">HTML 5 <span class="pull-right">90%</span></h5>
-                <div class="progress">
-                    <div class="progress-bar bg-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width:90%; height:6px;">
-                        <span class="sr-only">50% Complete</span> </div>
-                </div>
-                <h5 class="mt-4">jQuery <span class="pull-right">50%</span></h5>
-                <div class="progress">
-                    <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%; height:6px;">
-                        <span class="sr-only">50% Complete</span> </div>
-                </div>
-                <h5 class="mt-4">Photoshop <span class="pull-right">70%</span></h5>
-                <div class="progress">
-                    <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:70%; height:6px;">
-                        <span class="sr-only">50% Complete</span> </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="settings" role="tabpanel">
-            <div class="card-body">
-                <form class="form-horizontal form-material">
-                    <div class="form-group">
-                        <label class="col-md-12">Full Name</label>
-                        <div class="col-md-12">
-                            <input type="text" placeholder="Johnathan Doe" class="form-control form-control-line">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="example-email" class="col-md-12">Email</label>
-                        <div class="col-md-12">
-                            <input type="email" placeholder="johnathan@admin.com" class="form-control form-control-line" name="example-email" id="example-email">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-12">Password</label>
-                        <div class="col-md-12">
-                            <input type="password" value="password" class="form-control form-control-line">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-12">Phone No</label>
-                        <div class="col-md-12">
-                            <input type="text" placeholder="123 456 7890" class="form-control form-control-line">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-12">Message</label>
-                        <div class="col-md-12">
-                            <textarea rows="5" class="form-control form-control-line"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-12">Select Country</label>
-                        <div class="col-sm-12">
-                            <select class="form-control form-control-line">
-                                <option>London</option>
-                                <option>India</option>
-                                <option>Usa</option>
-                                <option>Canada</option>
-                                <option>Thailand</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <button class="btn btn-success">Update Profile</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+        </h6>    
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+                <a ngbNavLink>Phenotype Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Phenotype']"></app-list-association>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink>Gene Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Gene']"></app-list-association>
+                </ng-template>
+            </li>
+            <!-- <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Disease']"> -->
+            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Disease']">
+                <a ngbNavLink>Disease Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Disease']"></app-list-association>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Device']">
+                <a ngbNavLink>Disease Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Device']"></app-list-association>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Drug']">
+                <a ngbNavLink>Disease Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Drug']"></app-list-association>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="4" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Metabolite']">
+                <a ngbNavLink>Metabolite Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Metabolite']"></app-list-association>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Pathogen']">
+                <a ngbNavLink>Disease Association</a>
+                <ng-template ngbNavContent>
+                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Pathogen']"></app-list-association>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
 </div>
 </div>

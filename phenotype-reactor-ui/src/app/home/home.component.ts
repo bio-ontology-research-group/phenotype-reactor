@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AssociationService } from '../association.service';
+import { _ } from 'underscore';
 
 @Component({
   selector: 'app-home',
@@ -7,27 +10,63 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  ontologyClass  : any = null
+  ontologyClass = null;
+  iri = null;
+  type = null;
+  associations = null;
+  typeToAssoicationMap = {};
 
-  constructor() { }
+  currentJustify = 'start';
+
+  BASE_PREFIX = "http://phenomebrowser.net/"
+
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute, 
+    private associationService: AssociationService) { 
+      this.route.params.subscribe( params => {
+        this.iri = decodeURIComponent(params.iri);
+        this.type = params.type
+        if (this.iri && this.type) {
+          this.initAssociation()
+        }
+        
+      });
+  }
 
   ngOnInit() {
+
   }
 
-  onTermSelect(lookupResource){
-    console.log(lookupResource)
+  onTermSelect(lookupResource) {
     if (lookupResource && lookupResource.ontology) {
       this.ontologyClass = lookupResource
+      console.log(this.ontologyClass)
+      this.router.navigate(['/association', encodeURIComponent(lookupResource.class), lookupResource.ontology]);
     }
-    // if (lookupResource.type.value === 'http://ddiem.phenomebrowser.net/Disease') {
-    //   this.router.navigate(['/disease', encodeURIComponent(lookupResource.resource.value)]);
-    // }  else {
-    //   this.router.navigate(['/disease-list-by-resource', encodeURIComponent(lookupResource.resource.value), encodeURIComponent(lookupResource.type.value)]);
-    // }
   }
 
-  openInNewTab(url: string){
+  openInNewTab(url: string) {
     window.open(url, "_blank");
+  }
+
+  initAssociation() {
+    if (this.type == 'MP' || this.type == 'HP') {
+      this.associationService.find(null, this.iri, null).subscribe( data => {
+        this.associations = data ? data['results']['bindings'] : [];
+        this.transformAssociation(this.associations);
+      });
+    }
+  }
+
+  transformAssociation(associations) {
+    this.typeToAssoicationMap = {};
+    var types = _.map(associations, (obj) => obj['conceptType']['value'])
+    for (var index in types) {
+      this.typeToAssoicationMap[types[index]] = _.filter(associations, (obj) => obj['conceptType']['value'] == types[index]);
+    }
+    console.log(this.typeToAssoicationMap)
   }
 
 }
