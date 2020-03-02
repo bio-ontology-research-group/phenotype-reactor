@@ -22,7 +22,6 @@ FORMAT = getattr(settings, 'EXPORT_FORMAT', 'pretty-xml')
 
 HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/'
 HPO_ANNO_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation.tab'
-HPO_ANNO_HPO_TEAM_URL = HPO_PIPELINE_BASE_URL + 'phenotype_annotation_hpoteam.tab'
 
 print(DATA_DIR, FORMAT)
 

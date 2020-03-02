@@ -37,5 +37,4 @@ class Command(BaseCommand):
         transformer.transform_predictive_gene2phenotype()
         transformer.transform_metabolites2phenotype()
         transformer.transform_hpo_annotations(transformer.HPO_ANNO_URL, 'disease2phenotype_hpo')
-        transformer.transform_hpo_annotations(transformer.HPO_ANNO_HPO_TEAM_URL, 'disease2phenotype_hpoteam')
         archive.archive()
