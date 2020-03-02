@@ -1,11 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
+import api.archive.archive_ds as archive
+
 from os import listdir
 from os.path import isfile, join, splitext
 from pathlib import Path
 
-import api.rdfox as rdfox
+from rdflib import Graph
 
 import pykeen
 import pykeen.constants as pkc
@@ -13,13 +15,19 @@ import pykeen.constants as pkc
 import signal
 import logging
 import datetime
+import tarfile
+import os
+import glob
 
 
 logger = logging.getLogger(__name__)
+logging.getLogger('pykeen').setLevel(logging.INFO)
 
 
 RDF_DATA_ARCHIVE_DIR = getattr(settings, 'RDF_DATA_ARCHIVE_DIR', None)
-KGE_FOLDER = getattr(settings, 'KGE_FOLDER', None)
+KGE_DIR = getattr(settings, 'KGE_DIR', None)
+TRAINING_SET_DIR = join(KGE_DIR, 'trainingset')
+TRAINING_SET_FILE = join(TRAINING_SET_DIR, 'testset.nt')
 
 class Command(BaseCommand):
     help = 'Training kg data'
@@ -37,11 +45,61 @@ class Command(BaseCommand):
         parser.add_argument('-d', '--embedding_dim', type=str, help='number of embedding dimensions', )
         parser.add_argument('-b', '--batch_size', type=str, help='batch size', ) 
         parser.add_argument('-r', '--device', type=str, help='preferred device', ) 
+        parser.add_argument('-sp', '--skip_preprocessing', type=str, help='skipping data set preprocessing if already done', ) 
     
     def stop_subprocesses(self, signum, frame):
         if self.proc.poll() is None:
             self.proc.kill()
         exit(0)
+
+    
+    def generate_nt(self, testset_graph, file):
+        logger.info("Converting rdf file '{file}' to nt format".format(file=file))
+        store = Graph()
+        store.load(file)
+
+        size = len(store)
+        testset_size = int(size / 10)
+        triples = list(store.triples((None, None, None)))
+        for triple in triples[(size - testset_size):size]:
+            testset_graph.add(triple)
+            store.remove(triple)
+
+        store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
+        store.remove((None, None, None))
+
+    def rdf2nt(self):
+        ds_dir = os.path.join(settings.KGE_DIR, 'data-*')
+        os.chdir(glob.glob(ds_dir)[0])
+        files = [file for file in os.listdir('.') if os.path.isfile(file)]
+        
+        if len(files) < 1:
+            raise Exception("no file in dataset exists to process")
+
+        os.makedirs(TRAINING_SET_DIR, exist_ok=True)
+
+        testset_graph = Graph()
+        for entry in files:
+            if os.path.isfile(os.path.join(entry)):
+                self.generate_nt(testset_graph, entry)
+
+
+        logger.info("Creating test set '{TRAINING_SET_FILE}'".format(file=file))
+        testset_graph.serialize(TRAINING_SET_FILE, format='nt')
+        testset_graph.remove((None, None, None))
+
+    def preprocess_dataset(self):
+        file = archive.find_latest_file()
+        file_path = os.path.join(settings.TARGET_DATA_DIR, file.full_name)
+        if os.path.exists(file_path):
+            logger.info("Extracting data archive...")
+            ds_tar = tarfile.open(file_path)
+            ds_tar.extractall(KGE_DIR)
+            ds_tar.close()
+            
+        self.rdf2nt()
+        logger.info("Completed dataset preprocessing")
+
                 
     def handle(self, *args, **options):
         learning_rate = options['learning_rate']
@@ -49,15 +107,21 @@ class Command(BaseCommand):
         embedding_dim = options['embedding_dim']
         batch_size = options['batch_size']
         device = options['device']
+        skip_preprocessing = options['skip_preprocessing']
 
         if RDF_DATA_ARCHIVE_DIR is None or not RDF_DATA_ARCHIVE_DIR:
             raise Exception("configuration property 'archive.dir' is required")
-        if KGE_FOLDER is None or not KGE_FOLDER:
+        if KGE_DIR is None or not KGE_DIR:
             raise Exception("configuration property 'kge.dir' is required")
+        
+        if not skip_preprocessing or (skip_preprocessing and 'true' not in skip_preprocessing):
+            self.preprocess_dataset()
 
+        training_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and TRAINING_SET_FILE not in file]
         try: 
             config = dict()
-            config[pkc.TRAINING_SET_PATH] = join(RDF_DATA_ARCHIVE_DIR, 'bk-2020-02-03T12:50.nt')
+            config[pkc.TRAINING_SET_PATH] = training_files
+            config[pkc.TEST_SET_PATH] = TRAINING_SET_FILE
             config[pkc.EXECUTION_MODE] = pkc.TRAINING_MODE
             config[pkc.KG_EMBEDDING_MODEL_NAME] = pkc.TRANS_E_NAME
             config[pkc.SEED] = 0
@@ -70,11 +134,11 @@ class Command(BaseCommand):
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
             
-            logger.info(config)
+            logger.info("Starting training dataset with settings:" + config)
             
             results = pykeen.run(
                 config=config,
-                output_directory=KGE_FOLDER,
+                output_directory=KGE_DIR,
             )
 
             print('Keys:', *sorted(results.results.keys()), sep='\n  ')
