@@ -339,16 +339,14 @@ def transform_hpo_annotations(url, output_filename):
     df.reference = df.reference.replace(regex=['OMIM:'], value='https://omim.org/entry/')
     df.reference = df.reference.replace(regex=['ORPHA:'], value='https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert=')
     df.reference = df.reference.replace(regex=['PMID:'], value='https://www.ncbi.nlm.nih.gov/pubmed/')
+    df.reference = df.reference.replace(regex=['ISBN-13:'], value='https://isbnsearch.org/isbn/')
     df.curators = df.curators.astype(str)
     print(df.head(), len(df.columns))
     
     for index, row in df.iterrows():
-        disease = store.resource(row.reference)
-        disease.add(RDF.type, PHENO.Disease)
         phenotype = store.resource(str(OBO.uri) + row['HPO-ID'])
         phenotype.add(RDF.type, PHENO.Phenotype)
-        association = create_phenotypic_association(store, disease, phenotype)
-        
+
         evidence = None
         if 'IEA' in row['evidence-code']:
             evidence = OBO.ECO_0000501
@@ -359,7 +357,6 @@ def transform_hpo_annotations(url, output_filename):
         elif 'TAS' in row['evidence-code']:
             evidence = OBO.ECO_0000033
 
-        association.add(OBO.RO_0002558, evidence)
         row.curators = row.curators.split(';')
         creator = []
         created_on = None
@@ -368,8 +365,15 @@ def transform_hpo_annotations(url, output_filename):
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
-        add_association_provenance(store, association, creator=creator, created_on=created_on,
-        source='https://www.ncbi.nlm.nih.gov/pubmed/30476213')
+        for disease in row.reference.split(";"):
+            diseaseRes = store.resource(disease)
+            diseaseRes.add(RDF.type, PHENO.Disease)
+
+            association = create_phenotypic_association(store, diseaseRes, phenotype)
+            association.add(OBO.RO_0002558, evidence)
+            
+            add_association_provenance(store, association, creator=creator, created_on=created_on,
+            source='https://www.ncbi.nlm.nih.gov/pubmed/30476213')
     
 
     store.serialize('{folder}/{filename}.{extension}'.format(
