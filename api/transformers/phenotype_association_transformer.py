@@ -1,8 +1,8 @@
 # Transforms phenotype association files to rdf files
 from rdflib import Graph, Literal, BNode, RDF
-from rdflib.namespace import FOAF, DC, ClosedNamespace, RDFS, DCTERMS
-from rdflib.term import URIRef
+from rdflib.namespace import FOAF, DC, RDFS, DCTERMS
 
+from api.namespace import PHENO, OBO, PUBCHEM, MGI, ENTREZ_GENE, DECIPHER, OMIM, ORPHA, PMID, ISBN
 from django.conf import settings
 
 from pathlib import Path
@@ -28,48 +28,6 @@ print(DATA_DIR, FORMAT)
 FORMAT_DIC = {
     'xml' : 'rdf', 'n3': 'n3', 'turtle': 'ttl', 'nt': 'nt', 'pretty-xml': 'rdf', 'trix': 'trix', 'trig': 'trig', 'nquads':'nquads'
 }
-
-PHENO = ClosedNamespace(
-    uri=URIRef("http://phenomebrowser.net/"),
-    terms=[
-        #Classes
-        "Disease", "Drug", "Device", "Gene", "Genotype",
-        "Phenotype", "Pathogen", "Provenance", "Association", "Metabolite",
-
-        #Properties
-        "ecNumber", "uniprotId", "url", "failedToContributeToCondition"
-    ]
-)
-
-OBO = ClosedNamespace(
-    uri=URIRef("http://purl.obolibrary.org/obo/"),
-    terms=[
-        #has evidence
-        "RO_0002558",
-        #has phenotype
-        "RO_0002200",
-        #phenotypic similarity evidence used in automatic assertion
-        "ECO_0007824",
-        #curator inference used in manual assertion (manually curated)
-        "ECO_0000305",
-        #similarity evidence used in automatic assertion
-        "ECO_0000251",
-        #computational evidence used in automatic assertion (text mining, lexical matching, based on NPMI value)
-        "ECO_0007669",
-        #evidence used in automatic assertion (IEA)
-        "ECO_0000501",
-        # author statement from published clinical study (PCS for published clinical study)
-        "ECO_0006016",
-        # inference based on individual clinical experience (ICS for individual clinical experience)
-        "ECO_0006018",
-        #author statement supported by traceable reference (TAS traceable author statement) 
-        "ECO_0000033"
-    ]
-)
-
-PUBCHEM = ClosedNamespace(uri=URIRef("https://pubchem.ncbi.nlm.nih.gov/compound/"), terms=[])
-MGI = ClosedNamespace(uri=URIRef("http://www.informatics.jax.org/marker/"), terms=[])
-ENTREZ_GENE = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/gene/"), terms=[])
 
 def init():
     global TARGET_DATA_DIR
@@ -335,27 +293,48 @@ def transform_hpo_annotations(url, output_filename):
     store = create_graph()
     df = pd.read_csv(url, sep='\t') 
     df['HPO-ID'] = df['HPO-ID'].replace(regex=[':'], value='_')
-    df.reference = df.reference.replace(regex=['DECIPHER:'], value='https://decipher.sanger.ac.uk/syndrome/')
-    df.reference = df.reference.replace(regex=['OMIM:'], value='https://omim.org/entry/')
-    df.reference = df.reference.replace(regex=['ORPHA:'], value='https://www.orpha.net/consor/cgi-bin/OC_Exp.php?lng=EN&Expert=')
-    df.reference = df.reference.replace(regex=['PMID:'], value='https://www.ncbi.nlm.nih.gov/pubmed/')
-    df.reference = df.reference.replace(regex=['ISBN-13:'], value='https://isbnsearch.org/isbn/')
+
+    df['disease-identifier'] = df['disease-identifier'].astype(str)
+    df['disease_iri'] = df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
+    df['disease_iri'] = df['disease_iri'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
+    df['disease_iri'] = df['disease_iri'].replace(regex=['OMIM:'], value=OMIM.uri)
+    df['disease_iri'] = df['disease_iri'].replace(regex=['ORPHA:'], value=ORPHA.uri)
+
+    df.reference = df.reference.replace(regex=['DECIPHER:'], value=DECIPHER.uri)
+    df.reference = df.reference.replace(regex=['OMIM:'], value=OMIM.uri)
+    df.reference = df.reference.replace(regex=['ORPHA:'], value=ORPHA.uri)
+    df.reference = df.reference.replace(regex=['PMID:'], value=PMID.uri)
+    df.reference = df.reference.replace(regex=['ISBN-13:'], value=ISBN.uri)
+    df.reference = df.reference.replace(regex=['ISBN-10:'], value=ISBN.uri)
     df.curators = df.curators.astype(str)
     print(df.head(), len(df.columns))
-    
+
+    pheno_disease_dict = {}
     for index, row in df.iterrows():
         phenotype = store.resource(str(OBO.uri) + row['HPO-ID'])
         phenotype.add(RDF.type, PHENO.Phenotype)
 
-        evidence = None
-        if 'IEA' in row['evidence-code']:
-            evidence = OBO.ECO_0000501
-        elif 'PCS' in row['evidence-code']:
-            evidence = OBO.ECO_0006016
-        elif 'ICS' in row['evidence-code']:
-            evidence = OBO.ECO_0006018
-        elif 'TAS' in row['evidence-code']:
-            evidence = OBO.ECO_0000033
+        diseaseRes = store.resource(row['disease_iri'])
+        diseaseRes.add(RDF.type, PHENO.Disease)
+        
+        dict_key = row['HPO-ID'] + ":" + row['disease_iri']
+        if dict_key not in pheno_disease_dict:
+            association = create_phenotypic_association(store, diseaseRes, phenotype)
+
+            evidence = None
+            if 'IEA' in row['evidence-code']:
+                evidence = OBO.ECO_0000501
+            elif 'PCS' in row['evidence-code']:
+                evidence = OBO.ECO_0006016
+            elif 'ICS' in row['evidence-code']:
+                evidence = OBO.ECO_0006018
+            elif 'TAS' in row['evidence-code']:
+                evidence = OBO.ECO_0000033
+
+            association.add(OBO.RO_0002558, evidence)
+            pheno_disease_dict[dict_key] = association
+        else:
+            association = pheno_disease_dict[dict_key]
 
         row.curators = row.curators.split(';')
         creator = []
@@ -365,16 +344,14 @@ def transform_hpo_annotations(url, output_filename):
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
-        for disease in row.reference.split(";"):
-            diseaseRes = store.resource(disease)
-            diseaseRes.add(RDF.type, PHENO.Disease)
+        sources = ['https://www.ncbi.nlm.nih.gov/pubmed/30476213'] 
+        for ref in row.reference.split(";"):
+            if OMIM.uri in ref or DECIPHER.uri in ref or ORPHA.uri in ref:
+                continue
+            sources.append(ref)
 
-            association = create_phenotypic_association(store, diseaseRes, phenotype)
-            association.add(OBO.RO_0002558, evidence)
-            
-            add_association_provenance(store, association, creator=creator, created_on=created_on,
-            source='https://www.ncbi.nlm.nih.gov/pubmed/30476213')
-    
+        add_association_provenance(store, association, creator=creator, created_on=created_on,
+        source=sources)
 
     store.serialize('{folder}/{filename}.{extension}'.format(
         folder=TARGET_DATA_DIR, filename=output_filename,  extension=FORMAT_DIC[FORMAT]), 

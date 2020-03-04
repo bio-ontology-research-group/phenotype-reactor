@@ -43,7 +43,7 @@
                 </ng-template>
             </li>
             <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Drug']">
-                <a ngbNavLink>Disease Association</a>
+                <a ngbNavLink>Drug Association</a>
                 <ng-template ngbNavContent>
                     <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Drug']"></app-list-association>
                 </ng-template>
