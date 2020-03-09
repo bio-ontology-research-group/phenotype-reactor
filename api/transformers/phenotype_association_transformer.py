@@ -2,7 +2,7 @@
 from rdflib import Graph, Literal, BNode, RDF
 from rdflib.namespace import FOAF, DC, RDFS, DCTERMS
 
-from api.namespace import PHENO, OBO, PUBCHEM, MGI, ENTREZ_GENE, DECIPHER, OMIM, ORPHA, PMID, ISBN
+from api.rdf.namespace import PHENO, OBO, PUBCHEM, MGI, ENTREZ_GENE, DECIPHER, OMIM, ORPHA, PMID, ISBN
 from django.conf import settings
 
 from pathlib import Path

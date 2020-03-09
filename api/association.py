@@ -1,4 +1,4 @@
-import api.virtuoso as virt
+import api.rdf.virtuoso as virt
 import logging
 
 logger = logging.getLogger(__name__)

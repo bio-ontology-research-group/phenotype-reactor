@@ -5,3 +5,4 @@ requests==2.22.0
 pykeen==0.0.26
 djangorestframework==3.11.0
 django-cors-headers==3.2.1
+elasticsearch==7.5.1

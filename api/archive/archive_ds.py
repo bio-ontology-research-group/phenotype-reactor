@@ -4,10 +4,6 @@ from os import listdir
 from os.path import isfile, join, splitext
 from pathlib import Path
 
-from api.rdfox import MimeType
-
-import api.rdfox as rdfox
-
 import signal
 import logging
 import datetime

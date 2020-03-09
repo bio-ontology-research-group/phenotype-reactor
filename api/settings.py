@@ -197,3 +197,14 @@ VIRTUOSO_HOST = config['virtuoso']['server.host']
 VIRTUOSO_SPARQL_PORT = config['virtuoso']['server.sparql.port']
 RDF_DATA_ARCHIVE_DIR = config['datasets']['archive.dir']
 KGE_DIR = config['datasets']['kge.dir']
+
+ABEROWL_ES_URL = config['aberowl']['es.url']
+ABEROWL_ES_USERNAME = config['aberowl']['es.username']
+ABEROWL_ES_PASSWORD = config['aberowl']['es.password']
+ABEROWL_ES_IDX_ONTOLOGY = config['aberowl']['es.index.ontology']
+ABEROWL_ES_IDX_CLASS = config['aberowl']['es.index.class']
+
+
+LOOKUP_ES_URL = config['lookup']['es.url']
+LOOKUP_ES_USERNAME = config['lookup']['es.username']
+LOOKUP_ES_PASSWORD = config['lookup']['es.password']
