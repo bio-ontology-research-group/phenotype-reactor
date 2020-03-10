@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 import api.archive.archive_ds as archive
+import api.lookup.lookup_elasticsearch as lookup_es  
 from api.association import Association
 
 import logging
@@ -46,3 +47,19 @@ class GetLatestDataArchived(APIView):
             raise Http404
         except Exception as e:
             logger.exception("message")
+
+class FindEntityByLabelStartsWith(APIView):
+
+    """
+    List associations by given criteria
+    """
+    def get(self, request, format=None):
+        try:
+            term = request.GET.get('term', None)
+            entity_type = request.GET.get('entitytype', None)
+
+            result = self.lookup_es.find_by_startswith(term, entity_type) 
+            return Response(result)
+        except Exception as e:
+            logger.exception("message")
+            

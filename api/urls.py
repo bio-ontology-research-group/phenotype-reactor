@@ -24,5 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
     path('api/association', FindAssociation.as_view()),
+    path('api/entity/_startswith', FindEntityByLabelStartsWith.as_view()),
     path('archive/latest', GetLatestDataArchived.as_view()),
 ] + static(settings.ARCHIVE_URL, document_root=settings.TARGET_DATA_DIR)

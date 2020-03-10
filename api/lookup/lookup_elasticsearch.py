@@ -8,12 +8,13 @@ logger = logging.getLogger(__name__)
 es = None
 esUrl = settings.LOOKUP_ES_URL
 if settings.LOOKUP_ES_USERNAME and settings.LOOKUP_ES_PASSWORD:
-    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD))
+    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD), timeout=30)
 else :
-    es = Elasticsearch(esUrl)
+    es = Elasticsearch(esUrl, timeout=30)
 
 VALUESET_INDEX_NAME = "biomed_valueset"
 ENTITY_INDEX_NAME = "biomed_entity"
+DEFAULT_PAGE_SIZE = 10
 
 VALUESET_INDEX_SETTINGS = {
   "mappings" : {
@@ -66,6 +67,10 @@ ENTITY_INDEX_SETTINGS = {
         "type" : "keyword",
         "normalizer" : "entity_normalizer"
       },
+      "entity_type" : {
+        "type" : "keyword",
+        "normalizer" : "entity_normalizer"
+      },
       "synonym" : {
         "type" : "text"
       }
@@ -113,6 +118,33 @@ def delete_valueset(valueset_name):
     result = es.delete_by_query(index=ENTITY_INDEX_NAME, body=query)
   except Exception as e:
     logger.exception("message")
+
+def find_by_startswith(term, entity_type):
+  try:
+    query = {
+        "size" : DEFAULT_PAGE_SIZE,
+        "query": { 
+          "bool": { 
+            "must": [{
+              "prefix": {
+                "label": {
+                    "value": term
+                }
+              }
+            }, 
+            { 
+              "term": { 
+                "entity_type": entity_type 
+              } 
+            }] 
+          } 
+        }
+      }
+    result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query)
+    return list(map(lambda hit: hit['_source'], result['hits']['hits']))
+  except Exception as e:
+      logger.exception("message")
+
   
 
 logger.info("Creating index '%s' if not exists", VALUESET_INDEX_NAME)
