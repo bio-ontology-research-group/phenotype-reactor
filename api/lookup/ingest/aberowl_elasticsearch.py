@@ -24,7 +24,7 @@ def execute(indexname, query):
 def find_classes(ontology):
     try:
         query = {
-            "size" : 100000,
+            "size" : 250000,
             "query": { 
                 "bool": { 
                     "filter": [{ 

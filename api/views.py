@@ -15,11 +15,12 @@ import os
 logger = logging.getLogger(__name__) 
 
 class FindAssociation(APIView):
-    service = Association()
-
     """
     List associations by given criteria
     """
+
+    service = Association()
+
     def get(self, request, format=None):
         try:
             concept = request.GET.get('concept', None)
@@ -49,10 +50,10 @@ class GetLatestDataArchived(APIView):
             logger.exception("message")
 
 class FindEntityByLabelStartsWith(APIView):
-
     """
     List associations by given criteria
     """
+
     def get(self, request, format=None):
         try:
             term = request.GET.get('term', None)
@@ -63,3 +64,19 @@ class FindEntityByLabelStartsWith(APIView):
         except Exception as e:
             logger.exception("message")
             
+
+class FindEntityByIris(APIView):
+    """
+    List associations by given criteria
+    """
+
+    def post(self, request, format=None):
+        try:
+            entity_iris = request.POST.get('iri', None)
+            if not entity_iris:
+                raise RuntimeException("'iri' property is required")
+
+            result = self.lookup_es.find_by_iris(entity_iris) 
+            return Response(result)
+        except Exception as e:
+            logger.exception("message")

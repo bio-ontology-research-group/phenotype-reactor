@@ -18,12 +18,13 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import GetLatestDataArchived, FindAssociation, FindEntityByLabelStartsWith
+from api.views import GetLatestDataArchived, FindAssociation, FindEntityByLabelStartsWith, FindEntityByIris
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
     path('api/association', FindAssociation.as_view()),
     path('api/entity/_startswith', FindEntityByLabelStartsWith.as_view()),
+    path('api/entity/_findbyiri', FindEntityByIris.as_view()),
     path('archive/latest', GetLatestDataArchived.as_view()),
 ] + static(settings.ARCHIVE_URL, document_root=settings.TARGET_DATA_DIR)

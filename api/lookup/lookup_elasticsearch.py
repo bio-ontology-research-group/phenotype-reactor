@@ -125,18 +125,30 @@ def find_by_startswith(term, entity_type):
         "size" : DEFAULT_PAGE_SIZE,
         "query": { 
           "bool": { 
-            "must": [{
-              "prefix": {
-                "label": {
-                    "value": term
-                }
-              }
-            }, 
-            { 
-              "term": { 
-                "entity_type": entity_type 
-              } 
-            }] 
+            "must": [
+              { "prefix": { "label": { "value": term } }}, 
+              { "term": { "entity_type": entity_type } }
+            ] 
+          } 
+        }
+      }
+    result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query)
+    return list(map(lambda hit: hit['_source'], result['hits']['hits']))
+  except Exception as e:
+      logger.exception("message")
+
+def find_by_iris(iris):
+  try:
+    filter_part = []
+    for iri in iris:
+      filter_part.append({ "term": { "entity": { "value": iri } } })
+
+
+    query = {
+        "size" : 1000,
+        "query": { 
+          "bool": { 
+            "must": filter_part
           } 
         }
       }
