@@ -1,17 +1,3 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-
-import api.archive.archive_ds as archive
-
-from os import listdir
-from os.path import isfile, join, splitext, exists
-from pathlib import Path
-
-from rdflib import Graph
-
-import pykeen
-import pykeen.constants as pkc
-
 import signal
 import logging
 import datetime
@@ -20,6 +6,20 @@ import os
 import glob
 import shutil
 
+from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+
+import api.archive.archive_ds as archive
+
+from api.rdf.namespace import OBO
+from rdflib import Graph, RDF
+
+from os import listdir
+from os.path import isfile, join, splitext, exists
+from pathlib import Path
+
+import pykeen
+import pykeen.constants as pkc
 
 logger = logging.getLogger(__name__)
 logging.getLogger('pykeen').setLevel(logging.INFO)
@@ -55,20 +55,21 @@ class Command(BaseCommand):
         exit(0)
 
     
-    def generate_nt(self, file, testset_graph=None):
+    def generate_nt(self, file):
         logger.info("Converting rdf file '{file}' to nt format".format(file=file))
         store = Graph()
         store.load(file)
+        out_store = Graph()
+        stmts = list(store.subjects(RDF.predicate, OBO.RO_0002200))
+        phenotype_stmts = []
+        for stmt in stmts:
+            sub = store.value(stmt, RDF.subject)
+            predicate = store.value(stmt, RDF.predicate)
+            obj = store.value(stmt, RDF.object)
+            out_store.add([sub, predicate, obj])
 
-        if testset_graph:
-            size = len(store)
-            testset_size = int(size / 10)
-            triples = list(store.triples((None, None, None)))
-            for triple in triples[(size - testset_size):size]:
-                testset_graph.add(triple)
-                store.remove(triple)
-
-        store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
+        out_store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
+        out_store.remove((None, None, None))
         store.remove((None, None, None))
 
     def rdf2nt(self, ds_path, test):
@@ -82,17 +83,9 @@ class Command(BaseCommand):
             shutil.rmtree(TRAINING_SET_DIR)
 
         os.makedirs(TRAINING_SET_DIR)
-        testset_graph = None
-        if test:
-            testset_graph = Graph()
         for entry in files:
             if isfile(join(entry)):
-                self.generate_nt(entry, testset_graph)
-
-        if test:
-            logger.info("Creating test set '{file}'".format(file=TEST_SET_FILE))
-            testset_graph.serialize(TEST_SET_FILE, format='nt')
-            testset_graph.remove((None, None, None))
+                self.generate_nt(entry)
 
         
 
@@ -119,7 +112,6 @@ class Command(BaseCommand):
         batch_size = options['batch_size']
         device = options['device']
         skip_preprocessing = options['skip_preprocessing']
-        test = options['test']
 
         if RDF_DATA_ARCHIVE_DIR is None or not RDF_DATA_ARCHIVE_DIR:
             raise Exception("configuration property 'archive.dir' is required")
@@ -144,9 +136,6 @@ class Command(BaseCommand):
             config[pkc.SCORING_FUNCTION_NORM] = 1  # corresponds to L1
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
-
-            if test and 'true' in test:
-                config[pkc.TEST_SET_PATH] = TEST_SET_FILE
             
             logger.info("Starting training dataset with settings:" + str(config))
             
