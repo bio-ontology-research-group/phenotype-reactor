@@ -5,6 +5,12 @@ import logging
 from django.core.management.base import BaseCommand, CommandError
 
 from api.lookup.ingest.valuesets import * 
+from api.lookup.ingest.source import Source 
+from api.lookup.ingest.decipher_hpo import DecipherValueset
+from api.lookup.ingest.pubchem_sider import PubchemValueset
+from api.lookup.ingest.mgi import MGIValueset
+from api.lookup.ingest.omim import OMIMValueset
+from api.lookup.ingest.ncbi_gene import NCBIGeneValueset
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +43,7 @@ class Command(BaseCommand):
         self.index(MONDO())
         self.index(CHEBI())
 
-    def index(self, valueset: AberowlValueset):
+    def index(self, valueset: Source):
         logger.info("Starting indexing %s", valueset.get_name())
         start_index = time.perf_counter()
         valueset.fetch()

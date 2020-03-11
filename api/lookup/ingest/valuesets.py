@@ -26,4 +26,4 @@ class MONDO(AberowlValueset):
 
 class CHEBI(AberowlValueset):
     def __init__(self):
-        super().__init__("CHEBI", "Drug")
+        super().__init__("CHEBI", "Metabolite")

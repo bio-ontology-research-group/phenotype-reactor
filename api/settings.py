@@ -208,3 +208,5 @@ ABEROWL_ES_IDX_CLASS = config['aberowl']['es.index.class']
 LOOKUP_ES_URL = config['lookup']['es.url']
 LOOKUP_ES_USERNAME = config['lookup']['es.username']
 LOOKUP_ES_PASSWORD = config['lookup']['es.password']
+
+OMIM_KEY = config['omim']['key']
