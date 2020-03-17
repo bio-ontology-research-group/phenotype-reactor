@@ -35,11 +35,12 @@ import groovyx.gpars.GParsPool;
 OWLOntologyManager outputManager = OWLManager.createOWLOntologyManager();
 OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 
-String ontostring = args[0];
-String prefreasoner = args[1];
-String outDir = args[2];
+String ontostring = args[0].trim();
+String prefreasoner = args[1].trim();
+String outDir = args[2].trim();
 
-OWLOntology ont = manager.loadOntologyFromOntologyDocument(new File(ontostring));
+ontoFile = new File(ontostring)
+OWLOntology ont = manager.loadOntologyFromOntologyDocument(ontoFile);
 
 public class SimpleShortFormProvider1 implements ShortFormProvider, Serializable {
 
@@ -79,24 +80,16 @@ if (prefreasoner.toLowerCase().equals("elk"))
     // Save the inferred ontology.
     //outputManager.saveOntology(infOnt,IRI.create((new File("inferredontologygo2.owl").toURI())));
 
-
-
     // Display Axioms
     OWLObjectRenderer renderer =new ManchesterOWLSyntaxOWLObjectRendererImpl ();
     renderer.setShortFormProvider(new SimpleShortFormProvider1());
     int numaxiom1= infOnt.getAxiomCount();
     Set<OWLClass> classes=infOnt.getClassesInSignature();
 
-
-
-
-
     //display original axioms
     //int numaxiom1= Ont.getAxiomCount();
     Set<OWLClass> classeso=ont.getClassesInSignature();
-
-
-    FileWriter fwo= new FileWriter (outDir + "/axioms-list.lst"));
+    FileWriter fwo= new FileWriter ((outDir.equals("") ? "" : outDir + "/") + ontoFile.getName() + ".lst");
     BufferedWriter bwo =new BufferedWriter (fwo);
     PrintWriter outo =new PrintWriter (bwo);
 
@@ -108,7 +101,7 @@ if (prefreasoner.toLowerCase().equals("elk"))
 	    {
 	    // classess=renderer.render(class1);
 	    classaxiom=renderer.render (claxiom);
-	    outo.println ("Axiom:" + classaxiom);
+	    // outo.println ("Axiom:" + classaxiom);
 	    outo.println(classaxiom.replaceAll("\n"," ").replaceAll(","," "));
 	}
     }

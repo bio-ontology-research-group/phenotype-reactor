@@ -46,63 +46,11 @@ class Command(BaseCommand):
         parser.add_argument('-d', '--embedding_dim', type=str, help='number of embedding dimensions', )
         parser.add_argument('-b', '--batch_size', type=str, help='batch size', ) 
         parser.add_argument('-r', '--device', type=str, help='preferred device', ) 
-        parser.add_argument('-sp', '--skip_preprocessing', type=str, help='skipping data set preprocessing if already done', ) 
-        parser.add_argument('-t', '--test', type=str, help='For training with test set', ) 
     
     def stop_subprocesses(self, signum, frame):
         if self.proc.poll() is None:
             self.proc.kill()
         exit(0)
-
-    
-    def generate_nt(self, file):
-        logger.info("Converting rdf file '{file}' to nt format".format(file=file))
-        store = Graph()
-        store.load(file)
-        out_store = Graph()
-        stmts = list(store.subjects(RDF.predicate, OBO.RO_0002200))
-        phenotype_stmts = []
-        for stmt in stmts:
-            sub = store.value(stmt, RDF.subject)
-            predicate = store.value(stmt, RDF.predicate)
-            obj = store.value(stmt, RDF.object)
-            out_store.add([sub, predicate, obj])
-
-        out_store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
-        out_store.remove((None, None, None))
-        store.remove((None, None, None))
-
-    def rdf2nt(self, ds_path, test):
-        os.chdir(ds_path)
-        files = [file for file in os.listdir('.') if isfile(file)]
-        
-        if len(files) < 1:
-            raise Exception("no file in dataset exists to process")
-
-        if exists(TRAINING_SET_DIR):
-            shutil.rmtree(TRAINING_SET_DIR)
-
-        os.makedirs(TRAINING_SET_DIR)
-        for entry in files:
-            if isfile(join(entry)):
-                self.generate_nt(entry)
-
-        
-
-    def preprocess_dataset(self, test=False):
-        file = archive.find_latest_file()
-        file_path = join(settings.TARGET_DATA_DIR, file.full_name)
-        if exists(file_path):
-            logger.info("Extracting data archive...")
-            ds_tar = tarfile.open(file_path)
-            ds_tar.extractall(KGE_DIR)
-            ds_tar.close()
-        
-        ds_dir = join(KGE_DIR, 'data-*')
-        ds_path = glob.glob(ds_dir)[0]
-        self.rdf2nt(ds_path, test)
-        shutil.rmtree(ds_path)
-        logger.info("Completed dataset preprocessing")
 
                 
     def handle(self, *args, **options):
@@ -111,17 +59,8 @@ class Command(BaseCommand):
         embedding_dim = options['embedding_dim']
         batch_size = options['batch_size']
         device = options['device']
-        skip_preprocessing = options['skip_preprocessing']
 
-        if RDF_DATA_ARCHIVE_DIR is None or not RDF_DATA_ARCHIVE_DIR:
-            raise Exception("configuration property 'archive.dir' is required")
-        if KGE_DIR is None or not KGE_DIR:
-            raise Exception("configuration property 'kge.dir' is required")
-        
-        if not skip_preprocessing or (skip_preprocessing and 'true' not in skip_preprocessing):
-            self.preprocess_dataset()
-
-        training_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and TEST_SET_FILE not in file]
+        training_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1] or 'tsv' in splitext(file)[1])]
         try: 
             config = dict()
             config[pkc.TRAINING_SET_PATH] = training_files

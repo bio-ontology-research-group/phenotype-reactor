@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os, shutil, configparser
+from os.path import join
 
 # Reading setup properties from configuration file
 config_dir = os.path.expanduser("~") + "/.config"
@@ -188,8 +189,8 @@ RDF_STORE_DS = config['rdf_store']['datastore']
 RDF_STORE_USER = config['rdf_store']['username']
 RDF_STORE_PWD = config['rdf_store']['password']
 
-
 SOURCE_DATA_DIR = config['datasets']['source.dir']
+ONTOLOGY_DIR = config['datasets']['source.ontology.dir']
 TARGET_DATA_DIR = config['datasets']['target.dir']
 EXPORT_FORMAT = config['datasets']['format']
 
@@ -197,6 +198,7 @@ VIRTUOSO_HOST = config['virtuoso']['server.host']
 VIRTUOSO_SPARQL_PORT = config['virtuoso']['server.sparql.port']
 RDF_DATA_ARCHIVE_DIR = config['datasets']['archive.dir']
 KGE_DIR = config['datasets']['kge.dir']
+TRAINING_SET_DIR = join(KGE_DIR, 'trainingset')
 
 ABEROWL_ES_URL = config['aberowl']['es.url']
 ABEROWL_ES_USERNAME = config['aberowl']['es.username']
