@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
-import { AberowlService } from '../aberowl.service';
+import { LookupService } from '../lookup.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -25,7 +25,8 @@ export class SearchBarComponent implements OnInit {
     {name: 'Drug', index: 2},
     {name: 'Gene', index: 3},
     {name: 'Pathogen', index: 4},
-    {name: 'Phenotype', index: 5}
+    {name: 'Phenotype', index: 5},
+    {name: 'Metabolite', index: 6}
   ];
 
   formatter: any;
@@ -46,7 +47,7 @@ export class SearchBarComponent implements OnInit {
       tap(() => this.searching = false)
     )
 
-  constructor(private aberowlService: AberowlService,
+  constructor(private aberowlService: LookupService,
     private router: Router,
     private titlecasePipe:TitleCasePipe) { }
 

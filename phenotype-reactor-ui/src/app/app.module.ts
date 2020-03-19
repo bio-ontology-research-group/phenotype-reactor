@@ -10,7 +10,7 @@ import { AboutComponent } from './about/about.component';
 import { ISparqlComponent } from './isparql/isparql.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { TitleCasePipe } from '@angular/common';
-import { AberowlService } from './aberowl.service';
+import { LookupService } from './lookup.service';
 import { AssociationService }  from './association.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -33,7 +33,7 @@ import { ListAssociationComponent } from './list-association/list-association.co
     MDBBootstrapModule.forRoot(),
     AppRoutingModule
   ],
-  providers: [AberowlService, AssociationService, TitleCasePipe],
+  providers: [LookupService, AssociationService, TitleCasePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
