@@ -8,6 +8,8 @@ import json
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
+from rdflib.namespace import split_uri
+
 from os import listdir
 from os.path import isfile, join, splitext, exists
 from pathlib import Path
@@ -101,8 +103,14 @@ class Command(BaseCommand):
                     writer = csv.writer(file, delimiter='\t')
 
                     for key in entity_emb:
-                        row =[key, '', '', '', 'entity', sep.join(map(str, entity_emb[key]))]
-                        writer.writerow(row)
+                        local_name = ''
+                        try:
+                            uri = key[1:len(key) -1]
+                            local_name = split_uri(uri)[1]
+                        except Exception:
+                            pass
 
+                        row =[key, local_name, '', '', 'entity', sep.join(map(str, entity_emb[key]))]
+                        writer.writerow(row)
 
         logger.info("Finished generating bio2vec dataset file")
