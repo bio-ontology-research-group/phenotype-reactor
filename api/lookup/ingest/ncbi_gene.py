@@ -41,7 +41,9 @@ class NCBIGeneValueset(Source):
 
         self.df =  self.df[self.df['Symbol'] != 'NEWENTRY']
         self.df['GeneID'] = self.df['GeneID'].astype(str)
-        self.df['GeneID'] = self.df['GeneID'].add_prefix(ENTREZ_GENE.uri)
+        self.df['GeneID'] = str(ENTREZ_GENE.uri) + self.df['GeneID']
+        self.df['Synonyms'] = self.df['Synonyms'].astype(str)
+        self.df['Other_designations'] = self.df['Other_designations'].astype(str)
         logger.info('head: %s', self.df.head())
         self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
         logger.info("Finished mapping data: entities=%d", len(self.entities))
@@ -56,13 +58,12 @@ class NCBIGeneValueset(Source):
         logger.info("Finished indexing valueset %s", self.valueset)
 
     def map_entity(self, row):
-        print(row)
         obj = {}
         obj["entity"] =  getattr(row, 'GeneID')
         obj["label"] =  getattr(row, 'Symbol')
 
         synonym = []
-        synonym_col = getattr(row, 'Symbol')
+        synonym_col = getattr(row, 'Synonyms')
         if "-" != synonym_col:
             for syn in synonym_col.split('|'):
                 syn = syn.strip()
@@ -73,7 +74,7 @@ class NCBIGeneValueset(Source):
                     logger.info('AnimalQTLdb: CHANGED to: %s', syn)
                 synonym.append(syn)
 
-
+        other_designations = getattr(row, 'Other_designations')
         if other_designations != '-':
             synonym = synonym + other_designations.split('|')
 

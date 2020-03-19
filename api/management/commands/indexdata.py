@@ -34,7 +34,6 @@ class Command(BaseCommand):
                 
     def handle(self, *args, **options):
         logger.info("Starting indexing data")
-        start_index = time.perf_counter()
         self.index(HP())
         self.index(MP())
         self.index(ORDO())
@@ -42,6 +41,11 @@ class Command(BaseCommand):
         self.index(DOID())
         self.index(MONDO())
         self.index(CHEBI())
+        self.index(DecipherValueset())
+        self.index(PubchemValueset())
+        self.index(MGIValueset())
+        self.index(OMIMValueset())
+        self.index(NCBIGeneValueset())
 
     def index(self, valueset: Source):
         logger.info("Starting indexing %s", valueset.get_name())
