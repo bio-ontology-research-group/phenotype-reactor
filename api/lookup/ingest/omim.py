@@ -56,16 +56,16 @@ class OMIMValueset(Source):
         obj["label"] =  getattr(row, 'preferred_title')
         obj["synonym"] = [] 
         pref_titles = getattr(row, 'preferred_title')
-        if pref_titles and 'NaN' not in pref_titles:
-            obj["synonym"] = pref_titles.split(';')
+        if pref_titles and 'NaN' not in pref_titles and 'nan' not in pref_titles:
+            obj["synonym"] = [ item.strip() for item in pref_titles.split(';') if item]
 
         alternative_titles = getattr(row, 'alternative_titles')
-        if alternative_titles and 'NaN' not in alternative_titles:
-            obj["synonym"] = obj["synonym"]  + alternative_titles.split(';')
+        if alternative_titles and 'NaN' not in alternative_titles and 'nan' not in alternative_titles:
+            obj["synonym"] = obj["synonym"]  + [ item.strip() for item in alternative_titles.split(';') if item]
 
         included_titles = getattr(row, 'included_titles')
-        if included_titles and 'NaN' not in included_titles:
-            obj["synonym"] = obj["synonym"]  + included_titles.split(';')
+        if included_titles and 'NaN' not in included_titles and 'nan' not in included_titles:
+            obj["synonym"] = obj["synonym"]  + [ item.strip() for item in included_titles.split(';') if item]
 
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
