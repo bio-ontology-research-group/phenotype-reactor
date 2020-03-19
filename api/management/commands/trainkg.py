@@ -1,18 +1,12 @@
 import signal
 import logging
-import datetime
-import tarfile
 import os
-import glob
 import shutil
+import csv
+import json
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
-
-import api.archive.archive_ds as archive
-
-from api.rdf.namespace import OBO
-from rdflib import Graph, RDF
 
 from os import listdir
 from os.path import isfile, join, splitext, exists
@@ -21,14 +15,12 @@ from pathlib import Path
 import pykeen
 import pykeen.constants as pkc
 
+
 logger = logging.getLogger(__name__)
 logging.getLogger('pykeen').setLevel(logging.INFO)
 
-
-RDF_DATA_ARCHIVE_DIR = getattr(settings, 'RDF_DATA_ARCHIVE_DIR', None)
 KGE_DIR = getattr(settings, 'KGE_DIR', None)
-TRAINING_SET_DIR = join(KGE_DIR, 'trainingset')
-TEST_SET_FILE = join(TRAINING_SET_DIR, 'testset.nt')
+TRAINING_SET_DIR = getattr(settings, 'TRAINING_SET_DIR', None)
 
 class Command(BaseCommand):
     help = 'Training kg data'
@@ -87,8 +79,30 @@ class Command(BaseCommand):
             print('Keys:', *sorted(results.results.keys()), sep='\n  ')
             logger.info(results.trained_model)
             logger.info(results.losses)
+
+            self.generate_bio2vec_frmt()
                     
         except Exception as e:
             logger.exception("message")
         except RuntimeError:
             logger.exception("message")
+
+
+    def generate_bio2vec_frmt(self): 
+        logger.info("Started generating bio2vec dataset file")
+
+        entity_emb_file = 'entities_to_embeddings.json'
+        with open(join(KGE_DIR, entity_emb_file), "r") as f:
+                entity_emb = json.load(f)
+
+                sep = ','
+                outFile = join(KGE_DIR, "entities_to_embeddings.bio2vec.tsv")
+                with open(outFile, 'w') as file:
+                    writer = csv.writer(file, delimiter='\t')
+
+                    for key in entity_emb:
+                        row =[key, '', '', '', 'entity', sep.join(map(str, entity_emb[key]))]
+                        writer.writerow(row)
+
+
+        logger.info("Finished generating bio2vec dataset file")
