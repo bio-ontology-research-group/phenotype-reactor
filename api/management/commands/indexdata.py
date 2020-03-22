@@ -43,6 +43,7 @@ class Command(BaseCommand):
         self.index(CHEBI())
         self.index(DecipherValueset())
         self.index(PubchemValueset())
+        self.index(ECO())
         self.index(MGIValueset())
         self.index(OMIMValueset())
         self.index(NCBIGeneValueset())

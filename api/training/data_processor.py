@@ -4,6 +4,7 @@ import glob
 import shutil
 import subprocess
 import csv
+import logging
 
 from django.conf import settings
 

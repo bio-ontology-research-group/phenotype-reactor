@@ -1,5 +1,7 @@
 import signal
 import logging
+import os
+import shutil
 
 import api.training.data_processor as dp
 
@@ -51,6 +53,7 @@ class Command(BaseCommand):
                 if exists(TRAINING_SET_DIR):
                     shutil.rmtree(TRAINING_SET_DIR)
 
+                logger.info("creating directory for training data")
                 os.makedirs(TRAINING_SET_DIR)
 
             if process_data and 'true' in process_data:
