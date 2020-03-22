@@ -8,9 +8,9 @@ logger = logging.getLogger(__name__)
 es = None
 esUrl = settings.LOOKUP_ES_URL
 if settings.LOOKUP_ES_USERNAME and settings.LOOKUP_ES_PASSWORD:
-    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD), timeout=30)
+    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD), timeout=3 * 60)
 else :
-    es = Elasticsearch(esUrl, timeout=30)
+    es = Elasticsearch(esUrl, timeout=3 * 60)
 
 VALUESET_INDEX_NAME = "biomed_valueset"
 ENTITY_INDEX_NAME = "biomed_entity"
