@@ -9,7 +9,7 @@ PHENO = ClosedNamespace(
         "Phenotype", "Pathogen", "Provenance", "Association", "Metabolite",
 
         #Properties
-        "ecNumber", "uniprotId", "url", "failedToContributeToCondition"
+        "url"
     ]
 )
 
