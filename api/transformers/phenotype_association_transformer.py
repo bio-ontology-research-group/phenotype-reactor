@@ -246,7 +246,7 @@ def transform_predictive_gene2phenotype():
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(store, association, creator='Maxat Kulmanov', 
             created_on='2019-10-20', source='https://www.nature.com/articles/s41597-019-0090-x')
-
+        # TODO : Reference needs to be fixed
         if index > 0 and index % 200000 == 0:
             store.serialize('{folder}/predictive_gene2phenotype-sm-{split_count}.{extension}'.format(folder=TARGET_DATA_DIR, split_count=split_count, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
             print(len(store))

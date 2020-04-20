@@ -35,7 +35,7 @@ def find_classes(ontology):
                 } 
             }
         }
-        result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query, scroll='3m')
+        result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query, request_timeout=(10 * 60), scroll='3m')
         return list(map(lambda hit: hit['_source'], result['hits']['hits']))
     except Exception as e:
         logger.exception("message")
