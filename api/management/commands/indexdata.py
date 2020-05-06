@@ -14,6 +14,22 @@ from api.lookup.ingest.ncbi_gene import NCBIGeneValueset
 
 logger = logging.getLogger(__name__)
 
+sources_map = {
+        'hp': HP(), 
+        'mp': MP(),
+        'ordo': ORDO(), 
+        'ncbitaxon': NCBITAXON(), 
+        'doid': DOID, 
+        'mondo': MONDO(), 
+        'chebi': CHEBI(),
+        'decipher': DecipherValueset(),
+        'pubchem': PubchemValueset(), 
+        'eco': ECO(), 
+        'mgi': MGIValueset(), 
+        'omim': OMIMValueset(), 
+        'ncbigene': NCBIGeneValueset()
+    }
+
 class Command(BaseCommand):
     help = 'Started transforming data to rdf'
 
@@ -25,6 +41,7 @@ class Command(BaseCommand):
         signal.signal(signal.SIGQUIT, self.stop_subprocesses)
 
     def add_arguments(self, parser):
+        parser.add_argument('-s', '--sources', type=str, help='specify list of sources to be indexed', ) 
         pass
     
     def stop_subprocesses(self, signum, frame):
@@ -33,20 +50,16 @@ class Command(BaseCommand):
         exit(0)
                 
     def handle(self, *args, **options):
+        sources = options['sources']
         logger.info("Starting indexing data")
-        self.index(HP())
-        self.index(MP())
-        self.index(ORDO())
-        self.index(NCBITAXON())
-        self.index(DOID())
-        self.index(MONDO())
-        self.index(CHEBI())
-        self.index(DecipherValueset())
-        self.index(PubchemValueset())
-        self.index(ECO())
-        self.index(MGIValueset())
-        self.index(OMIMValueset())
-        self.index(NCBIGeneValueset())
+
+        if not sources or (sources.strip() and not sources_map[sources.split(',')[0]]):
+            logger.info("Indexing all valuesets")
+            for key in sources_map:
+                self.index(sources_map[key])
+        else:
+            for source in sources.split(","):
+                self.index(sources_map[source])
 
     def index(self, valueset: Source):
         logger.info("Starting indexing %s", valueset.get_name())

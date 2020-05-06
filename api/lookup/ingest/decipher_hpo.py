@@ -55,7 +55,7 @@ class DecipherValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'disease_iri')
-        obj["label"] =  getattr(row, '_3')
+        obj["label"] =  [getattr(row, '_3')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
         return obj

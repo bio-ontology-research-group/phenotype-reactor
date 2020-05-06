@@ -3,14 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export enum ENTITY_TYPE {
-  PATHOGEN = "PATHOGEN",
-  DRUG = "DRUG",
-  DISEASE = "Disease",
-  PHENOTYPE = "Phenotype",
-  GENE = "Gene"
-}
-
 @Injectable()
 export class LookupService {
 
@@ -22,25 +14,15 @@ export class LookupService {
 
   constructor(private http: HttpClient) { }
 
-  findDiseases(term) {
-    return this.findEntityByLabelStartsWith(term, ENTITY_TYPE.DISEASE)
+  findValueset() {
+    return this.http.get(`/api/valueset`, this.options);
   }
 
-  findPhenotypes(term) {
-    return this.findEntityByLabelStartsWith(term, ENTITY_TYPE.PHENOTYPE)
-  }
-
-  findPathogens(term) {
-    return this.findEntityByLabelStartsWith(term, ENTITY_TYPE.PATHOGEN)
-  }
-
-  findEntityByLabelStartsWith(term: string, entityType: string) {
+  findEntityByLabelStartsWith(term: string, valueset: string) {
     if (term === '') {
       return of([]);
     }
 
-    return this.http.get(`/api/entity/_startswith?term=${term}&entitytype${entityType}`, this.options)
-      .pipe(map(response => response ? response['result'] : []));
+    return this.http.get(`/api/entity/_startswith?term=${term}&valueset=${valueset}`, this.options);
   }
-  
 }

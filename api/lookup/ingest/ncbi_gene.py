@@ -60,7 +60,10 @@ class NCBIGeneValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'GeneID')
-        obj["label"] =  getattr(row, 'Symbol')
+        obj["label"] =  [getattr(row, 'Symbol')]
+
+        tax_num = getattr(row, 'tax_id')
+        tax_curie = ':'.join(('NCBITaxon', tax_num))
 
         synonym = []
         synonym_col = getattr(row, 'Synonyms')

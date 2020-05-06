@@ -14,20 +14,11 @@ export class SearchBarComponent implements OnInit {
 
   @Output() selectedTerm = new EventEmitter<any>();
 
-  selectedSearchMode = ''
+  selectedValueset = ''
   term = null;
   searching = false;
   searchFailed = false;
-
-  types = [
-    {name: 'Device', index: 0},
-    {name: 'Disease', index: 1},
-    {name: 'Drug', index: 2},
-    {name: 'Gene', index: 3},
-    {name: 'Pathogen', index: 4},
-    {name: 'Phenotype', index: 5},
-    {name: 'Metabolite', index: 6}
-  ];
+  valuesets : any = [];
 
   formatter: any;
   
@@ -47,12 +38,17 @@ export class SearchBarComponent implements OnInit {
       tap(() => this.searching = false)
     )
 
-  constructor(private aberowlService: LookupService,
+  constructor(private lookupService: LookupService,
     private router: Router,
     private titlecasePipe:TitleCasePipe) { }
 
   ngOnInit() {
     this.formatter = (x: {label: { value: string}}) => x.label ? this.toTitleCase(x.label.value) : null;
+
+    this.lookupService.findValueset().subscribe(res => {
+      this.valuesets = res
+      this.sort(this.valuesets)
+    })
   }
 
   ngOnChanges(change: SimpleChange) {
@@ -69,24 +65,15 @@ export class SearchBarComponent implements OnInit {
     return this.titlecasePipe.transform(text);
   }
 
-  onSearchModeSelect(event) {
-    this.selectedSearchMode = event.target.value;
+  onSearchValuesetSelect(event) {
+    this.selectedValueset = event.target.value;
   }
 
   findTerm(term) {
-      switch (this.selectedSearchMode) {
-        case '1':
-          return this.aberowlService.findDiseases(term);
-          break;
-        case '4':
-            return this.aberowlService.findPathogens(term);
-            break;
-        case '5':
-          return this.aberowlService.findPhenotypes(term);
-          break;
-        default:
-          return this.aberowlService.findDiseases(term);
-          break;
-    }
+      return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValueset)
+  }
+
+  sort(lookupList){
+    return lookupList.sort((one, two) => (one.name < two.name ? -1 : 1));
   }
 }

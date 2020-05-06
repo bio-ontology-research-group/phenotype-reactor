@@ -20,7 +20,7 @@ python manage.py processds -o true -d true -c true
 ```
 To train data using TrainE algorithm with setting  device=CPU, num of epochs=1000 and batch size=32, run the following command
 ```sh
-python manage.py trainkg -r CPU -e 1000 -b 32
+python manage.py trainkg -r cpu -e 1000 -b 32
 ```
 
 To deploy phenotype reactor backend api follow the following steps:

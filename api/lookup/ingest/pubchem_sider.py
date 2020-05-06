@@ -46,7 +46,7 @@ class PubchemValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'id')
-        obj["label"] =  getattr(row, 'name')
+        obj["label"] =  [getattr(row, 'name')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
         return obj

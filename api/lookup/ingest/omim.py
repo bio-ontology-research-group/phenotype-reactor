@@ -53,7 +53,7 @@ class OMIMValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'mim_number')
-        obj["label"] =  getattr(row, 'preferred_title')
+        obj["label"] =  [getattr(row, 'preferred_title')]
         obj["synonym"] = [] 
         pref_titles = getattr(row, 'preferred_title')
         if pref_titles and 'NaN' not in pref_titles and 'nan' not in pref_titles:
