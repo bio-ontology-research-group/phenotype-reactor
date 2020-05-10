@@ -15,6 +15,7 @@ import { AssociationService }  from './association.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ListAssociationComponent } from './list-association/list-association.component';
+import { DownloadsComponent } from './downloads/downloads.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ListAssociationComponent } from './list-association/list-association.co
     AboutComponent,
     ISparqlComponent,
     SearchBarComponent,
-    ListAssociationComponent
+    ListAssociationComponent,
+    DownloadsComponent
   ],
   imports: [
     BrowserModule,

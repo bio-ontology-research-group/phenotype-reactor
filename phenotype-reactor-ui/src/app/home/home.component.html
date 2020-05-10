@@ -2,62 +2,36 @@
 <div class="content mt-2">
 <div class="card mb-4 wow fadeIn">
     <div class="card-body justify-content-between">
-        <app-search-bar (selectedTerm)="onTermSelect($event)"></app-search-bar>
+        <app-search-bar (selectedTerm)="onTermSelect($event)" [valueset] = "valueset"></app-search-bar>
     </div>
 </div>
-<div class="card mb-4 wow fadeIn" *ngIf="iri && type">
+<div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
+    <div class="card-body justify-content-between p-4">
+        <span class="card-title">About the Phenotype Reactor project</span>
+        <p class="mt-3">The Phenotype Reactor is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to 
+        compute phentypic similarity between these concepts. It also provides SPARQL endpoint and a query editor for querying the phenotypes 
+        relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited 
+        to phentype relations with genes, genotype, disease, drug, pathogens and metabolites. <br />
+        We have integrated phenotype relations from various sources including research studies and community resources such as 
+        <a (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="text-primary">HPO phenotype annontations</a>.</p>
+    </div>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
         <span>
-            <span class="card-title" *ngIf="ontologyClass">{{ontologyClass.label}}</span> 
-            <span class="card-title" *ngIf="!ontologyClass">Disease Name</span>  
+            <span class="card-title" *ngIf="entity">{{entity.label[0]}}</span> 
+            <span class="card-title" *ngIf="!entity">Name</span>  
         </span>
-        <small class="text-muted ml-2" *ngIf="ontologyClass">{{ontologyClass.oboid}}</small>
+        <small class="text-muted ml-2" *ngIf="entity?.oboid">{{entity.oboid}}</small>
         <h6 class="card-subtitle mt-3">
-            <span *ngIf="ontologyClass">{{ontologyClass.definition ? ontologyClass.definition[0]: ''}}</span> 
-            <span *ngIf="!ontologyClass">Disease Definition</span>  
+            <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
+            <span *ngIf="!entity">Definition</span>  
         </h6>    
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-            <li [ngbNavItem]="1">
-                <a ngbNavLink>Phenotype Association</a>
+             <li [ngbNavItem]="typeIdx + 1" *ngFor="let type of types; let typeIdx = index">
+                <a ngbNavLink>{{type.replace(BASE_PREFIX, '')}} Association</a>
                 <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Phenotype']"></app-list-association>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="2">
-                <a ngbNavLink>Gene Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Gene']"></app-list-association>
-                </ng-template>
-            </li>
-            <!-- <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Disease']"> -->
-            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Disease']">
-                <a ngbNavLink>Disease Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Disease']"></app-list-association>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Device']">
-                <a ngbNavLink>Disease Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Device']"></app-list-association>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Drug']">
-                <a ngbNavLink>Drug Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Drug']"></app-list-association>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="4" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Metabolite']">
-                <a ngbNavLink>Metabolite Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Metabolite']"></app-list-association>
-                </ng-template>
-            </li>
-            <li [ngbNavItem]="3" *ngIf="typeToAssoicationMap[BASE_PREFIX + 'Pathogen']">
-                <a ngbNavLink>Disease Association</a>
-                <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[BASE_PREFIX + 'Pathogen']"></app-list-association>
+                    <app-list-association [associations]="typeToAssoicationMap[type]" [entities]="entities" [valueset]="valueset"></app-list-association>
                 </ng-template>
             </li>
         </ul>

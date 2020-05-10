@@ -8,9 +8,11 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ListAssociationComponent implements OnInit {
 
   @Input() associations = []
+  @Input() entities = {}
+  @Input() valueset = {}
 
   page = 1;
-  pageSize = 10;
+  pageSize = 20;
   collectionSize = 0
 
   constructor() { }
@@ -23,5 +25,9 @@ export class ListAssociationComponent implements OnInit {
     return this.associations ? this.associations
       .map((association, i) => ({id: i + 1, ...association}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+  }
+
+  openInNewTab(url: string) {
+    window.open(url, "_blank");
   }
 }

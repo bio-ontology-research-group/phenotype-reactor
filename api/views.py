@@ -10,7 +10,7 @@ import api.lookup.lookup_elasticsearch as lookup_es
 from api.association import Association
 
 import logging
-import os
+import json
 
 logger = logging.getLogger(__name__) 
 
@@ -57,9 +57,9 @@ class FindEntityByLabelStartsWith(APIView):
     def get(self, request, format=None):
         try:
             term = request.GET.get('term', None)
-            entity_type = request.GET.get('entitytype', None)
+            valueset = request.GET.get('valueset', None)
 
-            result = self.lookup_es.find_by_startswith(term, entity_type) 
+            result = lookup_es.find_entity_by_startswith(term, valueset) 
             return Response(result)
         except Exception as e:
             logger.exception("message")
@@ -72,11 +72,23 @@ class FindEntityByIris(APIView):
 
     def post(self, request, format=None):
         try:
-            entity_iris = request.POST.get('iri', None)
+            entity_iris = request.data['iri']
             if not entity_iris:
                 raise RuntimeException("'iri' property is required")
 
-            result = self.lookup_es.find_by_iris(entity_iris) 
+            result = lookup_es.find_entity_by_iris(entity_iris) 
+            return Response(result)
+        except Exception as e:
+            logger.exception("message")
+
+class FindValueset(APIView):
+    """
+    List associations by given criteria
+    """
+
+    def get(self, request, format=None):
+        try:
+            result = lookup_es.find_all_valueset()
             return Response(result)
         except Exception as e:
             logger.exception("message")

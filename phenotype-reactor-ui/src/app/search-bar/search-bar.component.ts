@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChange, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, SimpleChange, Output, EventEmitter, Input} from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { LookupService } from '../lookup.service';
 export class SearchBarComponent implements OnInit {
 
   @Output() selectedTerm = new EventEmitter<any>();
+  @Input() valueset =  new EventEmitter<any>();
 
   selectedValueset = ''
   term = null;
@@ -52,8 +53,8 @@ export class SearchBarComponent implements OnInit {
   }
 
   ngOnChanges(change: SimpleChange) {
-    if(change.currentValue && change.currentValue.diseaseList) {
-      // TODO
+    if(change && change['valueset']) {
+      this.selectedValueset = change['valueset'].currentValue
     }
   }
 

@@ -12,20 +12,25 @@ import { LookupService } from '../lookup.service';
 export class HomeComponent implements OnInit {
 
   entity = null;
+  entities = {};
   iri = null;
-  valueset = null;
+  valueset = 'HP';
   associations = null;
-  valuesetToAssoicationMap = {};
+  typeToAssoicationMap = {};
+  types = [];
+  active = 1;
 
   currentJustify = 'start';
 
   BASE_PREFIX = "http://phenomebrowser.net/"
+  PUBMED_PREFIX = "http://phenomebrowser.net/"
 
 
   constructor(
     private router: Router,
     private route: ActivatedRoute, 
-    private associationService: AssociationService) { 
+    private associationService: AssociationService,
+    private lookupService: LookupService) { 
       this.route.params.subscribe( params => {
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset
@@ -41,7 +46,6 @@ export class HomeComponent implements OnInit {
   onTermSelect(lookupResource) {
     if (lookupResource && lookupResource.valueset) {
       this.entity = lookupResource
-      console.log(this.entity)
       this.router.navigate(['/association', encodeURIComponent(lookupResource.entity), lookupResource.valueset]);
     }
   }
@@ -54,23 +58,58 @@ export class HomeComponent implements OnInit {
     if (this.valueset == 'MP' || this.valueset == 'HP') {
       this.associationService.find(null, this.iri, null).subscribe( data => {
         this.associations = data ? data['results']['bindings'] : [];
-        this.transformAssociation(this.associations);
+        this.transformConceptAssociation(this.associations);
+        this.resolveEntities(this.associations)
       });
     } else {
       this.associationService.find(this.iri, null, null).subscribe( data => {
         this.associations = data ? data['results']['bindings'] : [];
-        this.transformAssociation(this.associations);
+        this.transformPhenotypeAssociation(this.associations);
+        this.resolveEntities(this.associations)
       });
     }
   }
 
-  transformAssociation(associations) {
-    this.valuesetToAssoicationMap = {};
-    var types = _.map(associations, (obj) => obj['conceptType']['value'])
-    for (var index in types) {
-      this.valuesetToAssoicationMap[types[index]] = _.filter(associations, (obj) => obj['conceptType']['value'] == types[index]);
+  resolveEntities(associations){
+    var entityIris = new Set() 
+    entityIris.add(this.iri)
+
+    var concepts = _.map(associations, (obj) => obj['concept']['value'])
+    concepts.forEach(item => entityIris.add(item))
+    var phenotype = _.map(associations, (obj) => obj['phenotype']['value'])
+    phenotype.forEach(item => entityIris.add(item))
+    var phenotype = _.map(associations, (obj) => obj['evidence']['value'])
+    phenotype.forEach(item => entityIris.add(item))
+
+    var iris = Array.from(entityIris.values());
+
+    this.lookupService.findEntityByIris(iris).subscribe( data => {
+      var tmp = {};
+      if (data) {
+        (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
+        this.entities = tmp
+        this.entity = this.entities[this.iri]
+      }
+    });
+  }
+
+  transformConceptAssociation(associations) {
+    this.typeToAssoicationMap = {};
+    this.types = _.map(associations, (obj) => obj['conceptType']['value'])
+    this.types = Array.from(new Set(this.types).values());
+    for (var index in this.types) {
+      this.typeToAssoicationMap[this.types[index]] = _.filter(associations, (obj) => obj['conceptType']['value'] == this.types[index]);
     }
-    console.log(this.valuesetToAssoicationMap)
+  }
+
+  transformPhenotypeAssociation(associations) {
+    this.typeToAssoicationMap = {};
+    this.types = ['Phenotype']
+    this.typeToAssoicationMap[this.types[0]] = associations;
+  }
+
+  sortType(types){
+    return types.sort((one, two) => (one.replace(this.BASE_PREFIX, "") < two.replace(this.BASE_PREFIX, "")) ? -1 : 1);
   }
 
 }

@@ -2,20 +2,27 @@
     <table class="table table-striped">
     <thead color="default">
     <tr>
-        <th scope="col">ID</th>
         <th scope="col">Name</th>
         <th scope="col">Evidence</th>
+        <th scope="col">Created on</th>
         <th scope="col">Source</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let association of associationsPage; let assocIndex = index">
-        <td>
-            <h6>{{association.concept.value}}</h6><small class="text-muted">ID</small>
+        <td *ngIf="valueset == 'HP' || valueset=='MP'">
+            <a (click)="openInNewTab(association.concept.value)" class="text-muted">
+            <h6 *ngIf="this.entities[association.concept.value]">{{this.entities[association.concept.value]['label'][0]}}</h6><small class="text-muted">{{association.concept.value}}</small>
+            </a>
         </td>
-        <td>Disease name</td>
-        <td><span>{{association.evidence.value}}</span></td>
-        <td>{{association.source.value}}</td>
+        <td *ngIf="valueset != 'HP' && valueset!='MP'">
+            <a (click)="openInNewTab(association.phenotype.value)" class="text-muted">
+            <h6 *ngIf="this.entities[association.phenotype.value]">{{this.entities[association.phenotype.value]['label'][0]}}</h6><small class="text-muted">{{association.phenotype.value}}</small>
+            </a>
+        </td>
+        <td><span *ngIf="this.entities[association.evidence.value]"><a (click)="openInNewTab(association.evidence.value)" class="text-muted">{{this.entities[association.evidence.value]['label'][0]}}</a></span></td>
+        <td>{{association.created ? association.created.value : ''}}</td>
+        <td><a (click)="openInNewTab(association.source.value)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link</a></td>
     </tr>
     </tbody>
     </table>

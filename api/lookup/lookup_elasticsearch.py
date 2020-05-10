@@ -119,7 +119,7 @@ def delete_valueset(valueset_name):
   except Exception as e:
     logger.exception("message")
 
-def find_by_startswith(term, entity_type):
+def find_entity_by_startswith(term, valueset):
   try:
     query = {
         "size" : DEFAULT_PAGE_SIZE,
@@ -127,17 +127,17 @@ def find_by_startswith(term, entity_type):
           "bool": { 
             "must": [
               { "prefix": { "label": { "value": term } }}, 
-              { "term": { "entity_type": entity_type } }
+              { "term": { "valueset": valueset } }
             ] 
           } 
         }
       }
-    result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query)
+    result = es.search(index=ENTITY_INDEX_NAME, body=query)
     return list(map(lambda hit: hit['_source'], result['hits']['hits']))
   except Exception as e:
       logger.exception("message")
 
-def find_by_iris(iris):
+def find_entity_by_iris(iris):
   try:
     filter_part = []
     for iri in iris:
@@ -145,14 +145,27 @@ def find_by_iris(iris):
 
 
     query = {
-        "size" : 1000,
+        "size" : 10000,
         "query": { 
           "bool": { 
-            "must": filter_part
+            "should": filter_part
           } 
         }
       }
-    result = es.search(index=settings.ABEROWL_ES_IDX_CLASS, body=query)
+    result = es.search(index=ENTITY_INDEX_NAME, body=query)
+    return list(map(lambda hit: hit['_source'], result['hits']['hits']))
+  except Exception as e:
+      logger.exception("message")
+
+def find_all_valueset():
+  try:
+    query = {
+        "size": 100,
+        "query": { 
+          "match_all": { } 
+        }
+      }
+    result = es.search(index=VALUESET_INDEX_NAME, body=query)
     return list(map(lambda hit: hit['_source'], result['hits']['hits']))
   except Exception as e:
       logger.exception("message")

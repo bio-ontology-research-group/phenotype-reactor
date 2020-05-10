@@ -25,4 +25,9 @@ export class LookupService {
 
     return this.http.get(`/api/entity/_startswith?term=${term}&valueset=${valueset}`, this.options);
   }
+
+  findEntityByIris(iris: any[]) {
+    var data = {'iri': iris}
+    return this.http.post(`/api/entity/_findbyiri`, data, this.options);
+  }
 }

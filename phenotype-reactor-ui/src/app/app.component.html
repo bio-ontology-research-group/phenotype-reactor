@@ -1,4 +1,4 @@
-<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark special-color ie-nav" [containerInside]="false">
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark info-color-dark ie-nav" [containerInside]="false">
     <mdb-navbar-brand>
         <a class="logo navbar-brand" href="#"><strong>Phenotype Reactor</strong></a>
     </mdb-navbar-brand>
@@ -11,7 +11,17 @@
                 <a class="nav-link" routerLink="isparql">SPARQL</a>
             </li>
             <li class="nav-item waves-light" mdbWavesEffect>
+                <a class="nav-link" routerLink="downloads">Downloads</a>
+            </li>
+            <li class="nav-item waves-light" mdbWavesEffect>
                 <a class="nav-link" routerLink="about">About</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto nav-flex-icons">
+            <li class="nav-item">
+                <a class="nav-link waves-effect waves-light">
+                <i class="fas fa-info-circle"></i>
+                </a>
             </li>
         </ul>
        <!--  <ul class="navbar-nav nav-flex-icons">
@@ -36,7 +46,7 @@
 <!-- /.Main -->
 
 <!-- Footer -->
-<footer class="page-footer font-small special-color">
+<footer class="page-footer font-small info-color-dark">
   <div class="footer-copyright text-center py-3">phenotype-reactor
   </div>
 
