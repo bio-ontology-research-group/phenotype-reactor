@@ -199,6 +199,7 @@ VIRTUOSO_SPARQL_PORT = config['virtuoso']['server.sparql.port']
 RDF_DATA_ARCHIVE_DIR = config['datasets']['archive.dir']
 KGE_DIR = config['datasets']['kge.dir']
 TRAINING_SET_DIR = join(KGE_DIR, 'trainingset')
+TEST_SET_DIR = join(KGE_DIR, 'testset')
 
 ABEROWL_ES_URL = config['aberowl']['es.url']
 ABEROWL_ES_USERNAME = config['aberowl']['es.username']

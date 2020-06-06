@@ -1,6 +1,6 @@
 import logging 
 
-from api.lookup.ingest.source import Source
+from api.ingest.source import Source
 
 import api.lookup.ingest.aberowl_elasticsearch as aberowl_es
 import api.lookup.lookup_elasticsearch as lookup_es  

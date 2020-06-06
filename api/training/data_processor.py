@@ -5,12 +5,15 @@ import shutil
 import subprocess
 import csv
 import logging
+import api.archive.archive_ds as archive
 
 from django.conf import settings
 
 from api.rdf.namespace import OBO
 from rdflib import Graph, RDF
 from api.training.generate_graph import *
+from api.training.data_ingestion.omim_genedisease import OMIMDiseaseGeneAssoc
+from api.training.data_ingestion.patho_pathogendisease import PathoPathogenDiseaseAssoc
 
 from os import listdir
 from os.path import isfile, join, splitext, exists
@@ -66,6 +69,17 @@ def process_dataset():
     shutil.rmtree(ds_path)
     logger.info("Completed dataset preprocessing")
 
+def process_testset():
+    omimdisease_gene = OMIMDiseaseGeneAssoc()
+    omimdisease_gene.fetch()
+    omimdisease_gene.map()
+    omimdisease_gene.write()
+
+    pathogen_disease = PathoPathogenDiseaseAssoc()
+    pathogen_disease.fetch()
+    pathogen_disease.map()
+    pathogen_disease.write()
+
 
 def process_ontology():
     os.chdir('load')
@@ -96,3 +110,4 @@ def process_ontology():
                     writer.writerows(result)
             
         logger.info("Finished converting axioms for file '%s' to a graph", entry)
+        

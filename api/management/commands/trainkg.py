@@ -23,6 +23,7 @@ logging.getLogger('pykeen').setLevel(logging.INFO)
 
 KGE_DIR = getattr(settings, 'KGE_DIR', None)
 TRAINING_SET_DIR = getattr(settings, 'TRAINING_SET_DIR', None)
+TEST_SET_DIR = getattr(settings, 'TEST_SET_DIR', None)
 
 class Command(BaseCommand):
     help = 'Training kg data'
@@ -40,6 +41,7 @@ class Command(BaseCommand):
         parser.add_argument('-d', '--embedding_dim', type=str, help='number of embedding dimensions', )
         parser.add_argument('-b', '--batch_size', type=str, help='batch size', ) 
         parser.add_argument('-r', '--device', type=str, help='preferred device', ) 
+        parser.add_argument('-tn', '--testset_name', type=str, help='testset name', ) 
     
     def stop_subprocesses(self, signum, frame):
         if self.proc.poll() is None:
@@ -53,11 +55,13 @@ class Command(BaseCommand):
         embedding_dim = options['embedding_dim']
         batch_size = options['batch_size']
         device = options['device']
+        testset_name = options['testset_name']
 
         training_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1] or 'tsv' in splitext(file)[1])]
         try: 
             config = dict()
             config[pkc.TRAINING_SET_PATH] = training_files
+            config[pkc.TEST_SET_PATH] = join(TEST_SET_DIR, testset_name + '.tsv')
             config[pkc.EXECUTION_MODE] = pkc.TRAINING_MODE
             config[pkc.KG_EMBEDDING_MODEL_NAME] = pkc.TRANS_E_NAME
             config[pkc.SEED] = 0
@@ -69,6 +73,7 @@ class Command(BaseCommand):
             config[pkc.SCORING_FUNCTION_NORM] = 1  # corresponds to L1
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
+            config[pkc.FILTER_NEG_TRIPLES] = True,
             
             logger.info("Starting training dataset with settings:" + str(config))
             

@@ -1,6 +1,6 @@
 import logging 
 
-from api.lookup.ingest.source import Source
+from api.ingest.source import Source
 from api.rdf.namespace import MGI
 
 import api.lookup.lookup_elasticsearch as lookup_es  

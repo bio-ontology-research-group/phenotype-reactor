@@ -1,7 +1,7 @@
 import logging 
 
 from django.conf import settings
-from api.lookup.ingest.source import Source
+from api.ingest.source import Source
 from api.rdf.namespace import OMIM
 
 import api.lookup.lookup_elasticsearch as lookup_es  

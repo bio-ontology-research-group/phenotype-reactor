@@ -35,7 +35,9 @@ OBO = ClosedNamespace(
         # inference based on individual clinical experience (ICS for individual clinical experience)
         "ECO_0006018",
         #author statement supported by traceable reference (TAS traceable author statement) 
-        "ECO_0000033"
+        "ECO_0000033",
+        #associated with
+        "PATO_0001668"
     ]
 )
 
