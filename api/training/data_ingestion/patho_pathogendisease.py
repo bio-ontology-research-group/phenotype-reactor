@@ -49,11 +49,11 @@ class PathoPathogenDiseaseAssoc(Source):
 
     def map_entity(self, row):
         obj = {}
-        obj["pathogen"] = row.TaxID
+        obj["pathogen"] = "<" + row.TaxID + ">"
         diseases = []
         for disease in row.Diseases:
-            diseases.append(disease['id'])
+            diseases.append("<" + disease['id'] + ">")
 
         obj["disease"] =  diseases
-        obj["relation"] =  str(OBO.PATO_0001668)
+        obj["relation"] =  "<" + str(OBO.PATO_0001668) + ">"
         return obj
