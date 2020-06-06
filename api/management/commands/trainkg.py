@@ -79,6 +79,7 @@ class Command(BaseCommand):
             logger.info("Starting training dataset with settings:" + str(config))
             
             out_dir = join(KGE_DIR, pkc.TRANS_E_NAME + '-' + testset_name + '-' + str(datetime.date.today())
+            os.makedirs(out_dir)
             os.chdir(out_dir)
             results = pykeen.run(
                 config=config,
