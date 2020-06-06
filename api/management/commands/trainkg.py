@@ -4,6 +4,7 @@ import os
 import shutil
 import csv
 import json
+import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -15,7 +16,7 @@ from os.path import isfile, join, splitext, exists
 from pathlib import Path
 
 import pykeen
-import pykeen.constants as pkc
+import pykeen.constants as pkc 
 
 
 logger = logging.getLogger(__name__)
@@ -77,17 +78,18 @@ class Command(BaseCommand):
             
             logger.info("Starting training dataset with settings:" + str(config))
             
-            os.chdir(KGE_DIR)
+            out_dir = join(KGE_DIR, pkc.TRANS_E_NAME + '-' + testset_name + '-' + str(datetime.date.today())
+            os.chdir(out_dir)
             results = pykeen.run(
                 config=config,
-                output_directory=KGE_DIR,
+                output_directory=out_dir,
             )
 
             print('Keys:', *sorted(results.results.keys()), sep='\n  ')
             logger.info(results.trained_model)
             logger.info(results.losses)
 
-            self.generate_bio2vec_frmt()
+            self.generate_bio2vec_frmt(out_dir)
                     
         except Exception as e:
             logger.exception("message")
@@ -95,15 +97,15 @@ class Command(BaseCommand):
             logger.exception("message")
 
 
-    def generate_bio2vec_frmt(self): 
+    def generate_bio2vec_frmt(self, out_dir): 
         logger.info("Started generating bio2vec dataset file")
 
         entity_emb_file = 'entities_to_embeddings.json'
-        with open(join(KGE_DIR, entity_emb_file), "r") as f:
+        with open(join(out_dir, entity_emb_file), "r") as f:
                 entity_emb = json.load(f)
 
                 sep = ','
-                outFile = join(KGE_DIR, "entities_to_embeddings.bio2vec.tsv")
+                outFile = join(out_dir, "entities_to_embeddings.bio2vec.tsv")
                 with open(outFile, 'w') as file:
                     writer = csv.writer(file, delimiter='\t')
 
