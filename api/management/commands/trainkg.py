@@ -74,12 +74,12 @@ class Command(BaseCommand):
             config[pkc.SCORING_FUNCTION_NORM] = 1  # corresponds to L1
             config[pkc.NORM_FOR_NORMALIZATION_OF_ENTITIES] = 2  # corresponds to L2
             config[pkc.MARGIN_LOSS] = 1  # corresponds to L1
-            config[pkc.FILTER_NEG_TRIPLES] = True,
+            config[pkc.FILTER_NEG_TRIPLES] = True
             
             logger.info("Starting training dataset with settings:" + str(config))
             
-            out_dir = join(KGE_DIR, pkc.TRANS_E_NAME + '-' + testset_name + '-' + str(datetime.date.today())
-            os.makedirs(out_dir)
+            out_dir = join(KGE_DIR, pkc.TRANS_E_NAME + '-' + testset_name + '-' + str(datetime.date.today()))
+            os.makedirs(out_dir, exist_ok=True)
             os.chdir(out_dir)
             results = pykeen.run(
                 config=config,
