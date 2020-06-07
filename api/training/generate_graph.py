@@ -175,7 +175,7 @@ def convert_graph(data):
         return new_result
 
 
-def generate_graph(annotation,axiom_file):
+def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
     G = nx.Graph()
 
 
@@ -183,28 +183,38 @@ def generate_graph(annotation,axiom_file):
 
     # there are conjunction or disjunction
 
-    with open(axiom_file, "r") as f:
-        for line in f.readlines():
-            result = convert_graph(line.strip())
+    for axiom_file in axiom_files:
+        with open(axiom_file, "r") as f:
+            for line in f.readlines():
+                result = convert_graph(line.strip())
+                if not result:
+                    continue
 
-            # print("-"*40)
-            for entities in result:
+                # print("-"*40)
+                for entities in result:
 
+                    G.add_edge(entities[0].strip(), entities[2].strip())
+                    G.edges[entities[0].strip(), entities[2].strip()]["type"] = entities[1].strip()
+                    G.nodes[entities[0].strip()]["val"] = False
+                    G.nodes[entities[2].strip()]["val"] = False
+
+    nodes_set=set()
+    for annotation in annotation_files:
+        with open(annotation, "r") as f:
+            for line in f.readlines():
+                if not line.strip():
+                    continue
+
+                entities = line.split()
                 G.add_edge(entities[0].strip(), entities[2].strip())
-                G.edges[entities[0].strip(), entities[2].strip()]["type"] = entities[1].strip()
+                G.edges[entities[0].strip(), entities[2].strip()]["type"] = "HasAssociation"
                 G.nodes[entities[0].strip()]["val"] = False
                 G.nodes[entities[2].strip()]["val"] = False
 
-    with open(annotation, "r") as f:
-        for line in f.readlines():
-            entities = line.split()
-            G.add_edge(entities[0].strip(), entities[1].strip())
-            G.edges[entities[0].strip(), entities[1].strip()]["type"] = "HasAssociation"
-            G.nodes[entities[0].strip()]["val"] = False
-            G.nodes[entities[1].strip()]["val"] = False
-
+                nodes_set.add(entities[0])
+                nodes_set.add(entities[2])
     
-    return G
+    return (G, nodes_set)
 
 class Stack(object):
     def __init__(self):
