@@ -58,9 +58,9 @@ class OMIMDiseaseGeneAssoc(Source):
     def map_entity(self, row):
         if getattr(row, 'mim_entry_type') and getattr(row, 'mim_entry_type').strip() == 'gene' and 'nan' not in str(getattr(row, 'entrez_gene_id')):
             obj = {}
-            obj["disease"] =  "<" + getattr(row, 'mim_number') + ">"
-            obj["gene"] = "<" + str(ENTREZ_GENE.uri) + str(int(getattr(row, 'entrez_gene_id'))) + ">"
-            obj["relation"] =  "<" + str(OBO.PATO_0001668) + ">"
+            obj["disease"] =  getattr(row, 'mim_number')
+            obj["gene"] = str(ENTREZ_GENE.uri) + str(int(getattr(row, 'entrez_gene_id')))
+            obj["relation"] =  str(OBO.PATO_0001668)
             return obj
         else:
             return None
