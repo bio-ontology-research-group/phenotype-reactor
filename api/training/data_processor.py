@@ -107,7 +107,13 @@ def process_ontology():
                     if not result:
                         continue
                     
-                    writer.writerows(result)
+                    norm_result = []
+                    for triple in result:
+                        norm_triple = []
+                        for item in triple:
+                            norm_triple.append(item.replace("<", "").replace(">", ""))
+                        norm_result.append(norm_triple)
+                    writer.writerows(norm_result)
             
         logger.info("Finished converting axioms for file '%s' to a graph", entry)
         
