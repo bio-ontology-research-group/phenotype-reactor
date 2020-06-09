@@ -85,14 +85,32 @@ def write_file(pair, outdir):
                 fp.write("\n")
 
 
-def gene_node_vector(graph, nodes_set, outdir):
+class iteration_callback(gensim.models.callbacks.CallbackAny2Vec):
+    '''Callback to print loss after each epoch.'''
+
+    def __init__(self, outdir):
+        self.epoch = 0
+        self.outdir = outdir
+
+    def on_epoch_end(self, model):
+        loss = model.get_latest_training_loss()
+        print('Loss after epoch {}: {}'.format(self.epoch, loss))
+        with lock:
+            with open(join(self.outdir, "losses.tsv"), "a") as fp:
+                fp.write(str(self.epoch) + "\t" + str(loss) + "\n")
+        self.epoch += 1
+
+def gene_node_vector(graph, nodes_set, config):
     # nodes_set=set()
     # with open(entity_list,"r") as f:
     #     for line in f.readlines():
     #         data = line.strip().split()
     #         for da in data:
     #             nodes_set.add(da)
-
+    outdir = config['output_directory']
+    size = config['embedding_dim']
+    epochs = config['num_epochs']
+    workers = config['workers']
     nodes_G= [n for n in graph.nodes()]
 
     G = graph.subgraph(nodes_G)
@@ -101,6 +119,6 @@ def gene_node_vector(graph, nodes_set, outdir):
 
     print("start to train the word2vec models")
     sentences=gensim.models.word2vec.LineSentence(join(outdir, "walks.txt"))
-    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=100, window=10,iter=30,workers=10)
-    outfile = join(outdir, "embeddings.txt")
-    model.save(outfile)
+    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=size, window=10,iter=epochs,workers=workers, compute_loss=True, callbacks=[iteration_callback(outdir)])
+    model.save(join(outdir, "embeddings.pkl"))
+    return model
