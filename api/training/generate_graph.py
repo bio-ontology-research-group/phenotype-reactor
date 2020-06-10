@@ -213,7 +213,7 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
 
                 nodes_set.add(entities[0])
                 nodes_set.add(entities[2])
-    
+        print("Finished loading annontation:" +  str(annotation))
     return (G, nodes_set)
 
 class Stack(object):
