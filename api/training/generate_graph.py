@@ -182,7 +182,7 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
     # the restriction are min,max,exactly,some,only
 
     # there are conjunction or disjunction
-
+    count = 0
     for axiom_file in axiom_files:
         with open(axiom_file, "r") as f:
             for line in f.readlines():
@@ -191,6 +191,7 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
                     continue
 
                 # print("-"*40)
+                count += 1
                 for entities in result:
 
                     G.add_edge(entities[0].strip(), entities[2].strip())
@@ -204,7 +205,8 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
             for line in f.readlines():
                 if not line.strip():
                     continue
-
+                
+                count += 1
                 entities = line.split()
                 G.add_edge(entities[0].strip(), entities[2].strip())
                 G.edges[entities[0].strip(), entities[2].strip()]["type"] = "HasAssociation"
@@ -214,6 +216,7 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
                 nodes_set.add(entities[0])
                 nodes_set.add(entities[2])
         print("Finished loading annontation:" +  str(annotation))
+    print("Finished loading trainingset:" +  str(count))
     return (G, nodes_set)
 
 class Stack(object):

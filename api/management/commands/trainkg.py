@@ -113,8 +113,7 @@ class Command(BaseCommand):
                     for key in entity_emb:
                         local_name = ''
                         try:
-                            uri = key[1:len(key) -1]
-                            local_name = split_uri(uri)[1]
+                            local_name = split_uri(key)[1]
                         except Exception:
                             pass
 
