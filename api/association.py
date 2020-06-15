@@ -30,7 +30,7 @@ class Association:
                 PREFIX dcterms: <http://purl.org/dc/terms/> \
                 PREFIX dc: <http://purl.org/dc/elements/1.1/> \
                 \
-                SELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?evidence ?creator ?source ?created \
+                SELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?evidence ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
                 FROM <http://phenomebrowser.net> \
                 WHERE { \
                     ?association rdf:type rdf:Statement . \
@@ -45,6 +45,7 @@ class Association:
                 }'
         logger.debug("Executing query for search criteria: concept_iri=" 
             + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
+        # logger.debug("Query : %s", query)  
         return virt.execute_sparql(query, self.MIME_TYPE_JSON)
 
     def find_concepts(self, concept_iris):

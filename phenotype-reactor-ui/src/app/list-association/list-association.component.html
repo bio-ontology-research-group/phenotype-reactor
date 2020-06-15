@@ -22,7 +22,10 @@
         </td>
         <td><span *ngIf="this.entities[association.evidence.value]"><a (click)="openInNewTab(association.evidence.value)" class="text-muted">{{this.entities[association.evidence.value]['label'][0]}}</a></span></td>
         <td>{{association.created ? association.created.value : ''}}</td>
-        <td><a (click)="openInNewTab(association.source.value)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link</a></td>
+        <td><ul class="list-unstyled"><li *ngFor="let source of association.sources.value.split(','); let sourceIndex = index">
+            <a (click)="openInNewTab(source)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link {{ association.sources.value.split(',').length > 1 ? sourceIndex + 1 : ''}}</a>
+            </li></ul>
+        </td>
     </tr>
     </tbody>
     </table>
