@@ -19,12 +19,13 @@ from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from api.views import GetLatestDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
-    FindEntityByIris, FindValueset
+    FindEntityByIris, FindValueset, FindMostSimilar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
     path('api/association', FindAssociation.as_view()),
+    path('api/association/_mostsimilar', FindMostSimilar.as_view()),
     path('api/entity/_startswith', FindEntityByLabelStartsWith.as_view()),
     path('api/entity/_findbyiri', FindEntityByIris.as_view()),
     path('api/valueset', FindValueset.as_view()),

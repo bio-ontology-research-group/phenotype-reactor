@@ -13,12 +13,18 @@ export class HomeComponent implements OnInit {
 
   entity = null;
   entities = {};
+  similarEntities = {}
   iri = null;
   valueset = 'HP';
   associations = null;
+  mostSimilarConcepts = null
   typeToAssoicationMap = {};
   types = [];
   active = 1;
+
+  page = 1;
+  pageSize = 20;
+  collectionSize = 0
 
   currentJustify = 'start';
 
@@ -68,6 +74,26 @@ export class HomeComponent implements OnInit {
         this.resolveEntities(this.associations)
       });
     }
+    this.associationService.findMostSimilar(this.iri).subscribe( data => {
+      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
+      this.resolveSimilarEntities(this.mostSimilarConcepts)
+    });
+  }
+
+  resolveSimilarEntities(associations){
+    var entityIris = new Set() 
+    var concepts = _.map(associations, (obj) => obj['concept']['value'])
+    concepts.forEach(item => entityIris.add(item))
+
+    var iris = Array.from(entityIris.values());
+
+    this.lookupService.findEntityByIris(iris).subscribe( data => {
+      var tmp = {};
+      if (data) {
+        (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
+        this.similarEntities = tmp
+      }
+    });
   }
 
   resolveEntities(associations){
@@ -110,6 +136,12 @@ export class HomeComponent implements OnInit {
 
   sortType(types){
     return types.sort((one, two) => (one.replace(this.BASE_PREFIX, "") < two.replace(this.BASE_PREFIX, "")) ? -1 : 1);
+  }
+
+  get similarConceptsPage(): Object[] {
+    return this.mostSimilarConcepts ? this.mostSimilarConcepts
+      .map((concept, i) => ({id: i + 1, ...concept}))
+      .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
   }
 
 }

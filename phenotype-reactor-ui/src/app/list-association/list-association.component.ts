@@ -9,6 +9,8 @@ export class ListAssociationComponent implements OnInit {
 
   @Input() associations = []
   @Input() entities = {}
+  @Input() mostSimilarConcepts = []
+  @Input() similarEntities = {}
   @Input() valueset = {}
 
   page = 1;

@@ -34,5 +34,11 @@ export class AssociationService {
     var url = `${this.URL}?${query_string}`;
     return this.http.get(url, this.options);
   }
+
+  findMostSimilar(iri: string) {
+    var query_string = 'concept=' + iri;
+    var url = `${this.URL}/_mostsimilar?${query_string}`;
+    return this.http.get(url, this.options);
+  }
   
 }

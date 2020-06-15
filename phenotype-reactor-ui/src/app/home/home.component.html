@@ -34,6 +34,39 @@
                     <app-list-association [associations]="typeToAssoicationMap[type]" [entities]="entities" [valueset]="valueset"></app-list-association>
                 </ng-template>
             </li>
+            <li [ngbNavItem]="types.length + 1">
+                <a ngbNavLink>Similar Entities</a>
+                <ng-template ngbNavContent>
+                <div class="row">
+                    <table class="table table-striped">
+                    <thead color="default">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let similarConcept of similarConceptsPage; let assocIndex = index">
+                        <td>
+                            <a (click)="openInNewTab(similarConcept.concept.value)" class="text-muted">
+                                <h6 *ngIf="this.similarEntities[similarConcept.concept.value]">{{this.similarEntities[similarConcept.concept.value]['label'][0]}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
+                            </a>
+                        </td>
+                        <td>{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                    </ngb-pagination>
+
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                    </select>
+                </div>
+                </ng-template>
+            </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>

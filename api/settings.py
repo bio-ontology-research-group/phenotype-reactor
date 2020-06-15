@@ -184,6 +184,10 @@ LOGGING = {
         },
     }
 
+BIO2VEC_API_URL='https://bio2vec.cbrc.kaust.edu.sa/'
+BIO2VEC_DATASET='phenotype associations'
+BIO2VEC_DATASET_URI='b2vd:dataset_4'
+
 RDF_STORE_URL = config['rdf_store']['url']
 RDF_STORE_DS = config['rdf_store']['datastore']
 RDF_STORE_USER = config['rdf_store']['username']
@@ -206,7 +210,6 @@ ABEROWL_ES_USERNAME = config['aberowl']['es.username']
 ABEROWL_ES_PASSWORD = config['aberowl']['es.password']
 ABEROWL_ES_IDX_ONTOLOGY = config['aberowl']['es.index.ontology']
 ABEROWL_ES_IDX_CLASS = config['aberowl']['es.index.class']
-
 
 LOOKUP_ES_URL = config['lookup']['es.url']
 LOOKUP_ES_USERNAME = config['lookup']['es.username']

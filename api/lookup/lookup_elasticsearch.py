@@ -148,7 +148,10 @@ def find_entity_by_iris(iris):
         "size" : 10000,
         "query": { 
           "bool": { 
-            "should": filter_part
+            "should": filter_part,
+            "must" : {
+              "exists" : { "field" : "label" } 
+            }
           } 
         }
       }

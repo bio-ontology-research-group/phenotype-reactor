@@ -8,6 +8,7 @@ from rest_framework import status
 import api.archive.archive_ds as archive
 import api.lookup.lookup_elasticsearch as lookup_es  
 from api.association import Association
+from api.bio2vec_api import find_most_similar
 
 import logging
 import json
@@ -29,6 +30,21 @@ class FindAssociation(APIView):
 
             response = self.service.find(concept, phenotype) 
             return Response(response.json())
+        except Exception as e:
+            logger.exception("message")
+
+class FindMostSimilar(APIView):
+    """
+    List associations by given criteria
+    """
+
+    service = Association()
+    def get(self, request, format=None):
+        try:
+            concept = request.GET.get('concept', None)
+            similar_concepts = find_most_similar(concept) 
+            concepts = self.service.find_concepts(similar_concepts)
+            return Response(concepts.json())
         except Exception as e:
             logger.exception("message")
 

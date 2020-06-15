@@ -47,3 +47,15 @@ class Association:
             + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
         return virt.execute_sparql(query, self.MIME_TYPE_JSON)
 
+    def find_concepts(self, concept_iris):
+        concept_iris_str = ''
+        for iri in concept_iris:
+            concept_iris_str = concept_iris_str + '<' + iri + '> '
+        query = 'PREFIX pb: <http://phenomebrowser.net/> \
+                select ?concept ?type \
+                from <http://phenomebrowser.net> { \
+                    values ?concept { ' + concept_iris_str + '} . \
+                    ?concept a ?type . \
+                }' 
+        logger.debug("Executing query for search criteria: concept_iris=" + concept_iris_str)
+        return virt.execute_sparql(query, self.MIME_TYPE_JSON)
