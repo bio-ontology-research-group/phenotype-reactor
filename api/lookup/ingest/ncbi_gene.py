@@ -30,7 +30,25 @@ class NCBIGeneValueset(Source):
 
     def fetch(self):
         logger.info("Started fetching data for valueset %s", self.name)
-        self.df = pd.read_csv(self.url, compression='gzip', sep='\t', error_bad_lines=False) 
+        self.df = pd.read_csv(self.url, compression='gzip', sep='\t', error_bad_lines=False, 
+            names=[
+                'tax_id',
+                'GeneID',
+                'Symbol',
+                'LocusTag',
+                'Synonyms',
+                'dbXrefs',
+                'chromosome',
+                'map_location',
+                'description',
+                'type_of_gene',
+                'Symbol_from_nomenclature_authority',
+                'Full_name_from_nomenclature_authority',
+                'Nomenclature_status',
+                'Other_designations',
+                'Modification_date',
+                'Feature_type',
+            ]) 
         logger.info("Finished fetching data: entities=%d", self.df.size)
 
     def map(self):
@@ -63,8 +81,10 @@ class NCBIGeneValueset(Source):
         obj["label"] =  [getattr(row, 'Symbol')]
 
         tax_num = getattr(row, 'tax_id')
-        tax_curie = ':'.join(('NCBITaxon', tax_num))
+        if isinstance(tax_num, int):
+            tax_num = str(tax_num)
 
+        tax_curie = ':'.join(('NCBITaxon', tax_num))
         synonym = []
         synonym_col = getattr(row, 'Synonyms')
         if "-" != synonym_col:

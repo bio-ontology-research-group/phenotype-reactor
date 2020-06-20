@@ -5,7 +5,7 @@ import logging
 from django.core.management.base import BaseCommand, CommandError
 
 from api.lookup.ingest.valuesets import * 
-from api.lookup.ingest.source import Source 
+from api.ingest.source import Source 
 from api.lookup.ingest.decipher_hpo import DecipherValueset
 from api.lookup.ingest.pubchem_sider import PubchemValueset
 from api.lookup.ingest.mgi import MGIValueset
