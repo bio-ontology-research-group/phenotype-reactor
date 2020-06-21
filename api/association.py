@@ -42,21 +42,24 @@ class Association:
                 \n    ?prov dc:creator ?creator . \
                 \n    ?prov dcterms:source ?source . \
                 \n    OPTIONAL { ?prov dcterms:created ?created . } \
-                }'
+                \n}'
         logger.debug("Executing query for search criteria: concept_iri=" 
             + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
         # logger.debug("Query : %s", query)  
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
 
-    def find_concepts(self, concept_iris):
-        concept_iris_str = ''
-        for iri in concept_iris:
-            concept_iris_str = concept_iris_str + '<' + iri + '> '
-        query = 'PREFIX pb: <http://phenomebrowser.net/> \
-                select ?concept ?type \
-                from <http://phenomebrowser.net> { \
-                    values ?concept { ' + concept_iris_str + '} . \
-                    ?concept a ?type . \
-                }' 
-        logger.debug("Executing query for search criteria: concept_iris=" + concept_iris_str)
-        return virt.execute_sparql(query, self.MIME_TYPE_JSON)
+    def find_similar_concepts(self, concept_iri):
+        query = 'PREFIX b2v: <http://bio2vec.net/function#> \
+                \nPREFIX b2vd: <http://bio2vec.net/dataset#> \
+                \n \
+                \nSELECT ?concept ?type ?val \
+                \nWHERE { \
+                \n    SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> {  \
+                \n        (?concept ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <' + concept_iri + '> 10) .  \
+                \n    }  \
+                \n    GRAPH <http://phenomebrowser.net> { \
+                \n        ?concept a ?type . \
+                \n    } \
+                \n} ORDER BY DESC(?val)'
+        logger.debug("Executing query for search criteria: concept_iri=" + concept_iri)
+        return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)

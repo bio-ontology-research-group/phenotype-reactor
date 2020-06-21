@@ -41,11 +41,14 @@ WHERE {
     var query = `PREFIX b2v: <http://bio2vec.net/function#>
 PREFIX b2vd: <http://bio2vec.net/dataset#>
 
-SELECT ?sim ?val ?x ?y 
+SELECT ?sim ?type ?val ?x ?y
 WHERE {
   SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> { 
       (?sim ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <http://purl.obolibrary.org/obo/MONDO_0000257> 10) . 
   } 
+  GRAPH <http://phenomebrowser.net> {
+    ?sim a ?type .
+  }
 }`;
     this.query = query;
   }

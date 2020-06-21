@@ -44,9 +44,10 @@ class FindMostSimilar(APIView):
     def get(self, request, format=None):
         try:
             concept = request.GET.get('concept', None)
-            similar_concepts = find_most_similar(concept) 
-            concepts = self.service.find_concepts(similar_concepts)
-            return Response(concepts.json())
+            (response, query) = self.service.find_similar_concepts(concept) 
+            result = response.json()
+            result['query'] = query
+            return Response(result)
         except Exception as e:
             logger.exception("message")
 
