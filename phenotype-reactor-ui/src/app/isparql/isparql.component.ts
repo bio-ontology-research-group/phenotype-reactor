@@ -54,11 +54,24 @@ FROM <http://phenomebrowser.net>
 WHERE {
     ?association rdf:type rdf:Statement .
     ?association rdf:predicate obo:RO_0002200 .
-    ?association rdf:object obo:HP_0002938 .
+    ?association rdf:object obo:HP_0031246 .
     ?association rdf:subject ?concept .
     ?association dc:provenance ?prov .
     ?prov dc:creator ?creator .
     ?prov dcterms:source ?source .
+}`;
+    this.query = query;
+  }
+
+  listMostSimilarToAcuteDiarrhea() {
+    var query = `PREFIX b2v: <http://bio2vec.net/function#>
+PREFIX b2vd: <http://bio2vec.net/dataset#>
+
+SELECT ?sim ?val ?x ?y 
+WHERE {
+  SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> { 
+      (?sim ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <http://purl.obolibrary.org/obo/MONDO_0000257> 10) . 
+  } 
 }`;
     this.query = query;
   }
