@@ -28,8 +28,10 @@ class FindAssociation(APIView):
             phenotype = request.GET.get('phenotype', None)
             concept_type = request.GET.get('type', None)
 
-            response = self.service.find(concept, phenotype) 
-            return Response(response.json())
+            (response, query) = self.service.find(concept, phenotype) 
+            result = response.json()
+            result['query'] = query
+            return Response(result)
         except Exception as e:
             logger.exception("message")
 

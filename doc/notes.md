@@ -40,3 +40,10 @@ Generate app configuration link in sites-enabled
 sudo ln -s {nginx}/sites-available/phenotype-reactor.nginx.conf {nginx}/etc/nginx/sites-enabled
 ```
 Restart nginx service.
+
+
+To federate queries on virtuoso, run following command using iSQL:
+```sh
+grant SPARQL_LOAD_SERVICE_DATA to "SPARQL";
+grant SPARQL_SPONGE to "SPARQL";
+```

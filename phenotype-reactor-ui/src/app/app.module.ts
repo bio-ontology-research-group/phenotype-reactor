@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ListAssociationComponent } from './list-association/list-association.component';
 import { DownloadsComponent } from './downloads/downloads.component';
+import { SparqlFormComponent } from './sparql-form/sparql-form.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DownloadsComponent } from './downloads/downloads.component';
     ISparqlComponent,
     SearchBarComponent,
     ListAssociationComponent,
-    DownloadsComponent
+    DownloadsComponent,
+    SparqlFormComponent
   ],
   imports: [
     BrowserModule,

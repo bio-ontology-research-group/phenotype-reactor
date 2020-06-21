@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssociationService } from '../association.service';
 import { _ } from 'underscore';
 import { LookupService } from '../lookup.service';
+import { NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,9 @@ export class HomeComponent implements OnInit {
   typeToAssoicationMap = {};
   types = [];
   active = 1;
+  query=''
+  annontationQuery=''
+  similarityQuery=''
 
   page = 1;
   pageSize = 20;
@@ -64,18 +68,23 @@ export class HomeComponent implements OnInit {
     if (this.valueset == 'MP' || this.valueset == 'HP') {
       this.associationService.find(null, this.iri, null).subscribe( data => {
         this.associations = data ? data['results']['bindings'] : [];
+        this.annontationQuery = data ? data['query'] : '';
+        this.query = this.annontationQuery
         this.transformConceptAssociation(this.associations);
         this.resolveEntities(this.associations)
       });
     } else {
       this.associationService.find(this.iri, null, null).subscribe( data => {
         this.associations = data ? data['results']['bindings'] : [];
+        this.annontationQuery = data ? data['query'] : '';
+        this.query = this.annontationQuery
         this.transformPhenotypeAssociation(this.associations);
         this.resolveEntities(this.associations)
       });
     }
     this.associationService.findMostSimilar(this.iri).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
+      this.similarityQuery = data ? data['query'] : '';
       this.resolveSimilarEntities(this.mostSimilarConcepts)
     });
   }
@@ -142,6 +151,14 @@ export class HomeComponent implements OnInit {
     return this.mostSimilarConcepts ? this.mostSimilarConcepts
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+  }
+
+  onNavChange(changeEvent: NgbNavChangeEvent) {
+    if (changeEvent.nextId === this.types.length + 1) {
+      this.query = this.similarityQuery;
+    } else {
+      this.query = this.annontationQuery;
+    }
   }
 
 }

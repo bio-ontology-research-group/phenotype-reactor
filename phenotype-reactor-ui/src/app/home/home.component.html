@@ -27,7 +27,7 @@
             <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
             <span *ngIf="!entity">Definition</span>  
         </h6>    
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="onNavChange($event)">
              <li [ngbNavItem]="typeIdx + 1" *ngFor="let type of types; let typeIdx = index">
                 <a ngbNavLink>{{type.replace(BASE_PREFIX, '')}} Association</a>
                 <ng-template ngbNavContent>
@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let similarConcept of similarConceptsPage; let assocIndex = index">
-                        <td>
+                        <td class="w-50">
                             <a (click)="openInNewTab(similarConcept.concept.value)" class="text-muted">
                                 <h6 *ngIf="this.similarEntities[similarConcept.concept.value]">{{this.similarEntities[similarConcept.concept.value]['label'][0]}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
                             </a>
@@ -70,5 +70,10 @@
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
+</div>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
+    <div class="card-body justify-content-between">
+    <app-sparql-form [query]="query"></app-sparql-form>
 </div>
 </div>
