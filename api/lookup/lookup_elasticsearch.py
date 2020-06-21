@@ -1,6 +1,8 @@
 import logging
+import uuid
 
 from elasticsearch import Elasticsearch
+from elasticsearch import helpers
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -102,6 +104,20 @@ def index(index, document):
     if result["result"] == "created":
       return True
     return False 
+  except Exception as e:
+    logger.exception("message")
+
+def index_by_bulk(data):
+  try:
+    entries = []
+    for entry in data:
+      entries.append({ 
+          "_index": ENTITY_INDEX_NAME,
+          "_id": uuid.uuid4().hex,
+          "_source": entry
+      })
+    result = helpers.bulk(es, entries, refresh=True, request_timeout=(60 * 10))
+    logger.info("entries effected: %d", result[0])
   except Exception as e:
     logger.exception("message")
 
