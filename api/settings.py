@@ -216,3 +216,4 @@ LOOKUP_ES_USERNAME = config['lookup']['es.username']
 LOOKUP_ES_PASSWORD = config['lookup']['es.password']
 
 OMIM_KEY = config['omim']['key']
+OMIM_DIR = config['omim']['dir']

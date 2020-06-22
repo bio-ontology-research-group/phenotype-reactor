@@ -16,7 +16,8 @@ class OMIMValueset(Source):
         super().__init__('OMIM', 'Disease')
         self.valueset = None
         self.entities = None
-        self.url = 'https://data.omim.org/downloads/' + settings.OMIM_KEY + '/mimTitles.txt'
+        # self.url = 'https://data.omim.org/downloads/' + settings.OMIM_KEY + '/mimTitles.txt'
+        self.url = settings.OMIM_DIR
         self.df = None
 
     def fetch(self):
@@ -45,8 +46,7 @@ class OMIMValueset(Source):
         logger.info("Started indexing valueset %s", self.valueset)
         lookup_es.delete_valueset(self.valueset['valueset'])
         lookup_es.index(lookup_es.VALUESET_INDEX_NAME, self.valueset)
-        for entity in self.entities:
-            lookup_es.index(lookup_es.ENTITY_INDEX_NAME, entity)
+        lookup_es.index_by_bulk(self.entities)
     
         logger.info("Finished indexing valueset %s", self.valueset)
 

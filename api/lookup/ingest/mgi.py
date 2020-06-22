@@ -38,8 +38,7 @@ class MGIValueset(Source):
         logger.info("Started indexing valueset %s", self.valueset)
         lookup_es.delete_valueset(self.valueset['valueset'])
         lookup_es.index(lookup_es.VALUESET_INDEX_NAME, self.valueset)
-        for entity in self.entities:
-            lookup_es.index(lookup_es.ENTITY_INDEX_NAME, entity)
+        lookup_es.index_by_bulk(self.entities)
     
         logger.info("Finished indexing valueset %s", self.valueset)
 
