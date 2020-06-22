@@ -1,4 +1,5 @@
 import logging 
+import time
 
 from django.conf import settings
 from api.ingest.source import Source
@@ -70,15 +71,23 @@ class NCBIGeneValueset(Source):
         logger.info("Started indexing valueset %s", self.valueset)
         lookup_es.delete_valueset(self.valueset['valueset'])
         lookup_es.index(lookup_es.VALUESET_INDEX_NAME, self.valueset)
+        data = []
+        count = 0
         for entity in self.entities:
-            lookup_es.index(lookup_es.ENTITY_INDEX_NAME, entity)
+            data.append(entity)
+            if len(data) % 100000 == 0 or count == len(self.entities) - 1:
+                logger.info("indexing bulk of %d", len(data))
+                lookup_es.index_by_bulk(data)
+                data.clear()
+
+            count += 1
     
         logger.info("Finished indexing valueset %s", self.valueset)
 
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'GeneID')
-        obj["label"] =  [getattr(row, 'Symbol')]
+        obj["label"] =  [getattr(row, 'Symbol')] #TODO : 'nan' symbol index error
 
         tax_num = getattr(row, 'tax_id')
         if isinstance(tax_num, int):

@@ -19,7 +19,7 @@ sources_map = {
         'mp': MP(),
         'ordo': ORDO(), 
         'ncbitaxon': NCBITAXON(), 
-        'doid': DOID, 
+        'doid': DOID(), 
         'mondo': MONDO(), 
         'chebi': CHEBI(),
         'decipher': DecipherValueset(),
@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 self.index(sources_map[key])
         else:
             for source in sources.split(","):
+                logger.info("Indexing %s", source)
                 self.index(sources_map[source])
 
     def index(self, valueset: Source):
