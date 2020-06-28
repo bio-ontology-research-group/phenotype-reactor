@@ -2,6 +2,7 @@ import networkx as nx
 import pickle as pkl
 import json
 import sys
+import itertools
 
 def split_sentence(sentence):
     new_sentence=""
@@ -218,6 +219,61 @@ def generate_graph_and_annontation_nodes(annotation_files, axiom_files):
         print("Finished loading annontation:" +  str(annotation))
     print("Finished loading trainingset:" +  str(count))
     return (G, nodes_set)
+
+def generate_deepwalk_graph(annotation_files, axiom_files):
+    G = nx.Graph()
+
+    count = 0
+    node_dict = {}
+    node_count = itertools.count()
+    for axiom_file in axiom_files:
+        with open(axiom_file, "r") as f:
+            for line in f.readlines():
+                result = convert_graph(line.strip())
+                if not result:
+                    continue
+
+                # print("-"*40)
+                count += 1
+                for entities in result:
+                    if entities[0].strip() not in node_dict:
+                        node_dict[entities[0].strip()] = next(node_count)
+                    
+                    if entities[2].strip() not in node_dict:
+                        node_dict[entities[2].strip()] = next(node_count)
+                    
+                    subj = node_dict[entities[0].strip()]
+                    obj = node_dict[entities[2].strip()] 
+
+                    G.add_edge(subj, obj)
+                    G.edges[subj, obj]["type"] = entities[1].strip()
+                    G.nodes[subj]["val"] = False
+                    G.nodes[obj]["val"] = False
+
+    for annotation in annotation_files:
+        with open(annotation, "r") as f:
+            for line in f.readlines():
+                if not line.strip():
+                    continue
+                
+                count += 1
+                entities = line.split()
+                if entities[0].strip() not in node_dict:
+                    node_dict[entities[0].strip()] = next(node_count)
+                    
+                if entities[2].strip() not in node_dict:
+                    node_dict[entities[2].strip()] = next(node_count)
+                
+                subj = node_dict[entities[0].strip()]
+                obj = node_dict[entities[2].strip()] 
+                G.add_edge(subj, obj)
+                G.edges[subj, obj]["type"] = "HasAssociation"
+                G.nodes[subj]["val"] = False
+                G.nodes[obj]["val"] = False
+
+        print("Finished loading annontation:" +  str(annotation))
+    print("Finished loading trainingset:" +  str(count))
+    return (G, node_dict)
 
 class Stack(object):
     def __init__(self):

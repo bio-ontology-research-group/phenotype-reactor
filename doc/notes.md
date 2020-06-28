@@ -26,6 +26,10 @@ To train data using TrainE algorithm with setting  device=CPU, num of epochs=100
 ```sh
 python manage.py trainkg -r cpu -e 1000 -b 32
 ```
+To train data using deepwalk algorithm with setting  dimensions=128, num of walks=80, workers=30 and walk_size=40, run the following command
+```sh
+python manage.py traindeepwalk
+```
 
 To deploy phenotype reactor backend api follow the following steps:
 Copy the projects uwsgi configuration file 'phenotype-reactor.wsgi.ini' to apps-enabled of uwsgi.
