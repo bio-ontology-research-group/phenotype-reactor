@@ -79,7 +79,7 @@ class Command(BaseCommand):
             process = subprocess.Popen(CMD, text=True, shell=True)
             if process.wait() != 0:
                 exit(0)
-            
+
             self.generate_bio2vec_frmt(node_dict, outdir)
         except Exception as e:
             logger.exception("message")
@@ -112,8 +112,8 @@ class Command(BaseCommand):
                     local_name = ''
                     try:
                         uri = key[1:len(key) -1]
-                        local_name = split_uri(uri)[1]
                         key = uri
+                        local_name = split_uri(uri)[1]
                     except Exception:
                         pass
 
