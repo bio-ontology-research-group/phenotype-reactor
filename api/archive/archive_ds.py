@@ -10,7 +10,7 @@ import datetime
 import time
 import os
 import tarfile
-
+import operator
 
 logger = logging.getLogger(__name__)
 
@@ -18,14 +18,17 @@ RDF_DATA_ARCHIVE_DIR = getattr(settings, 'TARGET_DATA_DIR', None)
 
 class FileInfo:
  
-   def __init__(self):
+    def __init__(self):
        self.full_name = None
        self.last_mod_time = 0
        self.extn = None
  
-   def __str__(self):
+    def __str__(self):
        return 'Full Name: ' + self.full_name + '\n' \
-            + 'Last Modified Time: ' + time.strftime("%d %b %Y", time.gmtime(self.last_mod_time)) + '\n' \
+            + 'Last Modified Time: ' + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(self.last_mod_time)) + '\n' \
+
+    def to_dict(self):
+      return {"full_name": self.full_name, "last_mod_time": time.strftime("%Y-%m-%d", time.gmtime(self.last_mod_time)), "extn": self.extn}
 
 #Define method to extract attributes from full file name
 def populate_dir_object(file):
@@ -70,6 +73,17 @@ def find_latest_file(isfile = True):
         index += 1
 
     return latest_file_obj
+
+def find():
+    os.chdir(RDF_DATA_ARCHIVE_DIR)
+   
+    arhived_files = []
+    for file in os.listdir():
+        file_obj = None
+        if os.path.isfile(file) and '.gz' in splitext(file)[1]:
+            arhived_files.append(populate_file_object(file))
+    arhived_files.sort(key=lambda x: x.last_mod_time, reverse=True)
+    return [item.to_dict() for item in arhived_files]
 
 
 def archive():

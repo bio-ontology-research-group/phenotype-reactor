@@ -18,7 +18,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import GetLatestDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
+from api.views import GetLatestDataArchived, FindDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
     FindEntityByIris, FindValueset, FindMostSimilar
 
 urlpatterns = [
@@ -30,4 +30,5 @@ urlpatterns = [
     path('api/entity/_findbyiri', FindEntityByIris.as_view()),
     path('api/valueset', FindValueset.as_view()),
     path('archive/latest', GetLatestDataArchived.as_view()),
+    path('archive', FindDataArchived.as_view()),
 ] + static(settings.ARCHIVE_URL, document_root=settings.TARGET_DATA_DIR)

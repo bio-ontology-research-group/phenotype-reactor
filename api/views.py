@@ -1,3 +1,10 @@
+import logging
+import json
+import os
+
+import api.archive.archive_ds as archive
+import api.lookup.lookup_elasticsearch as lookup_es  
+
 from django.http import Http404, HttpResponse
 from django.conf import settings
 
@@ -5,13 +12,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-import api.archive.archive_ds as archive
-import api.lookup.lookup_elasticsearch as lookup_es  
 from api.association import Association
 from api.bio2vec_api import find_most_similar
 
-import logging
-import json
 
 logger = logging.getLogger(__name__) 
 
@@ -65,6 +68,17 @@ class GetLatestDataArchived(APIView):
                     response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
                     return response
             raise Http404
+        except Exception as e:
+            logger.exception("message")
+
+class FindDataArchived(APIView):
+    """
+    Get latest
+    """
+    def get(self, request, format=None):
+        try:
+            result = archive.find()
+            return Response(result)
         except Exception as e:
             logger.exception("message")
 
