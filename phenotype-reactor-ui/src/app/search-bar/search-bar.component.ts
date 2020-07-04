@@ -4,6 +4,7 @@ import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rx
 import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { LookupService } from '../lookup.service';
+import { _ } from 'underscore';
 
 @Component({
   selector: 'app-search-bar',
@@ -48,7 +49,9 @@ export class SearchBarComponent implements OnInit {
 
     this.lookupService.findValueset().subscribe(res => {
       this.valuesets = res
+      this.valuesets = _.filter(this.valuesets, (obj) => obj.valueset != 'ECO');
       this.sort(this.valuesets)
+      
     })
   }
 
