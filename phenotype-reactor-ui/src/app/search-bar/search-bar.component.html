@@ -12,6 +12,6 @@
     </form>
 </div>
 <ng-template #rt let-r="result" let-t="term">
-  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight>
+  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight><br />
+  <small>{{r.entity}}</small>
 </ng-template> 
-
