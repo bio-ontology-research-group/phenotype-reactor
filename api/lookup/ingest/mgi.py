@@ -45,7 +45,8 @@ class MGIValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, '_1')
-        obj["label"] =  [getattr(row, '_9')]
+        obj["label"] =  [getattr(row, '_7')]
+        obj["synonym"] =  [getattr(row, '_9')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
         return obj
