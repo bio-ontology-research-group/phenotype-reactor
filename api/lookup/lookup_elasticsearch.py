@@ -137,14 +137,19 @@ def delete_valueset(valueset_name):
 
 def find_entity_by_startswith(term, valueset):
   try:
+    criteria = None
+    if valueset.strip():
+      criteria = [
+              { "prefix": { "label": { "value": term } }}, 
+              { "term": { "valueset": valueset } }
+            ] 
+    else:
+      criteria = [ { "prefix": { "label": { "value": term }}} ] 
     query = {
         "size" : DEFAULT_PAGE_SIZE,
         "query": { 
           "bool": { 
-            "must": [
-              { "prefix": { "label": { "value": term } }}, 
-              { "term": { "valueset": valueset } }
-            ] 
+            "must": criteria
           } 
         }
       }
