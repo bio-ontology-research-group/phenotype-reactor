@@ -214,6 +214,8 @@ ABEROWL_ES_IDX_CLASS = config['aberowl']['es.index.class']
 LOOKUP_ES_URL = config['lookup']['es.url']
 LOOKUP_ES_USERNAME = config['lookup']['es.username']
 LOOKUP_ES_PASSWORD = config['lookup']['es.password']
+LOOKUP_ES_VALUESET_INDEX_NAME= config['lookup']['es.index.valueset.name']
+LOOKUP_ES_ENTITY_INDEX_NAME = config['lookup']['es.index.entity.name']
 
 OMIM_KEY = config['omim']['key']
 OMIM_DIR = config['omim']['dir']

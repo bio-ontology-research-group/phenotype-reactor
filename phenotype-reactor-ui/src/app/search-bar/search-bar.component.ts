@@ -51,7 +51,6 @@ export class SearchBarComponent implements OnInit {
       this.valuesets = res
       this.valuesets = _.filter(this.valuesets, (obj) => obj.valueset != 'ECO');
       this.sort(this.valuesets)
-      
     })
   }
 
