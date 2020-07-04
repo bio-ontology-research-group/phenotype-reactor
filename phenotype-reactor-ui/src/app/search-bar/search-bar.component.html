@@ -12,6 +12,7 @@
     </form>
 </div>
 <ng-template #rt let-r="result" let-t="term">
-  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight><br />
+  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight> 
+  <small *ngIf="selectedValueset == ''" class="font-italic">{{' ' + r.valueset}}</small> <br />
   <small>{{r.entity}}</small>
 </ng-template> 
