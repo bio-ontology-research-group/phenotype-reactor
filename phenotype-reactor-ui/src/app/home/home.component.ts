@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
   entities = {};
   similarEntities = {}
   iri = null;
-  valueset = 'HP';
+  valueset = '';
   associations = null;
   mostSimilarConcepts = null
   typeToAssoicationMap = {};
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
     private lookupService: LookupService) { 
       this.route.params.subscribe( params => {
         this.iri = decodeURIComponent(params.iri);
-        this.valueset = params.valueset
+        this.valueset = params.valueset ? params.valueset : ''
         if (this.iri && this.valueset) {
           this.initAssociation()
         }

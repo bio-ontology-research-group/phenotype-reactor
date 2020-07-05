@@ -141,6 +141,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 ARCHIVE_URL = '/archive/'
+SCHEMA_URL = '/archive/schema/'
 
 LOGGING = {
         'version': 1,
