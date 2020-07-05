@@ -11,5 +11,8 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
   }
-
+ 
+  openInNewTab(url: string) {
+    window.open(url, "_blank");
+  }
 }

@@ -2,11 +2,28 @@
 <div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
     <div class="card-body justify-content-between p-4">
         <span class="card-title">About the Phenotype Reactor project</span>
-        <p class="mt-3">The Phenotype Reactor is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to 
+        <div class="row pl-3 pt-3">
+        <p>The Phenotype Reactor is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to 
         compute phentypic similarity between these concepts. It also provides SPARQL endpoint and a query editor for querying the phenotypes 
         relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited 
         to phentype relations with genes, genotype, disease, drug, pathogens and metabolites. <br />
-        We have integrated phenotype relations from various sources including research studies and community resources such as HPO phenotype annontations.</p>
+        We have integrated phenotype relations from various sources including research studies and community resources such as HPO phenotype annontations.
+        </p>
+        </div>
+        <span class="card-title">Anontations Source</span>
+        <div class="row pl-3  pt-3"><p>Phenotype Reactor aggregated annotation datasets from research studies and cummunity resources are follwoing:</p></div>
+        <div class="row p-3">
+            <ul>
+            <li>Phenotypye Annontations from HPO. <button type="button" (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>Ontology based text mining of gene-phenotype associations. <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/30809638')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>Ontology based text mining of disease-phenotype associations. <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/30809638')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>Ontology based text mining of disease classes in Mondo Disease ontology to phenotype associations. <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/30809638')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>Ontology based text mining of metabolites-phenotype associations. <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/30809638')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>Drug-phentype association based on drug side effect resource. <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/20087340')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>PathoPhenoDB, linking human pathogens to their phenotypes in support of infectious disease research. <button type="button" (click)="openInNewTab('https://www.nature.com/articles/s41597-019-0090-x')" class="btn btn-link p-0 mb-1">Link</button></li>
+            <li>DeepPheno: Predicting single gene loss-of-function phenotypes using an ontology-aware hierarchical classifier. <button type="button" (click)="openInNewTab('https://www.biorxiv.org/content/10.1101/839332v2')" class="btn btn-link p-0 mb-1">Link</button></li>
+            </ul>
+        </div>
     </div>
 </div>
 </div>
