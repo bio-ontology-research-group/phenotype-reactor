@@ -22,7 +22,7 @@ class Command(BaseCommand):
         transformer.transform_gene2phenotype_text_mined()
         transformer.transform_pathogen2phenotype()
         transformer.transform_mondo2phenotype_top50()
-        transformer.transform_predictive_gene2phenotype()
+        transformer.transform_deeppheno_gene2phenotype()
         transformer.transform_metabolites2phenotype()
         transformer.transform_hpo_annotations(transformer.HPO_ANNO_URL, 'disease2phenotype_hpo')
         archive.archive()
