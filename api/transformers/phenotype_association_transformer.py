@@ -305,6 +305,7 @@ def transform_hpo_annotations(url, output_filename):
     df.reference = df.reference.replace(regex=['PMID:'], value=PMID.uri)
     df.reference = df.reference.replace(regex=['ISBN-13:'], value=ISBN.uri)
     df.reference = df.reference.replace(regex=['ISBN-10:'], value=ISBN.uri)
+    df.reference = df.reference.astype(str).replace(regex=['nan'], value='')
     df.curators = df.curators.astype(str)
     print(df.head(), len(df.columns))
 
