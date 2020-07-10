@@ -131,7 +131,7 @@ def delete_valueset(valueset_name):
         }
       } 
     result = es.delete_by_query(index=VALUESET_INDEX_NAME, body=query)
-    result = es.delete_by_query(index=ENTITY_INDEX_NAME, body=query)
+    result = es.delete_by_query(index=ENTITY_INDEX_NAME, body=query, request_timeout=(60 * 30))
   except Exception as e:
     logger.exception("message")
 

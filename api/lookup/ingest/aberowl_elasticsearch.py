@@ -6,7 +6,7 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 es = None
-esUrl = settings.ABEROWL_ES_URL
+esUrl = settings.ABEROWL_ES_URL.split(",")
 if settings.ABEROWL_ES_USERNAME and settings.ABEROWL_ES_PASSWORD:
     es = Elasticsearch(esUrl, http_auth=(settings.ABEROWL_ES_USERNAME, settings.ABEROWL_ES_PASSWORD))
 else :
