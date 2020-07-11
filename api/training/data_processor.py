@@ -6,6 +6,8 @@ import subprocess
 import csv
 import logging
 import api.archive.archive_ds as archive
+import requests
+import re
 
 from django.conf import settings
 
@@ -14,10 +16,12 @@ from rdflib import Graph, RDF
 from api.training.generate_graph import *
 from api.training.data_ingestion.omim_genedisease import OMIMDiseaseGeneAssoc
 from api.training.data_ingestion.patho_pathogendisease import PathoPathogenDiseaseAssoc
+from api.training.data_ingestion.curated_disgenet import CuratedDisgenetAssoc
 
 from os import listdir
 from os.path import isfile, join, splitext, exists
 from pathlib import Path
+
 
 
 logger = logging.getLogger(__name__)
@@ -39,35 +43,44 @@ def generate_nt(file):
         obj = store.value(stmt, RDF.object)
         out_store.add([sub, predicate, obj])
 
-    out_store.serialize('{folder}/{filename}.nt'.format(folder=TRAINING_SET_DIR, filename=file), format='nt')
+    out_store.serialize(f'{TRAINING_SET_DIR}/{os.path.basename(file)}.nt', format='nt')
     out_store.remove((None, None, None))
     store.remove((None, None, None))
 
-def rdf2nt(ds_path):
-    files = [file for file in os.listdir(ds_path) if isfile(file)]
-    
+def rdf2nt(ds_path): 
+    files = [file for file in os.listdir(ds_path) if isfile(join(ds_path, file))]
     if len(files) < 1:
         raise Exception("no file in dataset exists to process")
 
     for entry in files:
-        if isfile(join(entry)):
-            generate_nt(entry)
+        generate_nt(join(ds_path, entry))
         
 
 def process_dataset():
-    file = archive.find_latest_file()
-    file_path = join(settings.TARGET_DATA_DIR, file.full_name)
-    if exists(file_path):
-        logger.info("Extracting data archive...")
-        ds_tar = tarfile.open(file_path)
-        ds_tar.extractall(KGE_DIR)
-        ds_tar.close()
-    
-    ds_dir = join(KGE_DIR, 'data-*')
-    ds_path = glob.glob(ds_dir)[0]
-    rdf2nt(ds_path)
-    shutil.rmtree(ds_path)
-    logger.info("Completed dataset preprocessing")
+    url = 'http://phenomebrowser.net/archive/latest'
+    response = requests.get(url, stream=True)
+    filename = None
+    if response.status_code == 200:
+        file_header = response.headers['content-disposition']
+        filename = re.findall("filename=(.+)", file_header)[0]
+        tar_path = join(KGE_DIR, filename)
+        with open(tar_path, 'wb') as f:
+            f.write(response.raw.read())
+
+        fileobj = archive.populate_file_object(tar_path)
+        ds_dir = fileobj.full_name.split('.')[0]
+        if exists(tar_path):
+            logger.info("Extracting data archive...%s | %s", tar_path, ds_dir)
+            ds_tar = tarfile.open(tar_path)
+            ds_tar.extractall(KGE_DIR)
+            ds_tar.close()
+        
+        rdf2nt(ds_dir)
+        shutil.rmtree(ds_dir)
+        shutil.rmtree(tar_path)
+        logger.info("Completed dataset preprocessing")
+    else:
+        logger.error("Unable to download file")
 
 def process_testset():
     omimdisease_gene = OMIMDiseaseGeneAssoc()
@@ -79,6 +92,11 @@ def process_testset():
     pathogen_disease.fetch()
     pathogen_disease.map()
     pathogen_disease.write()
+
+    disgenet = CuratedDisgenetAssoc()
+    disgenet.fetch()
+    disgenet.map()
+    disgenet.write()
 
 
 def process_ontology():
