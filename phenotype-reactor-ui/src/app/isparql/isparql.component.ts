@@ -60,7 +60,7 @@ PREFIX b2vd: <http://bio2vec.net/dataset#>
 SELECT ?sim ?type ?val ?x ?y
 WHERE {
 SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> { 
-    (?sim ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <b2vd:dataset_4 <http://purl.obolibrary.org/obo/DOID_0060319> 10 <http://phenomebrowser.net/Disease>) . 
+    (?sim ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <http://purl.obolibrary.org/obo/DOID_0060319> 10 <http://phenomebrowser.net/Disease>) . 
 } 
 GRAPH <http://phenomebrowser.net> {
   ?sim a ?type .
