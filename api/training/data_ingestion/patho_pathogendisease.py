@@ -26,7 +26,6 @@ class PathoPathogenDiseaseAssoc(Source):
 
     def fetch(self):
         logger.info("Started fetching data %s", self.name)
-        #Headers MIM Number	MIM Entry Type (see FAQ 1.3 at https://omim.org/help/faq)	Entrez Gene ID (NCBI)	Approved Gene Symbol (HGNC)	Ensembl Gene ID (Ensembl)
         self.df = pd.read_json(self.url) 
         logger.info("Finished fetching data: entities=%d", self.df.size)
 

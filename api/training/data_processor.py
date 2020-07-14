@@ -77,7 +77,7 @@ def process_dataset():
         
         rdf2nt(ds_dir)
         shutil.rmtree(ds_dir)
-        shutil.rmtree(tar_path)
+        os.remove(tar_path)
         logger.info("Completed dataset preprocessing")
     else:
         logger.error("Unable to download file")
