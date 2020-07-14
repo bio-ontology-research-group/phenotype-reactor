@@ -37,6 +37,17 @@
             <li [ngbNavItem]="types.length + 1">
                 <a ngbNavLink>Similar Entities</a>
                 <ng-template ngbNavContent>
+                <div class="row"> 
+                    <div class="col-1 p-2 pt-3 ml-3">
+                        <label><strong>Filter By:</strong></label>
+                    </div>
+                    <div class="col-2 p-2">
+                        <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
+                            <option value="">Select Type</option>
+                            <option *ngFor="let type of TYPES" value="{{type.uri}}" [selected]='typeFilter == type.uri'>{{type.name}}</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row">
                     <table class="table table-striped">
                     <thead color="default">

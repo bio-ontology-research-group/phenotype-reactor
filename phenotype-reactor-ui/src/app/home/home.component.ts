@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit {
   query=''
   annontationQuery=''
   similarityQuery=''
+  typeFilter=''
+
 
   page = 1;
   pageSize = 20;
@@ -34,6 +36,7 @@ export class HomeComponent implements OnInit {
 
   BASE_PREFIX = "http://phenomebrowser.net/"
   PUBMED_PREFIX = "http://phenomebrowser.net/"
+  TYPES = [];
 
 
   constructor(
@@ -48,6 +51,7 @@ export class HomeComponent implements OnInit {
           this.initAssociation()
         }
       });
+      this.TYPES = associationService.TYPES;
   }
 
   ngOnInit() {
@@ -82,14 +86,24 @@ export class HomeComponent implements OnInit {
         this.resolveEntities(this.associations)
       });
     }
-    this.associationService.findMostSimilar(this.iri).subscribe( data => {
+    this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
       this.similarityQuery = data ? data['query'] : '';
       this.resolveSimilarEntities(this.mostSimilarConcepts)
     });
   }
 
-  resolveSimilarEntities(associations){
+  onTypeSelect(event) {
+    this.typeFilter = event.target.value;
+    this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
+      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
+      this.similarityQuery = data ? data['query'] : '';
+      this.query = this.similarityQuery;
+      this.resolveSimilarEntities(this.mostSimilarConcepts)
+    });
+  }
+
+  resolveSimilarEntities(associations) {
     var entityIris = new Set() 
     var concepts = _.map(associations, (obj) => obj['concept']['value'])
     concepts.forEach(item => entityIris.add(item))

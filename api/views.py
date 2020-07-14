@@ -47,7 +47,8 @@ class FindMostSimilar(APIView):
     def get(self, request, format=None):
         try:
             concept = request.GET.get('concept', None)
-            (response, query) = self.service.find_similar_concepts(concept) 
+            type_iri = request.GET.get('type', None)
+            (response, query) = self.service.find_similar_concepts(concept, type_iri) 
             result = response.json()
             result['query'] = query
             return Response(result)

@@ -6,6 +6,15 @@ export class AssociationService {
 
   URL = '/api/association'
 
+  TYPES = [
+    { name: 'Drug', uri: 'http://phenomebrowser.net/Drug' },
+    { name: 'Disease', uri: 'http://phenomebrowser.net/Disease' },
+    { name: 'Gene', uri: 'http://phenomebrowser.net/Gene' },
+    { name: 'Metabolite', uri: 'http://phenomebrowser.net/Metabolite' },
+    { name: 'Pathogen', uri: 'http://phenomebrowser.net/Pathogen' },
+    { name: 'Phenotype', uri: 'http://phenomebrowser.net/Phenotype' }
+  ]
+
   options = {
     headers:  new HttpHeaders({
       'Accept': 'application/json'
@@ -13,7 +22,6 @@ export class AssociationService {
   };
 
   constructor(private http: HttpClient) { }
-
 
   find(conceptIri: string, phenotypeIri: string, typeIri:string) {
     var query_string = '';
@@ -35,8 +43,12 @@ export class AssociationService {
     return this.http.get(url, this.options);
   }
 
-  findMostSimilar(iri: string) {
+  findMostSimilar(iri: string, typeIri: string) {
     var query_string = 'concept=' + iri;
+    if (typeIri) {
+      query_string = query_string + '&type=' + typeIri
+    }
+
     var url = `${this.URL}/_mostsimilar?${query_string}`;
     return this.http.get(url, this.options);
   }
