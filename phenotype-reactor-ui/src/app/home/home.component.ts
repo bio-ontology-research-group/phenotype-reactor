@@ -69,6 +69,8 @@ export class HomeComponent implements OnInit {
   }
 
   initAssociation() {
+    this.entities = {};
+    this.similarEntities = {};
     if (this.valueset == 'MP' || this.valueset == 'HP') {
       this.associationService.find(null, this.iri, null).subscribe( data => {
         this.associations = data ? data['results']['bindings'] : [];
@@ -94,6 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   onTypeSelect(event) {
+    this.similarEntities = {};
     this.typeFilter = event.target.value;
     this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
@@ -110,11 +113,13 @@ export class HomeComponent implements OnInit {
 
     var iris = Array.from(entityIris.values());
 
-    this.lookupService.findEntityByIris(iris).subscribe( data => {
+    this.lookupService.findEntityByIris(iris, data => {
       var tmp = {};
       if (data) {
         (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
-        this.similarEntities = tmp
+        for (let uri in tmp) {
+          this.similarEntities[uri] = tmp[uri]
+        }
       }
     });
   }
@@ -132,11 +137,13 @@ export class HomeComponent implements OnInit {
 
     var iris = Array.from(entityIris.values());
 
-    this.lookupService.findEntityByIris(iris).subscribe( data => {
+    this.lookupService.findEntityByIris(iris, data => {
       var tmp = {};
       if (data) {
         (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
-        this.entities = tmp
+        for (let uri in tmp) {
+          this.entities[uri] = tmp[uri]
+        }
         this.entity = this.entities[this.iri]
       }
     });

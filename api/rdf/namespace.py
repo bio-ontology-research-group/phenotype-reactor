@@ -49,3 +49,39 @@ OMIM = ClosedNamespace(uri=URIRef("https://omim.org/entry/"), terms=[])
 ORPHA = ClosedNamespace(uri=URIRef("http://www.orpha.net/ORDO/Orphanet_"), terms=[])
 PMID = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/pubmed/"), terms=[])
 ISBN = ClosedNamespace(uri=URIRef("https://isbnsearch.org/isbn/"), terms=[])
+
+PREFIX_TO_TYPE_DICT = {
+    (str(OBO.uri) + 'HP' ): str(PHENO.Phenotype),
+    (str(OBO.uri) + 'MP' ): str(PHENO.Phenotype),
+    (str(OBO.uri) + 'GO' ): str(PHENO.Gene),
+    (str(OBO.uri) + 'NCBITAXON' ): str(PHENO.Pathogen),
+    (str(OBO.uri) + 'CHEBI' ): str(PHENO.Metabolite),
+    (str(OBO.uri) + 'DOID' ): str(PHENO.Disease),
+    str(ORPHA.uri): str(PHENO.Disease),
+    str(DECIPHER.uri): str(PHENO.Disease),
+    str(OMIM.uri): str(PHENO.Disease),
+    str(PUBCHEM.uri): str(PHENO.Drug),
+    str(MGI.uri): str(PHENO.Gene),
+    str(ENTREZ_GENE.uri): str(PHENO.Gene)
+} 
+
+PREFIX_TO_VALUESET_DICT = {
+    (str(OBO.uri) + 'HP_' ): 'HP',
+    (str(OBO.uri) + 'MP_' ): 'MP',
+    (str(OBO.uri) + 'NCBITAXON_' ): 'NCBITAXON',
+    (str(OBO.uri) + 'CHEBI_' ): 'CHEBI',
+    (str(OBO.uri) + 'DOID_' ): 'DOID',
+    str(ORPHA.uri): 'ordo',
+} 
+
+def find_type(self, uri):
+    for key in PREFIX_TO_TYPE_DICT:
+        if key in uri:
+            return PREFIX_TO_TYPE_DICT[key] 
+    return 'entity'
+
+def find_valueset(self, uri):
+    for key in PREFIX_TO_VALUESET_DICT:
+        if key in uri:
+            return PREFIX_TO_VALUESET_DICT[key] 
+    return None
