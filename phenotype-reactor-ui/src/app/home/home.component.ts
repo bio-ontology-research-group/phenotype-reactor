@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.collectionSize = this.mostSimilarConcepts ? this.mostSimilarConcepts.length : 0;
   }
 
   onTermSelect(lookupResource) {
@@ -97,6 +98,7 @@ export class HomeComponent implements OnInit {
 
   onTypeSelect(event) {
     this.similarEntities = {};
+    this.page = 1;
     this.typeFilter = event.target.value;
     this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
@@ -169,6 +171,7 @@ export class HomeComponent implements OnInit {
   }
 
   get similarConceptsPage(): Object[] {
+    this.collectionSize = this.mostSimilarConcepts ? this.mostSimilarConcepts.length : 0;
     return this.mostSimilarConcepts ? this.mostSimilarConcepts
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
