@@ -158,21 +158,18 @@ def find_entity_by_startswith(term, valueset):
   except Exception as e:
       logger.exception("message")
 
-def find_entity_by_iris(iris):
+def find_entity_by_iris(iris, valueset):
   try:
     filter_part = []
-    for iri in iris:
-      filter_part.append({ "term": { "entity": { "value": iri } } })
-
-
+    if valueset:
+      print(valueset)
+      filter_part.append({ "term": { "valueset" : valueset }})
+    filter_part.append({ "terms": { "entity": iris } })
     query = {
         "size" : 10000,
         "query": { 
           "bool": { 
-            "should": filter_part,
-            "must" : {
-              "exists" : { "field" : "label" } 
-            }
+            "filter": filter_part
           } 
         }
       }

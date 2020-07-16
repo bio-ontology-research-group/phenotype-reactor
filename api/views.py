@@ -107,10 +107,15 @@ class FindEntityByIris(APIView):
     def post(self, request, format=None):
         try:
             entity_iris = request.data['iri']
+
+            valueset = None
+            if 'valueset' in request.data:
+                valueset = request.data['valueset']
+
             if not entity_iris:
                 raise RuntimeException("'iri' property is required")
 
-            result = lookup_es.find_entity_by_iris(entity_iris) 
+            result = lookup_es.find_entity_by_iris(entity_iris, valueset) 
             return Response(result)
         except Exception as e:
             logger.exception("message")
