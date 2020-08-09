@@ -15,10 +15,12 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
 from rdflib.namespace import split_uri
+from api.rdf.namespace import find_type
 
 from os import listdir
 from os.path import isfile, join, splitext, exists
 from api.training.generate_graph import *
+from api.training.evaluator import *
 
 logger = logging.getLogger(__name__)
 logging.getLogger('pykeen').setLevel(logging.INFO)
@@ -80,21 +82,17 @@ class Command(BaseCommand):
             if process.wait() != 0:
                 exit(0)
 
+            node_file = open("nodes.json", "r")
+            node_dict = json.load(node_file)
             self.generate_bio2vec_frmt(node_dict, outdir)
+            evaluate_curated_disgenet(outdir, join(TEST_SET_DIR, testset_name + '.tsv'))
         except Exception as e:
             logger.exception("message")
         except RuntimeError:
             logger.exception("message")
 
-
-    def write_nodes_file(self, node_dict):
-        node_file = open("nodes.json", "w")
-        json.dump(node_dict, node_file, indent=4)
-        node_file.close()
-
     def generate_bio2vec_frmt(self, node_dict, outdir): 
         logger.info("Started generating bio2vec dataset file")
-
         id2node_map = dict((v, k) for k, v in node_dict.items())
 
         sep = ','
@@ -110,14 +108,23 @@ class Command(BaseCommand):
                 for row in csv_reader:
                     key = id2node_map[int(row[0])]
                     local_name = ''
+                    entity_type = 'entity'
                     try:
                         uri = key[1:len(key) -1]
+                        entity_type = find_type(uri)
                         key = uri
                         local_name = split_uri(uri)[1]
                     except Exception:
                         pass
 
-                    row =[key, local_name, '', '', 'entity', sep.join(map(str, row[1:len(row)]))]
+                    row =[key, local_name, '', '', entity_type, sep.join(map(str, row[1:len(row)]))]
                     writer.writerow(row)
 
         logger.info("Finished generating bio2vec dataset file")
+
+    def write_nodes_file(self, node_dict):
+        node_file = open("nodes.json", "w")
+        json.dump(node_dict, node_file, indent=4)
+        node_file.close()
+
+           
