@@ -18,6 +18,7 @@ import { ListAssociationComponent } from './list-association/list-association.co
 import { DownloadsComponent } from './downloads/downloads.component';
 import { SparqlFormComponent } from './sparql-form/sparql-form.component';
 import { ArchiveService } from './archive.service';
+import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-chart.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ArchiveService } from './archive.service';
     SearchBarComponent,
     ListAssociationComponent,
     DownloadsComponent,
-    SparqlFormComponent
+    SparqlFormComponent,
+    PlotScatterChartComponent
   ],
   imports: [
     BrowserModule,

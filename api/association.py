@@ -52,7 +52,7 @@ class Association:
         query = 'PREFIX b2v: <http://bio2vec.net/function#> \
                 \nPREFIX b2vd: <http://bio2vec.net/dataset#> \
                 \n \
-                \nSELECT ?concept ?type ?val \
+                \nSELECT ?concept ?type ?val ?x ?y \
                 \nWHERE { \
                 \n    SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> {  \
                 \n        (?concept ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <' + concept_iri + '> 100 ' \

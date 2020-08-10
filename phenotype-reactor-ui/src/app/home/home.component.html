@@ -85,8 +85,17 @@
     </div>
 </div>
 </div>
+<div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && tabId === types.length + 1">
+    <div class="card-body justify-content-between">
+        <span>
+            <span class="card-title" *ngIf="entity">Neighbourhood Visualization</span> 
+            <hr />
+        </span>
+        <app-plot-scatter-chart [similarConcepts]="mostSimilarConcepts" [similarEntities]="similarEntities"></app-plot-scatter-chart>
+    </div>
+</div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
-    <app-sparql-form [query]="query"></app-sparql-form>
-</div>
+        <app-sparql-form [query]="query"></app-sparql-form>
+    </div>
 </div>

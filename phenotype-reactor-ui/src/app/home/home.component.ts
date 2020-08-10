@@ -37,6 +37,7 @@ export class HomeComponent implements OnInit {
   BASE_PREFIX = "http://phenomebrowser.net/"
   PUBMED_PREFIX = "http://phenomebrowser.net/"
   TYPES = [];
+  tabId = 0;
 
 
   constructor(
@@ -178,6 +179,7 @@ export class HomeComponent implements OnInit {
   }
 
   onNavChange(changeEvent: NgbNavChangeEvent) {
+    this.tabId = changeEvent.nextId;
     if (changeEvent.nextId === this.types.length + 1) {
       this.query = this.similarityQuery;
     } else {
