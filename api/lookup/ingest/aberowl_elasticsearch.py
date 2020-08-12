@@ -5,16 +5,19 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-es = None
 esUrl = settings.ABEROWL_ES_URL.split(",")
-if settings.ABEROWL_ES_USERNAME and settings.ABEROWL_ES_PASSWORD:
-    es = Elasticsearch(esUrl, http_auth=(settings.ABEROWL_ES_USERNAME, settings.ABEROWL_ES_PASSWORD))
-else :
-    es = Elasticsearch(esUrl)
+
+def connection():
+    if settings.ABEROWL_ES_USERNAME and settings.ABEROWL_ES_PASSWORD:
+        es = Elasticsearch(esUrl, http_auth=(settings.ABEROWL_ES_USERNAME, settings.ABEROWL_ES_PASSWORD))
+    else :
+        es = Elasticsearch(esUrl)
+    return es
 
 # executes query on given index
 def execute(indexname, query):
     try:
+        es = connection()
         res = es.search(index=indexname, body=query, request_timeout=(10 * 60))
         return res
     except Exception as e:
@@ -23,6 +26,7 @@ def execute(indexname, query):
 # find owl classes indexed in aberowl repository
 def find_classes(ontology):
     try:
+        es = connection()
         query = {
             "size" : 2500000,
             "query": { 
