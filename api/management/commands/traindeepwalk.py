@@ -85,7 +85,7 @@ class Command(BaseCommand):
             node_file = open("nodes.json", "r")
             node_dict = json.load(node_file)
             self.generate_bio2vec_frmt(node_dict, outdir)
-            evaluate_curated_disgenet(outdir, join(TEST_SET_DIR, testset_name + '.tsv'))
+            run_evaluation(outdir, join(TEST_SET_DIR, testset_name + '.tsv'), testset_name)
         except Exception as e:
             logger.exception("message")
         except RuntimeError:
