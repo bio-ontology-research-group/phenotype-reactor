@@ -10,14 +10,9 @@ logger = logging.getLogger(__name__)
 es = None
 esUrl = settings.LOOKUP_ES_URL.split(",")
 if settings.LOOKUP_ES_USERNAME and settings.LOOKUP_ES_PASSWORD:
-    es = Elasticsearch(esUrl, 
-    http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD), 
-    scheme="https",
-    use_ssl=True,
-    port=443,
-    timeout=3 * 60)
+    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD))
 else :
-    es = Elasticsearch(esUrl, timeout=3 * 60)
+    es = Elasticsearch(esUrl)
 
 VALUESET_INDEX_NAME = settings.LOOKUP_ES_VALUESET_INDEX_NAME
 ENTITY_INDEX_NAME = settings.LOOKUP_ES_ENTITY_INDEX_NAME
