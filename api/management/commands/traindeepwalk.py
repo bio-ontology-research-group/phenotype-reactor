@@ -40,6 +40,7 @@ class Command(BaseCommand):
         parser.add_argument('-n', '--number_walks', type=int, default=80, help='Number of walks', )
         parser.add_argument('-s', '--window_size', type=int, default=10, help='Window size', )
         parser.add_argument('-tn', '--testset_name', type=str, default='', help='testset name', ) 
+        parser.add_argument('-dg', '--directed', nargs='?', const=True, default=False, help='directed or undirected graph by default the graph is undirected', ) 
     
     def handle(self, *args, **options):
         model = options['model']
@@ -49,6 +50,7 @@ class Command(BaseCommand):
         number_walks = options['number_walks']
         window_size = options['window_size']
         testset_name = options['testset_name']
+        directed = options['directed']
         
         try:
             annontation_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1])]
@@ -68,10 +70,15 @@ class Command(BaseCommand):
                 'number_walks': number_walks,
                 'window_size': window_size,
                 'workers': workers,
+                'testset_name': testset_name,
+                'directed': directed,
             }
             logger.info("Starting training dataset with settings:" + str(config))
             (graph, node_dict) = generate_deepwalk_graph(annontation_files, axiom_files)
 
+            if directed:
+                graph = graph.to_directed()
+            
             edgelist_outfile = "kb.edgelist"
             nx.write_edgelist(graph, edgelist_outfile, data=False)
 
