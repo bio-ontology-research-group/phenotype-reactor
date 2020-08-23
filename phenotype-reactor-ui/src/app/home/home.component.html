@@ -22,7 +22,7 @@
             <span class="card-title" *ngIf="entity">{{entity.label[0]}}</span> 
             <span class="card-title" *ngIf="!entity">Name</span>  
         </span>
-        <small class="text-muted ml-2" *ngIf="entity?.oboid">{{entity.oboid}}</small>
+        <small class="text-muted ml-2" *ngIf="entity?.identifier">{{entity.identifier}}</small>
         <h6 class="card-subtitle mt-3">
             <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
             <span *ngIf="!entity">Definition</span>  
@@ -99,3 +99,4 @@
         <app-sparql-form [query]="query"></app-sparql-form>
     </div>
 </div>
+<app-bind-schema [entity]="entity"></app-bind-schema>

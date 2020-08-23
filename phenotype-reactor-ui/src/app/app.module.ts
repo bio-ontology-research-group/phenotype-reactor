@@ -19,6 +19,8 @@ import { DownloadsComponent } from './downloads/downloads.component';
 import { SparqlFormComponent } from './sparql-form/sparql-form.component';
 import { ArchiveService } from './archive.service';
 import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-chart.component';
+import { NgxJsonLdModule } from '@ngx-lite/json-ld';
+import { BindSchemaComponent } from './bind-schema/bind-schema.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-cha
     ListAssociationComponent,
     DownloadsComponent,
     SparqlFormComponent,
-    PlotScatterChartComponent
+    PlotScatterChartComponent,
+    BindSchemaComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +41,7 @@ import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-cha
     FormsModule,
     HttpClientModule,
     MDBBootstrapModule.forRoot(),
+    NgxJsonLdModule,
     AppRoutingModule
   ],
   providers: [LookupService, AssociationService, ArchiveService, TitleCasePipe],

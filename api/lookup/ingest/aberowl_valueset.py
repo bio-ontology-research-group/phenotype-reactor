@@ -58,6 +58,6 @@ class AberowlValueset(Source):
         obj["label"] =  entity['label'] if 'label' in entity else []
         obj["synonym"] =  entity['synonyms'] if 'synonyms' in entity  else []
         obj["definition"] =  entity['definition'] if 'definition' in entity  else []
-        obj["identifier"] =  entity['identifier'] if 'identifier' in entity  else []
+        obj["identifier"] =  entity['oboid'] if 'oboid' in entity  else []
         obj["entity_type"] = self.entity_type
         return obj
