@@ -21,3 +21,6 @@ The datasets aggregated from research studies and cummunity resources are follwo
 - Drug-phentype association based on drug side effect resource. [Link](https://www.ncbi.nlm.nih.gov/pubmed/20087340)
 - PathoPhenoDB, linking human pathogens to their phenotypes in support of infectious disease research. [Link](https://www.nature.com/articles/s41597-019-0090-x)
 - DeepPheno: Predicting single gene loss-of-function phenotypes using an ontology-aware hierarchical classifier. [Link](https://www.biorxiv.org/content/10.1101/839332v2)
+
+## License 
+This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/)
