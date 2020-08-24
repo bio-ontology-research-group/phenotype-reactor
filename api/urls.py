@@ -31,4 +31,4 @@ urlpatterns = [
     path('api/valueset', FindValueset.as_view()),
     path('archive/latest', GetLatestDataArchived.as_view()),
     path('archive', FindDataArchived.as_view()),
-] + static(settings.SCHEMA_URL, document_root='schema') + static(settings.ARCHIVE_URL, document_root=settings.TARGET_DATA_DIR) 
+] 

@@ -7,6 +7,10 @@
         "target": "http://localhost:8000",
         "secure": false
     },
+    "/static": {
+        "target": "http://localhost:8000",
+        "secure": false
+    },
     "/healthcheck": {
         "target": "http://localhost:8000",
         "secure": false

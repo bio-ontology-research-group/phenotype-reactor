@@ -141,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 ARCHIVE_URL = '/archive/'
-SCHEMA_URL = '/archive/schema/'
+SCHEMA_URL = '/schema/'
 
 LOGGING = {
         'version': 1,
@@ -220,3 +220,8 @@ LOOKUP_ES_ENTITY_INDEX_NAME = config['lookup']['es.index.entity.name']
 
 OMIM_KEY = config['omim']['key']
 OMIM_DIR = config['omim']['dir']
+
+STATICFILES_DIRS = [
+    ("archive", TARGET_DATA_DIR),
+    ("archive/schema", "schema")
+]

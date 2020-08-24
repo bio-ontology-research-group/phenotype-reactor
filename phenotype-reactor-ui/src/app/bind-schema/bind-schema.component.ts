@@ -32,6 +32,7 @@ export class BindSchemaComponent implements OnInit {
         type = 'Drug'
       } else if (this.entity.entity_type == 'Gene') {
         type = 'Gene'
+        context = this.BIO_SCHEMA_CONTEXT
       } else if (this.entity.entity_type == 'Metabolite') {
         type = 'ChemicalSubstance'
         context = this.BIO_SCHEMA_CONTEXT
