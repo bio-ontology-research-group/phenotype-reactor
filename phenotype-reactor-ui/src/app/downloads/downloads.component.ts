@@ -19,10 +19,10 @@ export class DownloadsComponent implements OnInit {
   }
 
   downloadFile(filename: string) {
-    window.open(`/static/archive/${filename}`);
+    window.open(`/static/${filename}`);
   }
 
-  downloadLatestFile(filename: string) {
+  downloadArchivedFile(filename: string) {
     window.open(`/archive/${filename}`);
   }
 

@@ -224,6 +224,5 @@ OMIM_KEY = config['omim']['key']
 OMIM_DIR = config['omim']['dir']
 
 STATICFILES_DIRS = [
-    ("archive", TARGET_DATA_DIR),
-    ("archive/schema", "schema")
+    ("schema", "schema")
 ]

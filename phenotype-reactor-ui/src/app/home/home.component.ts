@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssociationService } from '../association.service';
 import { _ } from 'underscore';
 import { LookupService } from '../lookup.service';
-import { NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavChangeEvent, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -39,12 +39,13 @@ export class HomeComponent implements OnInit {
   TYPES = [];
   tabId = 0;
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute, 
     private associationService: AssociationService,
-    private lookupService: LookupService) { 
+    private lookupService: LookupService,
+    private alertConfig: NgbAlertConfig) { 
+      alertConfig.type = 'secondary';
       this.route.params.subscribe( params => {
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset ? params.valueset : ''

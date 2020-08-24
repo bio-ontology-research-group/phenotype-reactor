@@ -10,7 +10,7 @@
             of RDF language. Here is the latest version of the anntations:</p>
         </div>
         <div class="row pl-3">
-            <span><ul><li><button type="button" (click)="downloadLatestFile('latest')" class="btn btn-link p-0 mb-1">Latest Version</button></li></ul></span>
+            <span><ul><li><button type="button" (click)="downloadArchivedFile('latest')" class="btn btn-link p-0 mb-1">Latest Version</button></li></ul></span>
         </div>
         <div class="row pl-3">
             <p>The structure of the annotations is descirbed in the <button type="button" (click)="openInNewTab('https://www.w3.org/TR/shacl/')" class="btn btn-link p-0 mb-1">SHACL</button> 
@@ -30,7 +30,7 @@
                 <tbody>
                     <tr *ngFor="let file of files">
                         <td>{{file.last_mod_time}}</td>
-                        <td><button type="button" (click)="downloadFile(file.full_name)" class="btn btn-link p-0 mb-1">tar.gz</button></td>
+                        <td><button type="button" (click)="downloadArchivedFile(file.full_name)" class="btn btn-link p-0 mb-1">tar.gz</button></td>
                     </tr>
                 </tbody>
             </table>
