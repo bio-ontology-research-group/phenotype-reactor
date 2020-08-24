@@ -21,8 +21,8 @@ export class BindSchemaComponent implements OnInit {
   ngOnChanges(change: SimpleChange) {
     if(change && change['entity'] && this.entity) {
       let identifier = this.entity.identifier ? this.entity.identifier : null;
-      let alternateName = this.entity.synonym.length > 0 ? this.entity.synonym[0] : null;
-      let definition = this.entity.definition.length > 0 ? this.entity.definition[0] : null;
+      let alternateName = this.entity.synonym && this.entity.synonym.length > 0 ? this.entity.synonym[0] : null;
+      let definition = this.entity.definition && this.entity.definition.length > 0 ? this.entity.definition[0] : null;
       let type = null;
       let context = this.SCHEMA_CONTEXT;
     

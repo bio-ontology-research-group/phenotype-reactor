@@ -4,12 +4,33 @@
             <option value="">All Databases</option>
             <option *ngFor="let valueset of valuesets" value="{{valueset.valueset}}" [selected]='selectedValueset == valueset.valueset'>{{valueset.valueset}}</option>
         </select>
-         <input id="search" type="text" class="form-control ml-3 w-25" (ngModel)="term"
+         <input id="search" type="text" class="form-control ml-3 w-25" (ngModel)="term" #searchInput
             [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search" [resultTemplate]="rt"
-            (selectItem)="onTermSelect($event)"/>
+            (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
         <!-- <button mdbBtn size="md" color="default" class="my-0 waves-light"
             mdbWavesEffect type="submit">Search</button> -->
     </form>
+</div>
+<div class="row">
+    <div class="col-1">
+    </div> 
+    <div class="col-9 ml-4"> 
+        <ul class="list-inline">
+            <li class="list-inline-item">e.g</li>
+            <li class="list-inline-item">
+                <button type="button" (click)="setExample('Cough')" class="btn btn-link p-0 mb-1">Cough</button>|
+            </li>
+            <li class="list-inline-item">
+                <button type="button" (click)="setExample('Influenza', 'MONDO')" class="btn btn-link p-0 mb-1">Influenza</button>|
+            </li>
+            <li class="list-inline-item">
+                <button type="button" (click)="setExample('FBN1', 'MGI')" class="btn btn-link p-0 mb-1">FBN1</button>|
+            </li>
+            <li class="list-inline-item">
+                <button type="button" (click)="setExample('Zika Virus', 'NCBITAXON')" class="btn btn-link p-0 mb-1">Zika Virus</button>
+            </li>
+        </ul>
+    </div>
 </div>
 <ng-template #rt let-r="result" let-t="term">
   <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight> 

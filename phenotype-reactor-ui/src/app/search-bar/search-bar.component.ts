@@ -1,10 +1,11 @@
-import { Component, OnInit, SimpleChange, Output, EventEmitter, Input} from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit, SimpleChange, Output, EventEmitter, Input, ViewChild, ElementRef} from '@angular/core';
+import { Observable, of, Subject, merge } from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { LookupService } from '../lookup.service';
 import { _ } from 'underscore';
+import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-search-bar',
@@ -13,8 +14,12 @@ import { _ } from 'underscore';
 })
 export class SearchBarComponent implements OnInit {
 
+  @ViewChild('searchInput', {static: true}) searchInput:ElementRef; 
+  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
   @Output() selectedTerm = new EventEmitter<any>();
   @Input() valueset =  new EventEmitter<any>();
+  
+  focus$ = new Subject<string>();
 
   selectedValueset = ''
   term = null;
@@ -24,11 +29,10 @@ export class SearchBarComponent implements OnInit {
 
   formatter: any;
   
-  search = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(() => this.searching = true),
+  search = (text$: Observable<string>) => {
+    const debouncedText$ = text$.pipe(debounceTime(500), distinctUntilChanged());
+    const inputFocus$ = this.focus$;
+    return merge(debouncedText$, inputFocus$).pipe(
       switchMap(term =>
         this.findTerm(term).pipe(
           tap(() => this.searchFailed = false),
@@ -36,10 +40,8 @@ export class SearchBarComponent implements OnInit {
             this.searchFailed = true;
             return of([]);
           }))
-      ),
-      tap(() => this.searching = false)
-    )
-
+    ));
+  }
   constructor(private lookupService: LookupService,
     private router: Router,
     private titlecasePipe:TitleCasePipe) { }
@@ -76,7 +78,18 @@ export class SearchBarComponent implements OnInit {
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValueset)
   }
 
-  sort(lookupList){
+  sort(lookupList) {
     return lookupList.sort((one, two) => (one.name < two.name ? -1 : 1));
+  }
+
+  setExample(term, valueset) {
+    if (!valueset) {
+      this.selectedValueset = ''
+    } else {
+      this.selectedValueset = valueset;
+    }
+
+    this.searchInput.nativeElement.value = term;
+    this.searchInput.nativeElement.focus();
   }
 }
