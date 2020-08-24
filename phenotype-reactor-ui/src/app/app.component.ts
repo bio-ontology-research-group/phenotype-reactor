@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'phenotype-reactor-ui';
+
+  openInNewTab(url: string) {
+    window.open(url, "_blank");
+  }
 }

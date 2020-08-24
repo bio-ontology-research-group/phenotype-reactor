@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-list-association',
   templateUrl: './list-association.component.html',
-  styleUrls: ['./list-association.component.css']
+  styleUrls: ['./list-association.component.css'],
+  providers: [NgbAlertConfig]
 })
 export class ListAssociationComponent implements OnInit {
 
@@ -17,7 +19,9 @@ export class ListAssociationComponent implements OnInit {
   pageSize = 20;
   collectionSize = 0
 
-  constructor() { }
+  constructor(alertConfig: NgbAlertConfig) { 
+    alertConfig.type = 'secondary';
+  }
 
   ngOnInit() {
     this.collectionSize = this.associations ? this.associations.length : 0;

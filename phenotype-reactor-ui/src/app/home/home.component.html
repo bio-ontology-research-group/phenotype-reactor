@@ -36,7 +36,7 @@
                     <app-list-association [associations]="typeToAssoicationMap[type]" [entities]="entities" [valueset]="valueset"></app-list-association>
                 </ng-template>
             </li>
-            <li [ngbNavItem]="types.length + 1">
+            <li [ngbNavItem]="types.length + 1" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
                 <a ngbNavLink>Similar Entities</a>
                 <ng-template ngbNavContent>
                 <div class="row"> 

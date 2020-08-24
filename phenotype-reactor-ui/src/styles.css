@@ -65,3 +65,7 @@ body {
     top: 100%;
     left: 0;
   }
+
+.mr-10, .mx-10 {
+    margin-right: 6rem !important;
+}

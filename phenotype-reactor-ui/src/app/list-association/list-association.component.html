@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="associations.length > 0">
     <table class="table table-striped">
     <thead color="default">
     <tr>
@@ -37,4 +37,8 @@
         <option [ngValue]="20">20 items per page</option>
         <option [ngValue]="50">50 items per page</option>
     </select>
+</div>
+
+<div class="row mt-2" *ngIf="associations.length < 1">
+    <p class="col-12 text-center"><ngb-alert class="alert-secondary" [dismissible]="false">No associations found</ngb-alert></p>
 </div>
