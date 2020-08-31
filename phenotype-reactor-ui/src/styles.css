@@ -69,3 +69,18 @@ body {
 .mr-10, .mx-10 {
     margin-right: 6rem !important;
 }
+
+.project-card a, a:hover {
+    text-decoration: none;
+}
+  
+.project-card a:hover {
+    opacity: 0.8;
+}
+
+.bg-purple {
+    background-color: var(--purple);
+}
+.bg-lightseagreen {
+    background-color: #20B2AA;
+}

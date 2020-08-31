@@ -8,12 +8,55 @@
 <div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
     <div class="card-body justify-content-between p-4">
         <span class="card-title">About the Phenotype Reactor project</span>
-        <p class="mt-3">The Phenotype Reactor is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to 
-        compute phentypic similarity between these concepts. It also provides SPARQL endpoint and a query editor for querying the phenotypes 
+        <p class="mt-3">The Phenotype Reactor is a platform that aggregates phenotype connections with biomedical concepts and provides the ability to 
+        compute phentypic similarity between these concepts. It provides a SPARQL endpoint and a query editor for querying the phenotype 
         relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited 
         to phentype relations with genes, genotype, disease, drug, pathogens and metabolites. <br />
         We have integrated phenotype relations from various sources including research studies and community resources such as 
         <a (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="text-primary">HPO phenotype annontations</a>.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="card text-white bg-primary mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
+        <a (click)="openInNewTab('http://patho.phenomebrowser.net')">
+        <div class="card-body">
+            <div class="row"> 
+                <div class="col-11"> 
+                    <h5 class="card-title">PathoPhenoDB</h5>
+                    <p class="card-text">A database of pathogens and their phenotypes for diagnostic support in infections</p>
+                </div>
+                <div class="col-1" style="font-size: 3em;"><i class="fas fa-chevron-right" ></i></div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <div class="card text-white bg-lightseagreen  mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
+        <a (click)="openInNewTab('http://vsim.phenomebrowser.net')">
+        <div class="card-body">
+            <div class="row"> 
+                <div class="col-11"> 
+                    <h5 class="card-title">VSIM</h5>
+                    <p class="card-text">Visualization and Simulation of the Human Genome Diseases</p>
+                </div>
+                <div class="col-1" style="font-size: 3em;"><i class="fas fa-chevron-right" ></i></div>
+            </div>
+        </div>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="card text-white bg-purple mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
+        <a (click)="openInNewTab('http://ddiem.phenomebrowser.net')">
+        <div class="card-body">
+            <div class="row"> 
+                <div class="col-11"> 
+                    <h5 class="card-title">DDIEM</h5>
+                    <p class="card-text">Drug database for inborn errors of metabolism</p>
+                </div>
+                <div class="col-1" style="font-size: 3em;"><i class="fas fa-chevron-right" ></i></div>
+            </div>
+        </div>
+        </a>
     </div>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">

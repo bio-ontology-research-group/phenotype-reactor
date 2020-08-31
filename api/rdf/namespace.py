@@ -74,13 +74,13 @@ PREFIX_TO_VALUESET_DICT = {
     str(ORPHA.uri): 'ordo',
 } 
 
-def find_type(self, uri):
+def find_type(uri):
     for key in PREFIX_TO_TYPE_DICT:
         if key in uri:
             return PREFIX_TO_TYPE_DICT[key] 
     return 'entity'
 
-def find_valueset(self, uri):
+def find_valueset(uri):
     for key in PREFIX_TO_VALUESET_DICT:
         if key in uri:
             return PREFIX_TO_VALUESET_DICT[key] 
