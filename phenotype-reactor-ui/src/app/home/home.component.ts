@@ -53,7 +53,6 @@ export class HomeComponent implements OnInit {
           this.initAssociation()
         }
       });
-      this.TYPES = associationService.TYPES;
   }
 
   ngOnInit() {
@@ -67,6 +66,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  onQueryChange(query) {
+    if (query) {
+      this.query = query;
+    }
+  }
+
   openInNewTab(url: string) {
     window.open(url, "_blank");
   }
@@ -75,20 +80,29 @@ export class HomeComponent implements OnInit {
     this.entities = {};
     this.similarEntities = {};
     if (this.valueset == 'MP' || this.valueset == 'HP') {
-      this.associationService.find(null, this.iri, null).subscribe( data => {
-        this.associations = data ? data['results']['bindings'] : [];
-        this.annontationQuery = data ? data['query'] : '';
-        this.query = this.annontationQuery
-        this.transformConceptAssociation(this.associations);
-        this.resolveEntities(this.associations)
-      });
+      // this.associationService.find(null, this.iri, null, null, null).subscribe( data => {
+      //   this.associations = data ? data['results']['bindings'] : [];
+      //   this.annontationQuery = data ? data['query'] : '';
+      //   this.query = this.annontationQuery
+      //   this.transformConceptAssociation(this.associations);
+      //   this.resolveEntities(this.associations)
+      // });
+      var i = 0
+      this.types = [];
+      for (var key in this.associationService.TYPES) {
+        if (key == 'Phenotype') 
+          continue
+        this.types[i] = this.associationService.TYPES[key];
+        i++;
+      }
     } else {
-      this.associationService.find(this.iri, null, null).subscribe( data => {
-        this.associations = data ? data['results']['bindings'] : [];
-        this.annontationQuery = data ? data['query'] : '';
-        this.query = this.annontationQuery
-        this.transformPhenotypeAssociation(this.associations);
-        this.resolveEntities(this.associations)
+      this.associationService.find(this.iri, null, null, null, null).subscribe( data => {
+        // this.associations = data ? data['results']['bindings'] : [];
+        // this.annontationQuery = data ? data['query'] : '';
+        // this.query = this.annontationQuery
+        // this.transformPhenotypeAssociation(this.associations);
+        // this.resolveEntities(this.associations)
+        this.types = [this.associationService.TYPES['Phenotype']]
       });
     }
     this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {

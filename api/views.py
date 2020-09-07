@@ -30,8 +30,10 @@ class FindAssociation(APIView):
             concept = request.GET.get('concept', None)
             phenotype = request.GET.get('phenotype', None)
             concept_type = request.GET.get('type', None)
+            limit = request.GET.get('limit', None)
+            offset = request.GET.get('offset', None)
 
-            (response, query) = self.service.find(concept, phenotype) 
+            (response, query) = self.service.find(concept, phenotype, concept_type, limit, offset) 
             result = response.json()
             result['query'] = query
             return Response(result)

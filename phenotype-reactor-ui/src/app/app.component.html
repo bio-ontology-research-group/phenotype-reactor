@@ -16,6 +16,16 @@
             <li class="nav-item waves-light" mdbWavesEffect>
                 <a class="nav-link" routerLink="about">About</a>
             </li>
+            <li ngbDropdown class="nav-item">
+                <a href (click)="false" class="nav-link waves-effect waves-light" ngbDropdownToggle>
+                    Related Databases
+                </a>
+                <div ngbDropdownMenu>
+                    <button ngbDropdownItem (click)="openInNewTab('http://patho.phenomebrowser.net')">DDIEM</button>
+                    <button ngbDropdownItem (click)="openInNewTab('http://patho.phenomebrowser.net')">PathoPhenoDB</button>
+                    <button ngbDropdownItem (click)="openInNewTab('http://vsim.phenomebrowser.net')">VSIM</button>
+                </div>
+            </li>
         </ul>
         <ul class="navbar-nav ml-auto nav-flex-icons mr-10">
                 <!-- <a class="nav-link waves-effect waves-light">
@@ -37,19 +47,7 @@
                     <button ngbDropdownItem (click)="openInNewTab('https://github.com/bio-ontology-research-group/phenotype-reactor/issues')">Report an Issue</button>
                 </div>
             </li>
-            
         </ul>
-       <!--  <ul class="navbar-nav nav-flex-icons">
-            <li class="nav-item waves-light" mdbWavesEffect>
-                <a class="nav-link"><mdb-icon fab icon="facebook-f"></mdb-icon></a>
-            </li>
-            <li class="nav-item waves-light" mdbWavesEffect>
-                <a class="nav-link"><mdb-icon fab icon="twitter"></mdb-icon></a>
-            </li>
-            <li class="nav-item waves-light" mdbWavesEffect>
-                <a class="nav-link"><mdb-icon fab icon="instagram"></mdb-icon></a>
-            </li>
-        </ul> -->
     </links>
 </mdb-navbar>
 <!-- Main -->

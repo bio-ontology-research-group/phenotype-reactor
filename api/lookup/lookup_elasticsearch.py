@@ -14,18 +14,17 @@ use_ssl = False
 if 'https' in esUrl[0]:
   use_ssl = True
 
+http_auth = None
 if settings.LOOKUP_ES_USERNAME and settings.LOOKUP_ES_PASSWORD:
-    es = Elasticsearch(esUrl, http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD),
-          use_ssl=use_ssl,
-          sniff_on_start=True,
-          sniff_on_connection_fail=True,
-          sniffer_timeout=60)
-else :
-    es = Elasticsearch(esUrl,
-          use_ssl=use_ssl,
-          sniff_on_start=True,
-          sniff_on_connection_fail=True,
-          sniffer_timeout=60)
+  http_auth=(settings.LOOKUP_ES_USERNAME, settings.LOOKUP_ES_PASSWORD)
+
+if not es:
+  es = Elasticsearch(esUrl, http_auth=http_auth,
+        use_ssl=use_ssl,
+        sniff_on_start=True,
+        sniff_on_connection_fail=True,
+        sniffer_timeout=60)
+  logger.info("Connected to elasticesearch server: %s", str(es))
 
 VALUESET_INDEX_NAME = settings.LOOKUP_ES_VALUESET_INDEX_NAME
 ENTITY_INDEX_NAME = settings.LOOKUP_ES_ENTITY_INDEX_NAME

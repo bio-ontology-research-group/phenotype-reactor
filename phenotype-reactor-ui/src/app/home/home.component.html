@@ -16,7 +16,7 @@
         <a (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="text-primary">HPO phenotype annontations</a>.</p>
     </div>
 </div>
-<div class="row">
+<!--<div class="row">
     <div class="card text-white bg-primary mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
         <a (click)="openInNewTab('http://patho.phenomebrowser.net')">
         <div class="card-body">
@@ -30,35 +30,7 @@
         </div>
         </a>
     </div>
-    <div class="card text-white bg-lightseagreen  mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
-        <a (click)="openInNewTab('http://vsim.phenomebrowser.net')">
-        <div class="card-body">
-            <div class="row"> 
-                <div class="col-11"> 
-                    <h5 class="card-title">VSIM</h5>
-                    <p class="card-text">Visualization and Simulation of the Human Genome Diseases</p>
-                </div>
-                <div class="col-1" style="font-size: 3em;"><i class="fas fa-chevron-right" ></i></div>
-            </div>
-        </div>
-        </a>
-    </div>
-</div>
-<div class="row">
-    <div class="card text-white bg-purple mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
-        <a (click)="openInNewTab('http://ddiem.phenomebrowser.net')">
-        <div class="card-body">
-            <div class="row"> 
-                <div class="col-11"> 
-                    <h5 class="card-title">DDIEM</h5>
-                    <p class="card-text">Drug database for inborn errors of metabolism</p>
-                </div>
-                <div class="col-1" style="font-size: 3em;"><i class="fas fa-chevron-right" ></i></div>
-            </div>
-        </div>
-        </a>
-    </div>
-</div>
+</div>-->
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
         <a (click)="openInNewTab(entity.entity)" class="text-muted">
@@ -74,9 +46,9 @@
         </h6>    
         <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="onNavChange($event)">
              <li [ngbNavItem]="typeIdx + 1" *ngFor="let type of types; let typeIdx = index">
-                <a ngbNavLink>{{type.replace(BASE_PREFIX, '')}} Association</a>
+                <a ngbNavLink>{{type.name}} Association</a>
                 <ng-template ngbNavContent>
-                    <app-list-association [associations]="typeToAssoicationMap[type]" [entities]="entities" [valueset]="valueset"></app-list-association>
+                    <app-list-association [iri]="iri" [valueset]="valueset" [type]="type" (annontationQuery)="onQueryChange($event)"></app-list-association>
                 </ng-template>
             </li>
             <li [ngbNavItem]="types.length + 1">
@@ -114,7 +86,8 @@
                     </tr>
                     </tbody>
                     </table>
-                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize">
+                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
+                        [maxSize]="5" class="pl-3">
                     </ngb-pagination>
 
                     <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">

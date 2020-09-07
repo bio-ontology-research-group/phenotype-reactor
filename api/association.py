@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 class Association:
     MIME_TYPE_JSON = "application/json"
 
-    def find(self, concept_iri, phenotype_iri, concept_type_iri=None):
+    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, limit=10, offset=None):
         if not concept_iri and not phenotype_iri:
            raise RuntimeException("atleast one of concept and phenotype field is required")
         
@@ -24,15 +24,8 @@ class Association:
         concept_var = '?concept' if not concept_iri else '(<{iri}> as ?concept)'.format(iri=concept_iri)
         type_var = '?conceptType' if not concept_type_iri else '(<{iri}> as ?conceptType)'.format(iri=concept_type_iri)
         phenotype_var = '?phenotype' if not phenotype_iri else '(<{iri}> as ?phenotype)'.format(iri=phenotype_iri)
-        query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                \nPREFIX pb: <http://phenomebrowser.net/> \
-                \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
-                \nPREFIX dcterms: <http://purl.org/dc/terms/> \
-                \nPREFIX dc: <http://purl.org/dc/elements/1.1/> \
-                \n\
-                \nSELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?evidence ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
-                \nFROM <http://phenomebrowser.net> \
-                \nWHERE { \
+        page = ' LIMIT ' + str(limit) + " OFFSET " + str(offset) if offset else ''
+        graph_pattern = 'WHERE { \
                 \n    ?association rdf:type rdf:Statement . \
                     ' + phenotype_stmt + ' \
                     ' + concept_stmt + ' \
@@ -43,6 +36,22 @@ class Association:
                 \n    ?prov dcterms:source ?source . \
                 \n    OPTIONAL { ?prov dcterms:created ?created . } \
                 \n}'
+        query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                \nPREFIX pb: <http://phenomebrowser.net/> \
+                \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
+                \nPREFIX dcterms: <http://purl.org/dc/terms/> \
+                \nPREFIX dc: <http://purl.org/dc/elements/1.1/> \
+                \n\
+                \nSELECT * \
+                \n{\n { \
+                \n  SELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?evidence ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
+                \n  FROM <http://phenomebrowser.net> \
+                \n  ' + graph_pattern + page + ' \
+                \n  } \
+                \n  UNION { select (count(*) as ?total)  \
+                \n  FROM <http://phenomebrowser.net> \
+                \n  ' + graph_pattern + ' \
+                \n  }\n}'
         logger.debug("Executing query for search criteria: concept_iri=" 
             + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
         # logger.debug("Query : %s", query)  

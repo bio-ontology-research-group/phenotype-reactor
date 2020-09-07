@@ -14,7 +14,7 @@ import { LookupService } from './lookup.service';
 import { AssociationService }  from './association.service';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { ListAssociationComponent } from './list-association/list-association.component';
+import { ListAssociationComponent, ListAssoicationSortableHeader} from './list-association/list-association.component';
 import { DownloadsComponent } from './downloads/downloads.component';
 import { SparqlFormComponent } from './sparql-form/sparql-form.component';
 import { ArchiveService } from './archive.service';
@@ -30,6 +30,7 @@ import { BindSchemaComponent } from './bind-schema/bind-schema.component';
     ISparqlComponent,
     SearchBarComponent,
     ListAssociationComponent,
+    ListAssoicationSortableHeader,
     DownloadsComponent,
     SparqlFormComponent,
     PlotScatterChartComponent,
