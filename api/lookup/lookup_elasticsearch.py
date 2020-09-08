@@ -174,11 +174,10 @@ def find_entity_by_iris(iris, valueset):
   try:
     filter_part = []
     if valueset:
-      print(valueset)
       filter_part.append({ "term": { "valueset" : valueset }})
     filter_part.append({ "terms": { "entity": iris } })
     query = {
-        "size" : 10000,
+        "size" : 50000,
         "query": { 
           "bool": { 
             "filter": filter_part

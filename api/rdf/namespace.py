@@ -50,6 +50,10 @@ ORPHA = ClosedNamespace(uri=URIRef("http://www.orpha.net/ORDO/Orphanet_"), terms
 PMID = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/pubmed/"), terms=[])
 ISBN = ClosedNamespace(uri=URIRef("https://isbnsearch.org/isbn/"), terms=[])
 
+RDFLIB_FORMAT_DIC = {
+    'xml' : 'rdf', 'n3': 'n3', 'turtle': 'ttl', 'nt': 'nt', 'pretty-xml': 'rdf', 'trix': 'trix', 'trig': 'trig', 'nquads':'nquads'
+}
+
 PREFIX_TO_TYPE_DICT = {
     (str(OBO.uri) + 'HP' ): str(PHENO.Phenotype),
     (str(OBO.uri) + 'MP' ): str(PHENO.Phenotype),
@@ -72,6 +76,10 @@ PREFIX_TO_VALUESET_DICT = {
     (str(OBO.uri) + 'CHEBI_' ): 'CHEBI',
     (str(OBO.uri) + 'DOID_' ): 'DOID',
     str(ORPHA.uri): 'ordo',
+    str(OMIM.uri): 'OMIM',
+    str(DECIPHER.uri): 'DECIPHER',
+    str(MGI.uri): 'MGI',
+    str(ENTREZ_GENE.uri): 'NCBIGene',
 } 
 
 def find_type(uri):

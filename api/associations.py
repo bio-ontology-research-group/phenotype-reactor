@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class Association:
+class Associations:
     MIME_TYPE_JSON = "application/json"
 
     def find(self, concept_iri, phenotype_iri, concept_type_iri=None, limit=10, offset=None):

@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.association import Association
+from api.associations import Associations
 from api.bio2vec_api import find_most_similar
 
 
@@ -23,7 +23,7 @@ class FindAssociation(APIView):
     List associations by given criteria
     """
 
-    service = Association()
+    service = Associations()
 
     def get(self, request, format=None):
         try:
@@ -45,7 +45,7 @@ class FindMostSimilar(APIView):
     List associations by given criteria
     """
 
-    service = Association()
+    service = Associations()
     def get(self, request, format=None):
         try:
             concept = request.GET.get('concept', None)
