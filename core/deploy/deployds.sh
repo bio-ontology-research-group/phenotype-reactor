@@ -5,8 +5,7 @@ echo "ERROR: container id is required argument"
 fi
 
 echo "Downloading phenotype data ..."
-# curl -L 'http://phenomebrowser.net/archive/latest' --output phenotype-data.tar.gz
-curl -L 'http://localhost/archive/latest' --output phenotype-data.tar.gz
+curl -L 'http://phenomebrowser.net/archive/latest' --output phenotype-data.tar.gz
 
 
 echo "Extracting phenotype data ..."

@@ -4,9 +4,6 @@ import time
 import datetime
 import os
 
-import api.transformers.phenotype_association_transformer as transformer
-import api.archive.archive_ds as archive
-
 from django.core.management.base import BaseCommand, CommandError
 
 from api.transformers.pathogen_pheno_ds import PathogenPhenoDS
@@ -61,7 +58,6 @@ class Command(BaseCommand):
             for source in sources.split(","):
                 logger.info("Transforming %s", source)
                 self.transform(sources_map[source])
-        archive.archive()
 
     def transform(self, source: RDFSource):
         logger.info("Started transformation %s", source.get_name())
