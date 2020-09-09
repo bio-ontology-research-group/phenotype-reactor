@@ -1,72 +1,94 @@
+import datetime
+
 VIRTUOSO_CONTAINER="pheno_virtuoso"
+DEEPPHENO_FILE_NUMS = range(1,20)
+
+configfile: "config.yaml"
+
+wildcard_constraints:
+    num_pat="\d+"
 
 rule virtuoso:
     output: touch("virtuoso.done")
     shell:"./start-virtuoso.sh {VIRTUOSO_CONTAINER}"
 
 rule t_doid_dp:
-    output: touch("t_doid_dp.done")
+    output: 
+        expand("{target_dir}/data-{date}/doid_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s doid_dp"
 
 rule t_hpo_dp:
-    output: touch("t_hpo_dp.done")
+    output: 
+        expand("{target_dir}/data-{date}/hpo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s hpo_dp"
 
 rule t_mondo_dp:
-    output: touch("t_mondo_dp.done")
+    output: 
+        expand("{target_dir}/data-{date}/mondo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s mondo_dp"
 
 rule t_patho_dp:
-    output: touch("t_patho_dp.done")
+    output: 
+        expand("{target_dir}/data-{date}/patho_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s patho_dp"
 
 rule t_pubchem_dp:
-    output: touch("t_pubchem_dp.done")
+    output: 
+        expand("{target_dir}/data-{date}/drugphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s pubchem_dp"
 
 rule t_txtmind_gp:
-    output: touch("t_txtmind_gp.done")
+    output: 
+        expand("{target_dir}/data-{date}/textmined_genephenotype-1.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
+        expand("{target_dir}/data-{date}/textmined_genephenotype-2.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
+        expand("{target_dir}/data-{date}/textmined_genephenotype-3.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s txtmind_gp"
 
 rule t_deep_gp:
-    output: touch("t_deep_gp.done")
+    output: 
+        expand("{target_dir}/data-{date}/deep_genephenotype-{filenum}.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()), filenum=DEEPPHENO_FILE_NUMS)
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s deep_gp"
 
 rule t_patho_pp:
-    output: touch("t_patho_pp.done")
+    output: 
+        expand("{target_dir}/data-{date}/pathogenphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s patho_pp"
 
 rule t_mp:
-    output: touch("t_mp.done")
+    output: 
+        expand("{target_dir}/data-{date}/metabolitephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s mp"
 
 rule archive:
-    input: "t_doid_dp.done", 
-            "t_hpo_dp.done", 
-            "t_patho_dp.done", 
-            "t_pubchem_dp.done", 
-            "t_txtmind_gp.done", 
-            "t_deep_gp.done", 
-            "t_patho_pp.done", 
-            "t_mp.done", 
+    input: expand("{target_dir}/data-{date}/doid_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/hpo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/mondo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/patho_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/drugphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/textmined_genephenotype-1.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
+        expand("{target_dir}/data-{date}/textmined_genephenotype-2.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
+        expand("{target_dir}/data-{date}/textmined_genephenotype-3.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
+        expand("{target_dir}/data-{date}/deep_genephenotype-{filenum}.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()), filenum=DEEPPHENO_FILE_NUMS),
+        expand("{target_dir}/data-{date}/pathogenphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/metabolitephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     output: touch("archive.done")
     shell:
         "cd ../../;"
