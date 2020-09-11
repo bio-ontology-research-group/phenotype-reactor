@@ -7,7 +7,7 @@ services:
       DBA_PASSWORD: "dba"
       SPARQL_UPDATE: "true"
       SPARQL_LOAD_SERVICE_DATA: "true"
-      DEFAULT_GRAPH: "http://ddiem.phenomebrowser.net"
+      DEFAULT_GRAPH: "http://phenomebrowser.net"
     volumes:
       - ./data/virtuoso:/data
     ports:
