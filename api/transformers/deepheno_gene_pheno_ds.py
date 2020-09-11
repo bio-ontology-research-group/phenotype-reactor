@@ -18,7 +18,7 @@ class DeepphenoGenePhenoDS(RDFSource):
         super().__init__('DeepphenoGenePhenoDS', target_dir)
         self.url = f'{self.sourcedir}/deeppheno_maxat.txt'
         self.df = None
-        self.rdf_filename = "drugphenotype"
+        self.rdf_filename = "deep_genephenotype"
 
     def fetch(self):
         logger.info("Started reading dataset: %s", self.name)
