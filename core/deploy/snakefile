@@ -1,7 +1,7 @@
 import datetime
 
 VIRTUOSO_CONTAINER="pheno_virtuoso"
-DEEPPHENO_FILE_NUMS = range(1,20)
+DEEPPHENO_FILE_NUMS = range(1,12)
 
 configfile: "config.yaml"
 
