@@ -94,7 +94,8 @@ rule t_mp:
         "venv/bin/python manage.py transform -s mp"
 
 rule archive:
-    input: expand("{target_dir}/data-{date}/doid_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+    input: 
+        expand("{target_dir}/data-{date}/doid_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
         expand("{target_dir}/data-{date}/hpo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
         expand("{target_dir}/data-{date}/mondo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
         expand("{target_dir}/data-{date}/patho_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
