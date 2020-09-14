@@ -64,12 +64,14 @@ export class ListAssociationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPage()
   }
 
   ngOnChanges(change: SimpleChange) {
     if(change && change['iri'] && this.iri) {
       console.log(this.iri, this.type)
+      this.page = 1;
+      this.previousPage = 1;
+      this.pageSize = 20;
       this.getPage();
     }
   }
@@ -83,7 +85,7 @@ export class ListAssociationComponent implements OnInit {
       }
 
       if (this.type.name == 'Phenotype') {
-        findAssociation = this.associationService.find(this.iri, null, this.type.uri, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(this.iri, null, null, this.pageSize, offset, this.orderBy)
       } else {
         findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.pageSize, offset, this.orderBy)
       }
