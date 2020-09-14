@@ -1,6 +1,7 @@
 import logging
 import json
 import os
+import requests
 
 import api.archive.archive_ds as archive
 import api.lookup.lookup_elasticsearch as lookup_es  
@@ -32,11 +33,17 @@ class FindAssociation(APIView):
             concept_type = request.GET.get('type', None)
             limit = request.GET.get('limit', None)
             offset = request.GET.get('offset', None)
+            order_by = request.GET.get('orderBy', None)
 
-            (response, query) = self.service.find(concept, phenotype, concept_type, limit, offset) 
-            result = response.json()
-            result['query'] = query
-            return Response(result)
+            (response, query) = self.service.find(concept, phenotype, concept_type, limit, offset, order_by) 
+            
+            if response.status_code == requests.codes.ok:
+                result = response.json()
+                result['query'] = query
+                return Response(result)
+            
+            if response.status_code == requests.codes.bad_request:
+                raise Exception(response.text)
         except Exception as e:
             logger.exception("message")
 
@@ -50,10 +57,15 @@ class FindMostSimilar(APIView):
         try:
             concept = request.GET.get('concept', None)
             type_iri = request.GET.get('type', None)
-            (response, query) = self.service.find_similar_concepts(concept, type_iri) 
-            result = response.json()
-            result['query'] = query
-            return Response(result)
+            order_by = request.GET.get('orderBy', None)
+            (response, query) = self.service.find_similar_concepts(concept, type_iri, order_by) 
+            if response.status_code == requests.codes.ok:
+                result = response.json()
+                result['query'] = query
+                return Response(result)
+            
+            if response.status_code == requests.codes.bad_request:
+                raise Exception(response.text)
         except Exception as e:
             logger.exception("message")
 

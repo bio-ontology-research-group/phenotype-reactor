@@ -69,16 +69,16 @@
                     <table class="table table-striped">
                     <thead color="default">
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name</th>
                         <th scope="col">Type</th>
-                        <th scope="col">Score</th>
+                        <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let similarConcept of similarConceptsPage; let assocIndex = index">
                         <td class="w-50">
                             <a (click)="openInNewTab(similarConcept.concept.value)" class="text-muted">
-                                <h6 *ngIf="this.similarEntities[similarConcept.concept.value]">{{this.similarEntities[similarConcept.concept.value]['label'][0]}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
+                                <h6 *ngIf="similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
                             </a>
                         </td>
                         <td>{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>

@@ -23,7 +23,7 @@ export class AssociationService {
 
   constructor(private http: HttpClient) { }
 
-  find(conceptIri: string, phenotypeIri: string, typeIri:string, limit:number, offset:number) {
+  find(conceptIri: string, phenotypeIri: string, typeIri:string, limit:number, offset:number, orderBy:string) {
     var query_string = '';
     if (conceptIri) {
       query_string += 'concept=' + conceptIri;
@@ -42,18 +42,27 @@ export class AssociationService {
     if (limit) {
       query_string += '&limit=' + limit;
     }
-
+    
     if (offset) {
       query_string += '&offset=' + offset;
     }
+
+    if (orderBy) {
+      query_string += '&orderBy=' + orderBy;
+    }
+
     var url = `${this.URL}?${query_string}`;
     return this.http.get(url, this.options);
   }
 
-  findMostSimilar(iri: string, typeIri: string) {
+  findMostSimilar(iri: string, typeIri: string, orderBy:string) {
     var query_string = 'concept=' + iri;
     if (typeIri) {
       query_string = query_string + '&type=' + typeIri
+    }
+
+    if (orderBy) {
+      query_string += '&orderBy=' + orderBy;
     }
 
     var url = `${this.URL}/_mostsimilar?${query_string}`;

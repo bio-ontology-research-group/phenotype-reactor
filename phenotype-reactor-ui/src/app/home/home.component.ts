@@ -1,9 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Directive, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssociationService } from '../association.service';
 import { _ } from 'underscore';
 import { LookupService } from '../lookup.service';
 import { NgbNavChangeEvent, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
+
+
+export type SortColumn = 'conceptLabel' | 'val' | '';
+export type SortDirection = 'asc' | 'desc' | '';
+const rotate: {[key: string]: SortDirection} = { 'asc': 'desc', 'desc': '', '': 'asc' };
+
+export interface SortEvent {
+  column: SortColumn;
+  direction: SortDirection;
+}
+
+@Directive({
+  selector: 'th[sortable]',
+  host: {
+    '[class.asc]': 'direction === "asc"',
+    '[class.desc]': 'direction === "desc"',
+    '(click)': 'rotate()'
+  }
+})
+export class ListSimilarEntitiesSortableHeader {
+
+  @Input() sortable: SortColumn = '';
+  @Input() direction: SortDirection = '';
+  @Output() sort = new EventEmitter<SortEvent>();
+
+  rotate() {
+    this.direction = rotate[this.direction];
+    this.sort.emit({column: this.sortable, direction: this.direction});
+  }
+}
 
 @Component({
   selector: 'app-home',
@@ -11,6 +41,8 @@ import { NgbNavChangeEvent, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  @ViewChildren(ListSimilarEntitiesSortableHeader) headers: QueryList<ListSimilarEntitiesSortableHeader>;
 
   entity = null;
   entities = {};
@@ -26,6 +58,7 @@ export class HomeComponent implements OnInit {
   annontationQuery=''
   similarityQuery=''
   typeFilter=''
+  mostSimilarQueryOrderBy = ''
 
 
   page = 1;
@@ -35,7 +68,6 @@ export class HomeComponent implements OnInit {
   currentJustify = 'start';
 
   BASE_PREFIX = "http://phenomebrowser.net/"
-  PUBMED_PREFIX = "http://phenomebrowser.net/"
   TYPES = [];
   tabId = 0;
 
@@ -57,6 +89,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.collectionSize = this.mostSimilarConcepts ? this.mostSimilarConcepts.length : 0;
+
+    for (var key in this.associationService.TYPES) {
+      this.TYPES.push(this.associationService.TYPES[key])
+    }
   }
 
   onTermSelect(lookupResource) {
@@ -80,13 +116,6 @@ export class HomeComponent implements OnInit {
     this.entities = {};
     this.similarEntities = {};
     if (this.valueset == 'MP' || this.valueset == 'HP') {
-      // this.associationService.find(null, this.iri, null, null, null).subscribe( data => {
-      //   this.associations = data ? data['results']['bindings'] : [];
-      //   this.annontationQuery = data ? data['query'] : '';
-      //   this.query = this.annontationQuery
-      //   this.transformConceptAssociation(this.associations);
-      //   this.resolveEntities(this.associations)
-      // });
       var i = 0
       this.types = [];
       for (var key in this.associationService.TYPES) {
@@ -96,62 +125,47 @@ export class HomeComponent implements OnInit {
         i++;
       }
     } else {
-      this.associationService.find(this.iri, null, null, null, null).subscribe( data => {
-        // this.associations = data ? data['results']['bindings'] : [];
-        // this.annontationQuery = data ? data['query'] : '';
-        // this.query = this.annontationQuery
-        // this.transformPhenotypeAssociation(this.associations);
-        // this.resolveEntities(this.associations)
-        this.types = [this.associationService.TYPES['Phenotype']]
-      });
+      this.types = [this.associationService.TYPES['Phenotype']]
     }
-    this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
-      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
-      this.similarityQuery = data ? data['query'] : '';
-      this.resolveSimilarEntities(this.mostSimilarConcepts)
-    });
+    this.findMostSimilar();
+    this.resolveEntities(null);
   }
 
   onTypeSelect(event) {
     this.similarEntities = {};
     this.page = 1;
     this.typeFilter = event.target.value;
-    this.associationService.findMostSimilar(this.iri, this.typeFilter).subscribe( data => {
-      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
-      this.similarityQuery = data ? data['query'] : '';
-      this.query = this.similarityQuery;
-      this.resolveSimilarEntities(this.mostSimilarConcepts)
-    });
+    this.findMostSimilar();
   }
 
-  resolveSimilarEntities(associations) {
-    var entityIris = new Set() 
-    var concepts = _.map(associations, (obj) => obj['concept']['value'])
-    concepts.forEach(item => entityIris.add(item))
+  // resolveSimilarEntities(associations) {
+  //   var entityIris = new Set() 
+  //   var concepts = _.map(associations, (obj) => obj['concept']['value'])
+  //   concepts.forEach(item => entityIris.add(item))
 
-    var iris = Array.from(entityIris.values());
+  //   var iris = Array.from(entityIris.values());
 
-    this.lookupService.findEntityByIris(iris, data => {
-      var tmp = {};
-      if (data) {
-        (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
-        for (let uri in tmp) {
-          this.similarEntities[uri] = tmp[uri]
-        }
-      }
-    });
-  }
+  //   this.lookupService.findEntityByIris(iris, data => {
+  //     var tmp = {};
+  //     if (data) {
+  //       (data as []).forEach((obj) => tmp[obj['entity']]=  obj)
+  //       for (let uri in tmp) {
+  //         this.similarEntities[uri] = tmp[uri]
+  //       }
+  //     }
+  //   });
+  // }
 
   resolveEntities(associations){
     var entityIris = new Set() 
     entityIris.add(this.iri)
 
-    var concepts = _.map(associations, (obj) => obj['concept']['value'])
-    concepts.forEach(item => entityIris.add(item))
-    var phenotype = _.map(associations, (obj) => obj['phenotype']['value'])
-    phenotype.forEach(item => entityIris.add(item))
-    var phenotype = _.map(associations, (obj) => obj['evidence']['value'])
-    phenotype.forEach(item => entityIris.add(item))
+    // var concepts = _.map(associations, (obj) => obj['concept']['value'])
+    // concepts.forEach(item => entityIris.add(item))
+    // var phenotype = _.map(associations, (obj) => obj['phenotype']['value'])
+    // phenotype.forEach(item => entityIris.add(item))
+    // var phenotype = _.map(associations, (obj) => obj['evidence']['value'])
+    // phenotype.forEach(item => entityIris.add(item))
 
     var iris = Array.from(entityIris.values());
 
@@ -167,21 +181,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  transformConceptAssociation(associations) {
-    this.typeToAssoicationMap = {};
-    this.types = _.map(associations, (obj) => obj['conceptType']['value'])
-    this.types = Array.from(new Set(this.types).values());
-    for (var index in this.types) {
-      this.typeToAssoicationMap[this.types[index]] = _.filter(associations, (obj) => obj['conceptType']['value'] == this.types[index]);
-    }
-  }
-
-  transformPhenotypeAssociation(associations) {
-    this.typeToAssoicationMap = {};
-    this.types = ['Phenotype']
-    this.typeToAssoicationMap[this.types[0]] = associations;
-  }
-
   sortType(types){
     return types.sort((one, two) => (one.replace(this.BASE_PREFIX, "") < two.replace(this.BASE_PREFIX, "")) ? -1 : 1);
   }
@@ -191,6 +190,30 @@ export class HomeComponent implements OnInit {
     return this.mostSimilarConcepts ? this.mostSimilarConcepts
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+  }
+
+  onSort({column, direction}: SortEvent) {
+    // resetting other headers
+    this.headers.forEach(header => {
+      if (header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    if (direction === '' || column === '') {
+      this.mostSimilarQueryOrderBy = '';
+    } else {
+      this.mostSimilarQueryOrderBy = direction + ":" + column;
+    }
+    this.findMostSimilar();
+  }
+  
+  findMostSimilar() {
+    this.associationService.findMostSimilar(this.iri, this.typeFilter, this.mostSimilarQueryOrderBy).subscribe( data => {
+      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
+      this.similarityQuery = data ? data['query'] : '';
+      this.query = this.similarityQuery;
+    });
   }
 
   onNavChange(changeEvent: NgbNavChangeEvent) {

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Directive, Output, EventEmitter, ViewChildren
 import { NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AssociationService } from '../association.service';
 
-export type SortColumn = 'name' | 'evidence' | '';
+export type SortColumn = 'name' | 'evidenceLabel' | 'created' | '';
 export type SortDirection = 'asc' | 'desc' | '';
 const rotate: {[key: string]: SortDirection} = { 'asc': 'desc', 'desc': '', '': 'asc' };
 
@@ -56,6 +56,7 @@ export class ListAssociationComponent implements OnInit {
   collectionSize = 0;
   associations = [];
   entities = {};
+  orderBy = ''
 
   constructor(private associationService: AssociationService,
     private alertConfig: NgbAlertConfig) { 
@@ -76,10 +77,15 @@ export class ListAssociationComponent implements OnInit {
   getPage() {
     if (this.iri && this.type) { 
       var findAssociation = null;
+      var offset = 1
+      if (this.page > 1) {
+        offset = this.pageSize * (this.page - 1)
+      }
+
       if (this.type.name == 'Phenotype') {
-        findAssociation = this.associationService.find(this.iri, null, this.type.uri, this.pageSize, this.page)
+        findAssociation = this.associationService.find(this.iri, null, this.type.uri, this.pageSize, offset, this.orderBy)
       } else {
-        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.pageSize, this.page)
+        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.pageSize, offset, this.orderBy)
       }
       
       findAssociation.subscribe(data => {
@@ -113,21 +119,20 @@ export class ListAssociationComponent implements OnInit {
     });
 
     // sorting countries
-    // if (direction === '' || column === '') {
-    //   // this.countries = COUNTRIES;
-    // } else {
-    //   this.countries = [...COUNTRIES].sort((a, b) => {
-    //     const res = compare(a[column], b[column]);
-    //     return direction === 'asc' ? res : -res;
-    //   });
-    // }
+    if (direction === '' || column === '') {
+      this.orderBy = '';
+    } else {
+      this.orderBy = direction + ":";
+      if (this.type.name == "Phenotype" &&  column == "name") {
+        this.orderBy += "phenotypeLabel";
+      } else if (column == "name") {
+        this.orderBy += "conceptLabel";
+      } else {
+        this.orderBy += column;
+      }
+    }
+    this.getPage()
   }
-
-  // get associationsPage(): Object[] {
-  //   return this.associations ? this.associations
-  //     .map((association, i) => ({id: i + 1, ...association}))
-  //     .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
-  // }
 
   openInNewTab(url: string) {
     window.open(url, "_blank");
