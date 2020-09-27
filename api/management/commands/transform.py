@@ -15,6 +15,8 @@ from api.transformers.textmined_gene_pheno_ds import TextminedhenoGenePhenoDS
 from api.transformers.doid_disease_pheno_ds import DOIDDiseasePhenoDS
 from api.transformers.drug_pheno_ds import DrugPhenoDS
 from api.transformers.hpo_disease_pheno_ds import HPODiseasePhenoDS
+from api.transformers.mgi_gene_pheno_ds import MgiGenePhenoDS
+from api.transformers.hpogold_disease_pheno_ds import HpoGoldDiseasePhenoDS
 
 from django.conf import settings
 from api.rdf.rdf_source import RDFSource
@@ -43,9 +45,11 @@ class Command(BaseCommand):
             'hpo_dp': HPODiseasePhenoDS(data_archive_path),
             'mondo_dp': MondoDiseasePhenoDS(data_archive_path), 
             'patho_dp': PathoDiseasePhenoDS(data_archive_path),
+            'hpogold_dp': HpoGoldDiseasePhenoDS(data_archive_path),
             'pubchem_dp': DrugPhenoDS(data_archive_path), 
             'txtmind_gp': TextminedhenoGenePhenoDS(data_archive_path), 
             'deep_gp': DeepphenoGenePhenoDS(data_archive_path),
+            'mgi_gp': MgiGenePhenoDS(data_archive_path),
             'patho_pp': PathogenPhenoDS(data_archive_path),
             'mp': MetabolitePhenoDS(data_archive_path)
         }   

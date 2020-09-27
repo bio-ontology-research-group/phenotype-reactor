@@ -244,11 +244,12 @@ def generate_deepwalk_graph(annotation_files, axiom_files):
                     
                     subj = node_dict[entities[0].strip()]
                     obj = node_dict[entities[2].strip()] 
-
                     G.add_edge(subj, obj)
                     G.edges[subj, obj]["type"] = entities[1].strip()
                     G.nodes[subj]["val"] = False
                     G.nodes[obj]["val"] = False
+                    
+        print("Finished loading ontology:" +  str(axiom_file))
 
     for annotation in annotation_files:
         with open(annotation, "r") as f:

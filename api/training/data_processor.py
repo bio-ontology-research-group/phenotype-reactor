@@ -17,6 +17,7 @@ from api.training.generate_graph import *
 from api.training.data_ingestion.omim_genedisease import OMIMDiseaseGeneAssoc
 from api.training.data_ingestion.patho_pathogendisease import PathoPathogenDiseaseAssoc
 from api.training.data_ingestion.curated_disgenet import CuratedDisgenetAssoc
+from api.training.data_ingestion.mousegold_genedisease import MouseGoldDiseaseGeneAssoc
 
 from os import listdir
 from os.path import isfile, join, splitext, exists
@@ -48,7 +49,8 @@ def generate_nt(file):
     store.remove((None, None, None))
 
 def rdf2nt(ds_path): 
-    files = [file for file in os.listdir(ds_path) if isfile(join(ds_path, file))]
+    files = [file for file in os.listdir(ds_path) if isfile(join(ds_path, file)) 
+    and ('rdf' in splitext(file)[1]) and (not str(file).startswith('._'))]
     if len(files) < 1:
         raise Exception("no file in dataset exists to process")
 
@@ -97,6 +99,11 @@ def process_testset():
     disgenet.fetch()
     disgenet.map()
     disgenet.write()
+
+    mousegene_disease = MouseGoldDiseaseGeneAssoc()
+    mousegene_disease.fetch()
+    mousegene_disease.map()
+    mousegene_disease.write()
 
 
 def process_ontology():
