@@ -21,6 +21,8 @@ def run_evaluation(outdir, test_file, testset_name):
         evaluate_pathodisassoc(outdir, test_file, testset_name)
     elif "OmimDiseaseGeneAssociations" in test_file:
         evaluate_omimdisgene(outdir, test_file, testset_name)
+    elif "MouseGoldDiseaseGeneAssociations" in test_file:
+        evaluate_mousegold_disgene(outdir, test_file, testset_name)
 
 
 def evaluate_curated_disgenet(outdir, test_file, testset_name):
@@ -47,6 +49,39 @@ def evaluate_curated_disgenet(outdir, test_file, testset_name):
 
     (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
     np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
+
+def evaluate_mousegold_disgene(outdir, test_file, testset_name):
+    embds_dict = get_embeddings(outdir)
+    gene_embeddings = {}
+    disease_embeddings = {}
+
+    for key in embds_dict.keys(): 
+        if 'http://www.informatics.jax.org/marker/MGI:' in key:
+            gene_embeddings[key] = [float(i) for i in embds_dict[key]]
+        if 'https://omim.org/entry/' in key:
+            disease_embeddings[key] = [float(i) for i in embds_dict[key]]
+
+    print("gene embedding:", len(gene_embeddings.keys()))
+    print("disease embedding:", len(disease_embeddings.keys()))
+
+    disease_gene_df = pd.read_csv(test_file, sep = '\t', names=['disease', 'relation', 'gene'])
+    disease_genes = {}
+    diseases = set()
+    genes = set()
+    for index, row in disease_gene_df.iterrows():
+        if row.disease in disease_genes:
+            disease_genes[row.disease].append(row.gene)
+        else:
+            disease_genes[row.disease]=[row.gene]
+        
+        diseases.add(row.disease)
+        genes.add(row.gene)
+
+    print("gene:", len(diseases))
+    print("disease:", len(genes))
+    (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
+    np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
+
 
 
 def evaluate_pathodisassoc(outdir, test_file, testset_name):
