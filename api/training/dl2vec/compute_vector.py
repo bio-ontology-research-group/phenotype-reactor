@@ -86,7 +86,6 @@ def write_file(pair, outdir):
                     fp.write(str(sub_p)+" ")
                 fp.write("\n")
 
-
 class iteration_callback(gensim.models.callbacks.CallbackAny2Vec):
     '''Callback to print loss after each epoch.'''
 
@@ -96,11 +95,15 @@ class iteration_callback(gensim.models.callbacks.CallbackAny2Vec):
 
     def on_epoch_end(self, model):
         loss = model.get_latest_training_loss()
-        print('Loss after epoch {}: {}'.format(self.epoch, loss))
+        if self.epoch == 0:
+            print('Loss after epoch {}: {}'.format(self.epoch, loss))
+        else:
+            print('Loss after epoch {}: {}'.format(self.epoch, loss- self.loss_previous_step))
         with lock:
             with open(join(self.outdir, "losses.tsv"), "a") as fp:
                 fp.write(str(self.epoch) + "\t" + str(loss) + "\n")
         self.epoch += 1
+        self.loss_previous_step = loss
 
 def gene_node_vector(graph, nodes_set, config):
     # nodes_set=set()

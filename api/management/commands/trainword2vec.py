@@ -32,7 +32,7 @@ TRAINING_SET_DIR = getattr(settings, 'TRAINING_SET_DIR', None)
 TEST_SET_DIR = getattr(settings, 'TEST_SET_DIR', None)
 
 class Command(BaseCommand):
-    help = 'Training kg data using deepwalk'
+    help = 'Training kg data using deepwalk + word2vec'
 
     def add_arguments(self, parser):
         parser.add_argument('-m', '--model', type=str, default='sg', help='Preferred word2vec architecture, sg or cbow', )
