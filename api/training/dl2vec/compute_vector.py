@@ -6,6 +6,7 @@ import json
 import sys
 import os
 import gensim
+import fasttext
 
 import networkx as nx
 from networkx.readwrite import json_graph
@@ -13,6 +14,7 @@ import multiprocessing as mp
 from threading import Lock
 import pickle as pkl
 from os.path import join
+
 
 
 lock = Lock()
@@ -121,4 +123,17 @@ def gene_node_vector(graph, nodes_set, config):
     sentences=gensim.models.word2vec.LineSentence(join(outdir, "walks.txt"))
     model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=size, window=10,iter=epochs,workers=workers, compute_loss=True, callbacks=[iteration_callback(outdir)])
     model.save(join(outdir, "embeddings.pkl"))
+    return model
+
+def compute_vector_with_word2vec(walkfile, representation_size, epochs, workers, outdir):
+    print("start to train the word2vec models")
+    sentences=gensim.models.word2vec.LineSentence(walkfile)
+    model=gensim.models.Word2Vec(sentences,sg=1, min_count=1, size=representation_size, window=10,iter=epochs,workers=workers, compute_loss=True, callbacks=[iteration_callback(outdir)])
+    model.save(join(outdir, "embeddings.pkl"))
+    return model
+
+def compute_vector_with_fasttext(walkfile, outdir):
+    print("start to train the fasttext models")
+    model = fasttext.train_unsupervised(walkfile, model='skipgram')
+    model.save_model(join(outdir, "embeddings.bin"))
     return model

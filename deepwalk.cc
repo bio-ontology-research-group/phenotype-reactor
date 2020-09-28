@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#define NUM_NODES 1000000
+#define NUM_NODES 100000//0
 #define BUFFERSIZE 512
 #define THREADS 32
 
@@ -47,11 +47,17 @@ uniform_int_distribution<int> uni(0,INT_MAX);
 ofstream fout;
 boost::mutex mtx;
 
+int num_nodes = NUM_NODES;
+int threads = THREADS;
+int number_walks = NUMBER_WALKS;
+int length_walks = LENGTH_WALKS;
+
 
 void build_graph(string fname) {
   char buffer[BUFFERSIZE];
   graph.reserve(NUM_NODES) ;
   ifstream in(fname);
+  cout << "ifstreaming";
   while(in) {
     in.getline(buffer, BUFFERSIZE);
     if(in) {
@@ -65,10 +71,10 @@ void build_graph(string fname) {
 }
 
 void walk(unsigned int source) {
-  vector<vector<unsigned int>> walks(NUMBER_WALKS) ;
+  vector<vector<unsigned int>> walks(number_walks) ;
   if (graph[source].size()>0) { // if there are outgoing edges at all
-    for (int i = 0 ; i < NUMBER_WALKS ; i++) {
-      int count = LENGTH_WALKS ;
+    for (int i = 0 ; i < number_walks ; i++) {
+      int count = length_walks ;
       int current = source ;
       walks[i].push_back(source) ;
       while (count > 0) {
@@ -107,7 +113,7 @@ void walk(unsigned int source) {
 }
 
 void generate_corpus() {
-  pool tp(THREADS);
+  pool tp(threads);
   for ( auto it = graph.begin(); it != graph.end(); ++it ) {
     unsigned int source = it -> first ;
     tp.schedule(boost::bind(&walk, source ) ) ;
@@ -117,10 +123,25 @@ void generate_corpus() {
 }
 
 int main (int argc, char *argv[]) {
-  cout << "Building graph from " << argv[1] << "\n" ;
+  cout << "Building graph from " << argv[1] << "\n";
   build_graph(argv[1]);
-  cout << "Number of nodes in graph: " << graph.size() << "\n" ;
+  num_nodes = graph.size();
+  cout << "Number of nodes in graph: " << num_nodes << "\n" ;
   cout << "Writing walks to " << argv[2] << "\n" ;
+
+  if (argc > 3) {
+    number_walks = strtol(argv[3], nullptr, 0);
+  }
+  if (argc > 4) {
+    length_walks = strtol(argv[4], nullptr, 0);
+  }
+  if (argc > 5) {
+    threads = strtol(argv[5], nullptr, 0);
+  }
+
+  cout << "Number of walks to " << number_walks << "\n" ;
+  cout << "Walk length to " << length_walks << "\n" ;
+  cout << "Threads to " << threads << "\n" ;
   fout.open(argv[2]) ;
   generate_corpus() ;
   fout.close() ;
