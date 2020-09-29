@@ -37,21 +37,25 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-m', '--model', type=str, default='sg', help='Preferred fasttext architecture, sg or cbow', )
+        parser.add_argument('-d', '--representation_size', type=int, default=100, help='Computed vector dimensions', )
         parser.add_argument('-w', '--workers', type=int, default=32, help='Number of worker threads while training', )
         parser.add_argument('-wl', '--walk_length', type=int, default=100, help='Random walk length', )
         parser.add_argument('-n', '--number_walks', type=int, default=20, help='Number of walks', )
+        parser.add_argument('-ep', '--epochs', type=int, default=5, help='number of iterations', )
         parser.add_argument('-tn', '--testset_name', type=str, default='', help='testset name', ) 
         parser.add_argument('-e', '--exp_name', type=str, default='', help='experiment name', ) 
         parser.add_argument('-dg', '--directed', nargs='?', const=True, default=False, help='directed or undirected graph by default the graph is undirected', ) 
     
     def handle(self, *args, **options):
         model = options['model']
+        representation_size = options['representation_size']
         workers = options['workers']
         walk_length = options['walk_length']
         number_walks = options['number_walks']
         testset_name = options['testset_name']
         directed = options['directed']
         exp_name = options['exp_name']
+        epochs = options['epochs']
 
         try:
             annontation_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1])]
@@ -69,6 +73,8 @@ class Command(BaseCommand):
                 'output_directory': outdir,
                 'walk_length': walk_length,
                 'number_walks': number_walks,
+                'representation_size': representation_size,
+                'epochs': epochs,
                 'workers': workers,
                 'testset_name': testset_name,
                 'directed': directed,
@@ -91,7 +97,7 @@ class Command(BaseCommand):
             
             # node_file = open("nodes.json", "r") 
             # node_dict = json.load(node_file)
-            model = compute_vector_with_fasttext(walkfile, outdir)
+            model = compute_vector_with_fasttext(walkfile, representation_size, epochs, workers, outdir)
             # model = fasttext.load_model(join(outdir, "embeddings.bin"))
             self.generate_bio2vec_frmt(model, node_dict, outdir)
             run_evaluation(outdir, join(TEST_SET_DIR, testset_name + '.tsv'), testset_name)
