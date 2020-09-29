@@ -36,16 +36,24 @@ def evaluate_curated_disgenet(outdir, test_file, testset_name):
         if 'DOID' in key:
             disease_embeddings[key] = embds_dict[key]
 
-    print("gene", len(gene_embeddings.keys()))
-    print("disease", len(disease_embeddings.keys()))
+    print("gene embedding:", len(gene_embeddings.keys()))
+    print("disease embedding:", len(disease_embeddings.keys()))
 
     disease_gene_df = pd.read_csv(test_file, sep = '\t', names=['disease', 'relation', 'gene'])
     disease_genes = {}
+    diseases = set()
+    genes = set()
     for index, row in disease_gene_df.iterrows():
         if row.disease in disease_genes:
             disease_genes[row.disease].append(row.gene)
         else:
             disease_genes[row.disease]=[row.gene]
+
+        diseases.add(row.disease)
+        genes.add(row.gene)
+    
+    print("disease:", len(diseases))
+    print("gene:", len(genes))
 
     (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
     np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
@@ -77,8 +85,8 @@ def evaluate_mousegold_disgene(outdir, test_file, testset_name):
         diseases.add(row.disease)
         genes.add(row.gene)
 
-    print("gene:", len(diseases))
-    print("disease:", len(genes))
+    print("disease:", len(diseases))
+    print("gene:", len(genes))
     (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
     np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
 
@@ -95,17 +103,24 @@ def evaluate_pathodisassoc(outdir, test_file, testset_name):
         if 'NCBITaxon' in key:
             pathogen_embeddings[key] = embds_dict[key]
 
-    print("disease", len(disease_embeddings.keys()))
-    print("pathogen", len(pathogen_embeddings.keys()))
+    print("disease embedding:", len(disease_embeddings.keys()))
+    print("pathogen embedding:", len(pathogen_embeddings.keys()))
 
     pathogen_disease_df = pd.read_csv(test_file, sep = '\t', names=['pathogen', 'relation', 'disease'])
     pathogen_disease = {}
+    pathogens = set()
+    diseases = set()
     for index, row in pathogen_disease_df.iterrows():
         if row.disease in pathogen_disease:
             pathogen_disease[row.pathogen].append(row.disease)
         else:
             pathogen_disease[row.pathogen]=[row.disease]
 
+        pathogens.add(row.pathogen)
+        diseases.add(row.disease)
+
+    print("pathogens:", len(pathogens))
+    print("disease:", len(diseases))
     (auc_data2, auc) = evaluate(pathogen_disease, pathogen_embeddings, disease_embeddings)
     np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
 
@@ -125,11 +140,19 @@ def evaluate_omimdisgene(outdir, test_file, testset_name):
 
     disease_gene_df = pd.read_csv(test_file, sep = '\t', names=['disease', 'relation', 'gene'])
     disease_genes = {}
+    diseases = set()
+    genes = set()
     for index, row in disease_gene_df.iterrows():
         if row.disease in disease_genes:
             disease_genes[row.disease].append(row.gene)
         else:
             disease_genes[row.disease]=[row.gene]
+
+        diseases.add(row.disease)
+        genes.add(row.gene)
+
+    print("disease:", len(diseases))
+    print("gene:", len(genes))
 
     (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
     np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
