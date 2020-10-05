@@ -81,6 +81,8 @@ class Command(BaseCommand):
                 'testset_name': testset_name,
                 'directed': directed,
             }
+
+            self.write_json(config, join(outdir, "config.json"))
             logger.info("Starting training dataset with settings:" + str(config))
             (graph, node_dict) = generate_deepwalk_graph(annontation_files, axiom_files)
 
@@ -103,6 +105,7 @@ class Command(BaseCommand):
             # model = gensim.models.Word2Vec.load(join(outdir, "embeddings.pkl"))
             self.generate_bio2vec_frmt(model, node_dict, outdir)
             run_evaluation(outdir, join(TEST_SET_DIR, testset_name + '.tsv'), testset_name)
+            logger.info("Finished training dataset")
         except Exception as e:
             logger.exception("message")
         except RuntimeError:
@@ -144,8 +147,11 @@ class Command(BaseCommand):
         logger.info("Finished generating bio2vec dataset file")
 
     def write_nodes_file(self, node_dict, outdir):
-        node_file = open(join(outdir, "nodes.json"), "w")
+        self.write_json(node_dict, join(outdir, "nodes.json"))
+
+    def write_json(self, dict, file):
+        json_file = open(file, "w")
         json.dump(node_dict, node_file, indent=4)
-        node_file.close()
+        json_file.close()
 
            
