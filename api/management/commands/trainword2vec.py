@@ -151,7 +151,7 @@ class Command(BaseCommand):
 
     def write_json(self, dictionary, file):
         json_file = open(file, "w")
-        json.dump(dictionary, file, indent=4)
+        json.dump(dictionary, json_file, indent=4)
         json_file.close()
 
            
