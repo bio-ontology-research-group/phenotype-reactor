@@ -145,9 +145,10 @@ class Command(BaseCommand):
     def write_nodes_file(self, node_dict, outdir):
         self.write_json(node_dict, join(outdir, "nodes.json"))
 
-    def write_json(self, dict, file):
+    def write_json(self, dictionary, file):
         json_file = open(file, "w")
-        json.dump(node_dict, node_file, indent=4)
+        json.dump(dictionary, file, indent=4)
         json_file.close()
+
 
            

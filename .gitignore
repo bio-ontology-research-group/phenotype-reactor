@@ -1,11 +1,10 @@
 
 \.vscode/
+__pycache__
 
-api/__pycache__/
 venv/
-
-api/management/commands/__pycache__/
 
 db\.sqlite3
 
 phenotype-reactor-ui/\.editorconfig
+static
