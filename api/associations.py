@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 class Associations:
     MIME_TYPE_JSON = "application/json"
 
-    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, limit=10, offset=None, order_by=None):
+    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iri=None, limit=10, offset=None, order_by=None):
         if not concept_iri and not phenotype_iri:
            raise RuntimeException("atleast one of concept and phenotype field is required")
         
@@ -25,8 +25,12 @@ class Associations:
         type_subj = '?concept' if not concept_iri else '<{iri}>'.format(iri=concept_iri)
         type_stmt = (type_subj + ' rdf:type <' + concept_type_iri + '> .' ) if concept_type_iri else type_subj + ' rdf:type  ?conceptType .'
 
+        evidence_stmt = '?association obo:RO_0002558 ' + ('<' + evidence_iri + '> .' if evidence_iri else '?evidence .')
+        evidenceLabel_stmt = ('<' + evidence_iri + '>' if evidence_iri else '?evidence') + ' rdfs:label ?evidenceLabel .'
+
         concept_var = '?concept' if not concept_iri else '(<{iri}> as ?concept)'.format(iri=concept_iri)
         type_var = '?conceptType' if not concept_type_iri else '(<{iri}> as ?conceptType)'.format(iri=concept_type_iri)
+        evidence_var = '?evidence' if not evidence_iri else '(<{iri}> as ?evidence)'.format(iri=evidence_iri)
         phenotype_var = '?phenotype' if not phenotype_iri else '(<{iri}> as ?phenotype)'.format(iri=phenotype_iri)
 
         order_clause = self.create_orderby_clause(order_by)
@@ -36,8 +40,8 @@ class Associations:
                     ' + phenotype_stmt + ' \
                     ' + concept_stmt + ' \
                 \n    ' + type_stmt + ' \
-                \n    ?association obo:RO_0002558 ?evidence . \
-                \n    ?evidence rdfs:label ?evidenceLabel . \
+                \n    ' + evidence_stmt + ' \
+                \n    ' + evidenceLabel_stmt + ' \
                 \n    ?association dc:provenance ?prov . \
                 \n    ?prov dc:creator ?creator . \
                 \n    ?prov dcterms:source ?source . \
@@ -52,7 +56,7 @@ class Associations:
                 \nSELECT * \
                 \n{\n { \
                 \n  SELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?phenotypeLabel ?conceptLabel \
-                \n  ?evidence ?evidenceLabel ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
+                \n  ' + evidence_var + ' ?evidenceLabel ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
                 \n  FROM <http://phenomebrowser.net> \
                 \n  ' + graph_pattern + page + ' \
                 \n  } \

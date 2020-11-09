@@ -1,3 +1,14 @@
+<div class="row"> 
+    <div class="col-1 p-2 pt-3 ml-3">
+        <label><strong>Filter By:</strong></label>
+    </div>
+    <div class="col-2 p-2">
+        <select class="browser-default custom-select default ml-3" color="default" (change)="onEvidenceSelect($event)">
+            <option value="">Select Evidence</option>
+            <option *ngFor="let evidence of EVIDENCE" value="{{evidence.uri}}" [selected]='evidenceFilter == evidence.uri'>{{evidence.name}}</option>
+        </select>
+    </div>
+</div>
 <div class="row" *ngIf="associations.length > 0">
     <table class="table table-striped">
     <thead color="default">

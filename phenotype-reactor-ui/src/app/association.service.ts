@@ -15,6 +15,16 @@ export class AssociationService {
     'Phenotype' : { name: 'Phenotype', uri: 'http://phenomebrowser.net/Phenotype' }
   }
 
+  EVIDENCE = {
+    'ECO_0006016' : { name: 'author statement from published clinical study', uri: 'http://purl.obolibrary.org/obo/ECO_0006016' },
+    'ECO_0000033' : { name: 'author statement supported by traceable reference',  uri: 'http://purl.obolibrary.org/obo/ECO_0000033' },
+    'ECO_0007669' : { name: 'computational evidence used in automatic assertion', uri: 'http://purl.obolibrary.org/obo/ECO_0007669' },
+    'ECO_0000305' : { name: 'curator inference used in manual assertion',  uri: 'http://purl.obolibrary.org/obo/ECO_0000305' },
+    'ECO_0000501' : { name: 'inferred from electronic annotation', uri: 'http://purl.obolibrary.org/obo/ECO_0000501' },
+    'ECO_0006018' : { name: 'inference based on individual clinical experience',  uri: 'http://purl.obolibrary.org/obo/ECO_0006018' },
+    'ECO_0000251' : { name: 'similarity evidence used in automatic assertion', uri: 'http://purl.obolibrary.org/obo/ECO_0000251' }
+  }
+
   options = {
     headers:  new HttpHeaders({
       'Accept': 'application/json'
@@ -23,7 +33,7 @@ export class AssociationService {
 
   constructor(private http: HttpClient) { }
 
-  find(conceptIri: string, phenotypeIri: string, typeIri:string, limit:number, offset:number, orderBy:string) {
+  find(conceptIri: string, phenotypeIri: string, typeIri:string, evidenceIri:string, limit:number, offset:number, orderBy:string) {
     var query_string = '';
     if (conceptIri) {
       query_string += 'concept=' + conceptIri;
@@ -37,6 +47,11 @@ export class AssociationService {
     if (typeIri) {
       query_string += query_string ? '&' : '';
       query_string += 'type=' + typeIri;
+    }
+
+    if (evidenceIri) {
+      query_string += query_string ? '&' : '';
+      query_string += 'evidence=' + evidenceIri;
     }
 
     if (limit) {

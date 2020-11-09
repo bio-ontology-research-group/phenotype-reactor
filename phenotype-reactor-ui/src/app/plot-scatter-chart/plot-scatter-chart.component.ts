@@ -91,7 +91,7 @@ export class PlotScatterChartComponent implements OnInit {
         if (entity) {
           return "name: " + entity['label'][0] + "<br>" + "id : " + d.concept.value;
         } else {
-          return "name: " + d.concept.value //"<br>" + "id : " + d.id;
+          return "name: " + d.conceptLabel.value + "<br>" + "id : " + d.concept.value;
         }
       })
     

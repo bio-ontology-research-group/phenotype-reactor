@@ -57,10 +57,15 @@ export class ListAssociationComponent implements OnInit {
   associations = [];
   entities = {};
   orderBy = ''
+  EVIDENCE : any = []
+  evidenceFilter = ''
 
   constructor(private associationService: AssociationService,
     private alertConfig: NgbAlertConfig) { 
     alertConfig.type = 'secondary';
+    for (var key in this.associationService.EVIDENCE) {
+      this.EVIDENCE.push(this.associationService.EVIDENCE[key])
+    }
   }
 
   ngOnInit() {
@@ -76,6 +81,13 @@ export class ListAssociationComponent implements OnInit {
     }
   }
 
+  onEvidenceSelect(event) {
+    this.similarEntities = {};
+    this.page = 1;
+    this.evidenceFilter = event.target.value;
+    this.getPage();
+  }
+
   getPage() {
     if (this.iri && this.type) { 
       var findAssociation = null;
@@ -85,9 +97,9 @@ export class ListAssociationComponent implements OnInit {
       }
 
       if (this.type.name == 'Phenotype') {
-        findAssociation = this.associationService.find(this.iri, null, null, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(this.iri, null, null, this.evidenceFilter, this.pageSize, offset, this.orderBy)
       } else {
-        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.pageSize, offset, this.orderBy)
       }
       
       findAssociation.subscribe(data => {
