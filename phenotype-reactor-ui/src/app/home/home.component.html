@@ -69,20 +69,29 @@
                     <table class="table table-striped">
                     <thead color="default">
                     <tr>
-                        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name</th>
+                        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
                         <th scope="col">Type</th>
                         <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
+
+                            <button type="button" class="btn btn-outline-secondary mr-2" placement="top"
+                                    ngbPopover="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." popoverTitle="Popover on top">
+                            Popover on top
+                            </button>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let similarConcept of similarConceptsPage; let assocIndex = index">
-                        <td class="w-50">
-                            <a (click)="openInNewTab(similarConcept.concept.value)" class="text-muted">
+                    <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
+                        <td class="w-40">
+                            <a (click)="openConcept(similarConcept.concept.value)" class="text-muted">
                                 <h6 *ngIf="similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
                             </a>
+                            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
+                                    [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
+                            <i class="fas fa-info-circle"></i>
+                            </button>
                         </td>
-                        <td>{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
-                        <td>{{similarConcept.val?.value}}<td>
+                        <td class="w-30">{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
+                        <td class="w-30">{{similarConcept.val?.value}}<td>
                     </tr>
                     </tbody>
                     </table>
@@ -106,6 +115,23 @@
     </div>
 </div>
 </div>
+<ng-template #similarPopContent>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <span *ngIf="popSimilarEntity != null">
+    <span *ngIf="popSimilarEntity.definition && popSimilarEntity.definition.length > 0"><strong>Definition:</strong> {{popSimilarEntity.definition}}<br/></span>
+    <strong>Type:</strong> {{popSimilarEntity.entity_type}} <br />
+    <strong>Database:</strong> {{popSimilarEntity.valueset}} <br /> 
+    <strong>URL:</strong>&nbsp;<a (click)="openInNewTab(popSimilarEntity.entity)">{{popSimilarEntity.entity}}</a><br />
+    </span>
+</ng-template>
+<ng-template #similarPopTitle>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <strong>{{popSimilarEntity?.label[0]}}</strong>
+</ng-template>
 <div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && tabId === types.length + 1">
     <div class="card-body justify-content-between">
         <span>

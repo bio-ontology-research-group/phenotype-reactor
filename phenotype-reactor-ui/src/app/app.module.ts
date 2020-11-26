@@ -38,9 +38,9 @@ import { BindSchemaComponent } from './bind-schema/bind-schema.component';
   ],
   imports: [
     BrowserModule,
-    NgbModule,
     FormsModule,
     HttpClientModule,
+    NgbModule,
     MDBBootstrapModule.forRoot(),
     NgxJsonLdModule,
     AppRoutingModule

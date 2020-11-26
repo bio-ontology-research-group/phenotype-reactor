@@ -80,6 +80,7 @@ PREFIX_TO_VALUESET_DICT = {
     str(DECIPHER.uri): 'DECIPHER',
     str(MGI.uri): 'MGI',
     str(ENTREZ_GENE.uri): 'NCBIGene',
+    str(PUBCHEM.uri): 'PUBCHEM',
 } 
 
 def find_type(uri):

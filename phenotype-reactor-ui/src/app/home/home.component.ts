@@ -54,11 +54,12 @@ export class HomeComponent implements OnInit {
   typeToAssoicationMap = {};
   types = [];
   active = 1;
-  query=''
-  annontationQuery=''
-  similarityQuery=''
-  typeFilter=''
-  mostSimilarQueryOrderBy = ''
+  query='';
+  annontationQuery='';
+  similarityQuery='';
+  typeFilter='';
+  mostSimilarQueryOrderBy = '';
+  popSimilarEntity = null;
 
 
   page = 1;
@@ -185,11 +186,12 @@ export class HomeComponent implements OnInit {
     return types.sort((one, two) => (one.replace(this.BASE_PREFIX, "") < two.replace(this.BASE_PREFIX, "")) ? -1 : 1);
   }
 
-  get similarConceptsPage(): Object[] {
+  get similarConceptsPage() {
     this.collectionSize = this.mostSimilarConcepts ? this.mostSimilarConcepts.length : 0;
-    return this.mostSimilarConcepts ? this.mostSimilarConcepts
+    var similarConceptsPage =  this.mostSimilarConcepts ? this.mostSimilarConcepts
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+    return similarConceptsPage;
   }
 
   onSort({column, direction}: SortEvent) {
@@ -223,6 +225,23 @@ export class HomeComponent implements OnInit {
     } else {
       this.query = this.annontationQuery;
     }
+  }
+
+  openConcept(concept) {
+    var valueset = this.lookupService.findValuesetName(concept)
+    this.router.navigate(['/association', concept, valueset]);
+  }
+
+  displayConcept(concept) {
+    var iris = [concept]
+    this.popSimilarEntity = null;
+    this.lookupService.findEntityByIris(iris, data => {
+      this.popSimilarEntity = data[0]
+    });
+  }
+
+  index(i: number, obj: any) {
+    return i;
   }
 
 }

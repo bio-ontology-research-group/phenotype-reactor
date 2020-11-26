@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Directive, Output, EventEmitter, ViewChildren, QueryList, SimpleChange } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AssociationService } from '../association.service';
+import { LookupService } from '../lookup.service';
 
 export type SortColumn = 'name' | 'evidenceLabel' | 'created' | '';
 export type SortDirection = 'asc' | 'desc' | '';
@@ -56,12 +58,16 @@ export class ListAssociationComponent implements OnInit {
   collectionSize = 0;
   associations = [];
   entities = {};
-  orderBy = ''
-  EVIDENCE : any = []
-  evidenceFilter = ''
+  orderBy = '';
+  EVIDENCE : any = [];
+  evidenceFilter = '';
+  popEntity = null;
 
-  constructor(private associationService: AssociationService,
-    private alertConfig: NgbAlertConfig) { 
+  constructor(private router: Router,
+    private route: ActivatedRoute, 
+    private associationService: AssociationService,
+    private alertConfig: NgbAlertConfig,
+    private lookupService: LookupService) { 
     alertConfig.type = 'secondary';
     for (var key in this.associationService.EVIDENCE) {
       this.EVIDENCE.push(this.associationService.EVIDENCE[key])
@@ -73,7 +79,6 @@ export class ListAssociationComponent implements OnInit {
 
   ngOnChanges(change: SimpleChange) {
     if(change && change['iri'] && this.iri) {
-      console.log(this.iri, this.type)
       this.page = 1;
       this.previousPage = 1;
       this.pageSize = 20;
@@ -150,5 +155,18 @@ export class ListAssociationComponent implements OnInit {
 
   openInNewTab(url: string) {
     window.open(url, "_blank");
+  }
+
+  open(concept) {
+    var valueset = this.lookupService.findValuesetName(concept)
+    this.router.navigate(['/association', concept, valueset]);
+  }
+
+  displayConcept(concept) {
+    var iris = [concept]
+    this.popEntity = null;
+    this.lookupService.findEntityByIris(iris, data => {
+      this.popEntity = data[0]
+    });
   }
 }

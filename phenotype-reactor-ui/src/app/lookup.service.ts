@@ -12,8 +12,14 @@ export class LookupService {
     })
   };
 
-  OBO_PREFIX = 'http://purl.obolibrary.org/obo/'
-  ORPHA_PREFIX = 'http://www.orpha.net/ORDO/Orphanet_'
+  OBO_PREFIX = 'http://purl.obolibrary.org/obo/';
+  ORPHA_PREFIX = 'http://www.orpha.net/ORDO/Orphanet_';
+  OMIM_PREFIX = 'https://omim.org/entry/';
+  DECIPHER_PREFIX = 'https://decipher.sanger.ac.uk/syndrome/';
+  MGI_PREFIX = 'http://www.informatics.jax.org/marker/';
+  ENTREZ_GENE_PREFIX = 'https://www.ncbi.nlm.nih.gov/gene/';
+  PUBCHEM_PREFIX = 'https://pubchem.ncbi.nlm.nih.gov/compound/';
+
   PREFIX_TO_VALUESET_DICT = {}
 
   constructor(private http: HttpClient) { 
@@ -24,6 +30,11 @@ export class LookupService {
     this.PREFIX_TO_VALUESET_DICT[this.OBO_PREFIX + 'CHEBI_'] = 'CHEBI';
     this.PREFIX_TO_VALUESET_DICT[this.OBO_PREFIX + 'DOID_'] = 'DOID';
     this.PREFIX_TO_VALUESET_DICT[this.ORPHA_PREFIX] = 'ordo';
+    this.PREFIX_TO_VALUESET_DICT[this.OMIM_PREFIX] = 'OMIM';
+    this.PREFIX_TO_VALUESET_DICT[this.DECIPHER_PREFIX] = 'DECIPHER';
+    this.PREFIX_TO_VALUESET_DICT[this.MGI_PREFIX] = 'MGI';
+    this.PREFIX_TO_VALUESET_DICT[this.ENTREZ_GENE_PREFIX] = 'NCBIGene';
+    this.PREFIX_TO_VALUESET_DICT[this.PUBCHEM_PREFIX] = 'PUBCHEM';
   }
 
   findValueset() {

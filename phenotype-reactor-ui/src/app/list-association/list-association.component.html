@@ -21,22 +21,30 @@
     </thead>
     <tbody>
     <tr *ngFor="let association of associations; let assocIndex = index">
-        <td *ngIf="valueset == 'HP' || valueset=='MP'">
-            <a (click)="openInNewTab(association.concept.value)" class="text-muted">
+        <td *ngIf="valueset == 'HP' || valueset=='MP'"  class="w-30">
+            <a (click)="open(association.concept.value)" class="text-muted">
             <h6>{{association.conceptLabel.value}}</h6><small class="text-muted">{{association.concept.value}}</small>
             </a>
+            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
+                    [ngbPopover]="popContent" [popoverTitle]="popTitle" (click)="displayConcept(association.concept.value)">
+            <i class="fas fa-info-circle"></i>
+            </button>
         </td>
         <td *ngIf="valueset != 'HP' && valueset!='MP'">
-            <a (click)="openInNewTab(association.phenotype.value)" class="text-muted">
+            <a (click)="open(association.phenotype.value)" class="text-muted w-30">
             <h6>{{association.phenotypeLabel.value}}</h6><small class="text-muted">{{association.phenotype.value}}</small>
             </a>
+            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
+                    [ngbPopover]="popContent" [popoverTitle]="popTitle" (click)="displayConcept(association.phenotype.value)">
+            <i class="fas fa-info-circle"></i>
+            </button>
         </td>
-        <td><a (click)="openInNewTab(association.evidence.value)" class="text-muted">{{association.evidenceLabel.value}}</a></td>
-        <td>{{association.created ? association.created.value : ''}}</td>
+        <td><a (click)="openInNewTab(association.evidence.value)" class="text-muted w-20">{{association.evidenceLabel.value}}</a></td>
         <td><ul class="list-unstyled"><li *ngFor="let source of association.sources.value.split(','); let sourceIndex = index">
             <a (click)="openInNewTab(source)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link {{ association.sources.value.split(',').length > 1 ? sourceIndex + 1 : ''}}</a>
             </li></ul>
         </td>
+        <td class="w-20">{{association.created ? association.created.value : ''}}</td>
     </tr>
     </tbody>
     </table>
@@ -54,3 +62,20 @@
 <div class="row mt-2" *ngIf="associations.length < 1">
     <p class="col-12 text-center"><ngb-alert class="alert-secondary" [dismissible]="false">No results found</ngb-alert></p>
 </div>
+<ng-template #popContent>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <span *ngIf="popEntity != null">
+    <span *ngIf="popEntity.definition && popEntity.definition.length > 0"><strong>Definition:</strong> {{popEntity.definition}}<br/></span>
+    <strong>Type:</strong> {{popEntity.entity_type}} <br />
+    <strong>Database:</strong> {{popEntity.valueset}} <br /> 
+    <strong>URL:</strong>&nbsp;<a (click)="openInNewTab(popEntity.entity)">{{popEntity.entity}}</a><br />
+    </span>
+</ng-template>
+<ng-template #popTitle>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <strong>{{popEntity?.label[0]}}</strong>
+</ng-template>
