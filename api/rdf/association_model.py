@@ -4,7 +4,7 @@ import uuid
 
 from api.rdf.namespace import PHENO, OBO, PUBCHEM, MGI, ENTREZ_GENE, DECIPHER, OMIM, ORPHA, PMID, ISBN 
 from rdflib.namespace import FOAF, DC, RDFS, DCTERMS
-from rdflib import Graph, Literal, RDF, XSD
+from rdflib import Graph, Literal, RDF, XSD, URIRef
 
 
 def create_graph():
@@ -42,4 +42,5 @@ def create_phenotypic_association(store, subject, object):
     association.add(RDF.subject, subject)
     association.add(RDF.predicate,OBO.RO_0002200)
     association.add(RDF.object, object)
+    store.add((URIRef(subject), OBO.RO_0002200, URIRef(object)))
     return association
