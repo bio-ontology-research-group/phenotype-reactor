@@ -4,9 +4,10 @@
             <option value="">All Databases</option>
             <option *ngFor="let valueset of valuesets" value="{{valueset.valueset}}" [selected]='selectedValueset == valueset.valueset'>{{valueset.valueset}}</option>
         </select>
-         <input id="search" type="text" class="form-control ml-3 w-25" (ngModel)="term" #searchInput
+         <input id="search" type="text" class="form-control ml-3 w-40" (ngModel)="term" #searchInput
             [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search" [resultTemplate]="rt"
             (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
+        <button type="button" class="btn btn-light ml-3" (click)="openHelp(content)"><i class="fas fa-question-circle"></i></button>
         <!-- <button mdbBtn size="md" color="default" class="my-0 waves-light"
             mdbWavesEffect type="submit">Search</button> -->
     </form>
@@ -18,16 +19,19 @@
         <ul class="list-inline mb-0">
             <li class="list-inline-item">e.g</li>
             <li class="list-inline-item">
-                <button type="button" (click)="setExample('Cough')" class="btn btn-link p-0 mb-1">Cough</button>|
+                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/HP_0002060')" class="btn btn-link p-0 mb-1">Abnormal cerebral morphology</button> |
             </li>
             <li class="list-inline-item">
-                <button type="button" (click)="setExample('Influenza', 'MONDO')" class="btn btn-link p-0 mb-1">Influenza</button>|
+                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/DOID_1307')" class="btn btn-link p-0 mb-1">dementia</button> |
             </li>
             <li class="list-inline-item">
-                <button type="button" (click)="setExample('FBN1', 'MGI')" class="btn btn-link p-0 mb-1">FBN1</button>|
+                <button type="button" (click)="openConcept('https://www.ncbi.nlm.nih.gov/gene/38')" class="btn btn-link p-0 mb-1">ACAT1</button> |
             </li>
             <li class="list-inline-item">
-                <button type="button" (click)="setExample('Zika Virus', 'NCBITAXON')" class="btn btn-link p-0 mb-1">Zika Virus</button>
+                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/NCBITaxon_10255')" class="btn btn-link p-0 mb-1">Variola virus</button> |
+            </li>
+            <li class="list-inline-item">
+                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/HP_0000988')" class="btn btn-link p-0 mb-1">Rash</button>
             </li>
         </ul>
     </div>
@@ -37,3 +41,41 @@
   <small *ngIf="selectedValueset == ''" class="font-italic">{{' ' + r.valueset}}</small> <br />
   <small>{{r.entity}}</small>
 </ng-template> 
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Search Examples</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="search-examples">
+        <ul>
+            <li><button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/HP_0002060')" class="btn btn-link p-0 mb-1">Abnormal cerebral morphology</button> 
+                <span class="ml-5"> - by phenotypes</span>
+            </li>
+            <li><button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/DOID_1307')" class="btn btn-link p-0 mb-1">dementia</button>
+                <span class="ml-5"> - by disease</span>
+            </li>
+            <li><button type="button" (click)="openConcept('https://www.ncbi.nlm.nih.gov/gene/38')" class="btn btn-link p-0 mb-1">ACAT1</button>
+                <span class="ml-5"> - by gene</span>
+            </li>
+            <li><button type="button" (click)="openConcept('https://pubchem.ncbi.nlm.nih.gov/compound/105310993')" class="btn btn-link p-0 mb-1">acipimox</button>
+                <span class="ml-5"> - by drug</span>
+            </li>
+            <li><button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/HP_0002018')" class="btn btn-link p-0 mb-1">Nausea</button>
+                <span class="ml-5"> - by phenotype cause by acipimox</span>
+            </li>
+            <li><button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/NCBITaxon_10255')" class="btn btn-link p-0 mb-1">Variola virus</button>
+                <span class="ml-5"> - by pathogen</span>
+            </li>
+            <li><button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/CHEBI_17500')" class="btn btn-link p-0 mb-1">7alpha-hydroxycholesterol</button>
+                <span class="ml-5"> - by metabolite</span>
+            </li>
+        </ul>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { LookupService } from '../lookup.service';
 import { _ } from 'underscore';
-import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-search-bar',
@@ -44,7 +44,8 @@ export class SearchBarComponent implements OnInit {
   }
   constructor(private lookupService: LookupService,
     private router: Router,
-    private titlecasePipe:TitleCasePipe) { }
+    private titlecasePipe:TitleCasePipe,
+    private modalService: NgbModal) { }
 
   ngOnInit() {
     this.formatter = (x: {label: { value: string}}) => x.label ? this.toTitleCase(x.label.value) : null;
@@ -92,4 +93,14 @@ export class SearchBarComponent implements OnInit {
     this.searchInput.nativeElement.value = term;
     this.searchInput.nativeElement.focus();
   }
+
+  openConcept(concept) {
+    var valueset = this.lookupService.findValuesetName(concept)
+    this.router.navigate(['/association', concept, valueset]);
+  }
+
+  openHelp(content) {
+    this.modalService.open(content, { size: 'lg' });
+  }
+  
 }
