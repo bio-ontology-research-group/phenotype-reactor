@@ -50,7 +50,7 @@ class DrugPhenoDS(RDFSource):
         association = create_phenotypic_association(self.store, drug, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(self.store, association, creator='Sara Althubaiti', created_on='2019-03-12',
-         source="https://www.ncbi.nlm.nih.gov/pubmed/20087340")
+         source="http://phenomebrowser.net/downloads#sider")
 
     def resolve_display(self):
         drug  = list(set(self.store.subjects(RDF.type, PHENO.Drug)))
