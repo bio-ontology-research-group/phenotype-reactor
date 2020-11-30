@@ -42,5 +42,5 @@ def create_phenotypic_association(store, subject, object):
     association.add(RDF.subject, subject)
     association.add(RDF.predicate,OBO.RO_0002200)
     association.add(RDF.object, object)
-    store.add((URIRef(subject), OBO.RO_0002200, URIRef(object)))
+    subject.add(OBO.RO_0002200, object)
     return association
