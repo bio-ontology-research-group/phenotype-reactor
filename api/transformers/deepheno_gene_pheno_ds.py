@@ -38,7 +38,7 @@ class DeepphenoGenePhenoDS(RDFSource):
         split_count = 1
         for index, row in self.df.iterrows():
             self.map_association(row)
-            if index > 0 and index % 500000 == 0:
+            if index > 0 and index % 1500000 == 0:
                 self.resolve_display()
                 self.store.serialize(f'{self.target_dir}/{self.rdf_filename}-{split_count}.{self.rdf_ext}', format=settings.EXPORT_FORMAT, max_depth=3)
                 logger.info("rdf writting for %s with size:%d", self.name, len(self.store))
@@ -53,6 +53,9 @@ class DeepphenoGenePhenoDS(RDFSource):
         logger.info("Finished rdf writting for %s with size:%d", self.name, len(self.store))
 
     def map_association(self, row):
+        if row.score < 0.3:
+            return
+            
         gene = self.store.resource(str(ENTREZ_GENE.uri) + row.gene)
         gene.add(RDF.type, PHENO.Gene)
         phenotype = self.store.resource(str(OBO.uri) + row.phenotype)
