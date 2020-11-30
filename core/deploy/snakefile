@@ -75,6 +75,20 @@ rule t_deep_gp:
         "cd ../../;"
         "venv/bin/python manage.py transform -s deep_gp"
 
+rule t_hpo_gp:
+    output: 
+        expand("{target_dir}/data-{date}/hpo_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
+    shell:
+        "cd ../../;"
+        "venv/bin/python manage.py transform -s hpo_gp"
+
+rule t_mgi_gp:
+    output: 
+        expand("{target_dir}/data-{date}/mgi_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
+    shell:
+        "cd ../../;"
+        "venv/bin/python manage.py transform -s mgi_gp"
+
 rule t_patho_pp:
     input:
         expand("{source_dir}/pathogens_phenotypes_shenay.txt", source_dir=config["source_dir"])
@@ -104,6 +118,8 @@ rule archive:
         expand("{target_dir}/data-{date}/textmined_genephenotype-2.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
         expand("{target_dir}/data-{date}/textmined_genephenotype-3.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
         expand("{target_dir}/data-{date}/deep_genephenotype-{filenum}.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()), filenum=DEEPPHENO_FILE_NUMS),
+        expand("{target_dir}/data-{date}/hpo_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
+        expand("{target_dir}/data-{date}/mgi_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
         expand("{target_dir}/data-{date}/pathogenphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())), 
         expand("{target_dir}/data-{date}/metabolitephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     output: touch("archive.done")
