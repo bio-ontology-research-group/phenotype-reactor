@@ -7,9 +7,10 @@ PHENO = ClosedNamespace(
         #Classes
         "Disease", "Drug", "Device", "Gene", "Genotype",
         "Phenotype", "Pathogen", "Provenance", "Association", "Metabolite",
+        "AssociationSet", 
 
         #Properties
-        "url"
+        "url", "includeTypes", "association"
     ]
 )
 

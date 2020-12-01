@@ -16,7 +16,7 @@ HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/l
 class HPOGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('HPOGenePhenoDS', target_dir)
+        super().__init__('hpo gene-phenotypes', [PHENO.Gene], target_dir)
         self.url = f'{HPO_PIPELINE_BASE_URL}/genes_to_phenotype.txt'
         self.df = None
         self.rdf_filename = "hpo_genephenotype"
@@ -59,6 +59,7 @@ class HPOGenePhenoDS(RDFSource):
         sources = 'https://hpo.jax.org/app/download/annotation'
         creator = 'HPO'
         add_association_provenance(self.store, association, creator=creator, created_on=created_on, source=sources)
+        self.add_association(association)
         
 
     def resolve_display(self):

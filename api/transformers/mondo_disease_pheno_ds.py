@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MondoDiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('MondoDiseasePhenoDS', target_dir)
+        super().__init__('textmined mondo disease-phenotypes', [PHENO.Disease], target_dir)
         self.url = f'{self.sourcedir}/mondo-pheno_shenay.txt'
         self.df = None
         self.rdf_filename = "mondo_diseasephenotype"
@@ -51,6 +51,7 @@ class MondoDiseasePhenoDS(RDFSource):
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(self.store, association, creator='Senay Kafkas',
          source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
+        self.add_association(association)
         
 
     def resolve_display(self):

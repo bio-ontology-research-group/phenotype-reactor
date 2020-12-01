@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MGIGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('MGIGenePhenoDS', target_dir)
+        super().__init__('mgi gene-phenotypes', [PHENO.Gene], target_dir)
         self.url = f'http://www.informatics.jax.org/downloads/reports/MGI_PhenoGenoMP.rpt'
         self.df = None
         self.rdf_filename = "mgi_genephenotype"
@@ -58,6 +58,7 @@ class MGIGenePhenoDS(RDFSource):
             sources = 'http://www.informatics.jax.org/downloads/reports/index.html#pheno'
             creator = 'MGI'
             add_association_provenance(self.store, association, creator=creator, created_on=created_on, source=sources)
+            self.add_association(association)
         
 
     def resolve_display(self):

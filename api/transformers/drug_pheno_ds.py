@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DrugPhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('DrugPhenoDS', target_dir)
+        super().__init__('sider drug-phenotypes', [PHENO.Drug], target_dir)
         self.url = f'{self.sourcedir}/drug_phenotypes_sara.txt'
         self.df = None
         self.rdf_filename = "drugphenotype"
@@ -51,6 +51,7 @@ class DrugPhenoDS(RDFSource):
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(self.store, association, creator='Sara Althubaiti', created_on='2019-03-12',
          source="http://phenomebrowser.net/downloads#sider")
+        self.add_association(association)
 
     def resolve_display(self):
         drug  = list(set(self.store.subjects(RDF.type, PHENO.Drug)))

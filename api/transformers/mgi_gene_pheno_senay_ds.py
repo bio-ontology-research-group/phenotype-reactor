@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MgiGenePhenoSenayDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('MgiGenePhenoDS', target_dir)
+        super().__init__('mgi gene-phenotypes provided by senay', [PHENO.Gene],  target_dir)
         self.url = f'{self.sourcedir}/MGI.gene_pheno.4sim.txt'
         self.rows = []
         self.rdf_filename = "mgi_genephenotype"
@@ -54,6 +54,7 @@ class MgiGenePhenoSenayDS(RDFSource):
                 association.add(OBO.RO_0002558, OBO.ECO_0007669)
                 add_association_provenance(self.store, association, creator='Mgi', created_on='2019-03-12',
                 source="https://www.ncbi.nlm.nih.gov/pubmed/20087340")
+                self.add_association(association)
 
     def resolve_display(self):
         gene  = list(set(self.store.subjects(RDF.type, PHENO.Gene)))

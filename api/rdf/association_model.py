@@ -37,10 +37,18 @@ def add_association_provenance(store, association, creator=None, created_on=None
     return association
 
 def create_phenotypic_association(store, subject, object):
-    association = store.resource(str(PHENO.uri) + str(uuid.uuid4()))
+    association = store.resource(str(PHENO.uri) + "/association/" + str(uuid.uuid4()))
     association.add(RDF.type, RDF.Statement)
     association.add(RDF.subject, subject)
     association.add(RDF.predicate,OBO.RO_0002200)
     association.add(RDF.object, object)
     subject.add(OBO.RO_0002200, object)
     return association
+
+def create_associationset(store, label, types=[]):
+    associationset = store.resource(str(PHENO.uri) + "/associationset/" + str(uuid.uuid4()))
+    associationset.add(RDF.type, PHENO.AssociationSet)
+    associationset.add(RDFS.label, Literal(label, datatype=XSD.string))
+    for type in types:
+        associationset.add(PHENO.includeTypes, type)
+    return associationset

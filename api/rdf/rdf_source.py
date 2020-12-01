@@ -6,7 +6,7 @@ from django.conf import settings
 
 from api.ingest.source import Source
 from api.rdf.namespace import RDFLIB_FORMAT_DIC, PHENO, OBO, find_valueset
-from api.rdf.association_model import create_graph
+from api.rdf.association_model import create_graph, create_associationset
 
 from rdflib.namespace import RDFS
 from rdflib.term import URIRef
@@ -17,11 +17,12 @@ logger = logging.getLogger(__name__)
 
 class RDFSource(Source):
 
-    def __init__(self, name, target_dir) :
+    def __init__(self, name, types, target_dir) :
         super().__init__(name, '')
         self.target_dir = target_dir
         self.rdf_ext = RDFLIB_FORMAT_DIC[settings.EXPORT_FORMAT]
         self.store = create_graph()
+        self.associationset = create_associationset(self.store, name, types)
 
     def add_phenotype_label(self):
         phenotypes  = list(set(self.store.subjects(RDF.type, PHENO.Phenotype)))
@@ -53,3 +54,6 @@ class RDFSource(Source):
             except StopIteration as e:
                 logger.warning("Did not find label for:" + iri)
                 continue
+
+    def add_association(self, association):
+        self.associationset.add(PHENO.association, association)

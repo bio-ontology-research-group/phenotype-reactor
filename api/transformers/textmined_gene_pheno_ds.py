@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class TextminedhenoGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('TextminedhenoGenePhenoDS', target_dir)
+        super().__init__('textmined gene-phenotypes', [PHENO.Gene], target_dir)
         self.url = f'{self.sourcedir}/genephenotypes_textmined_senay.txt'
         self.df = None
         self.rdf_filename = "textmined_genephenotype"
@@ -63,6 +63,7 @@ class TextminedhenoGenePhenoDS(RDFSource):
             association.add(OBO.RO_0002558, OBO.ECO_0007669)
             add_association_provenance(self.store, association, creator='Senay Kafkas', 
                 created_on='2019-01-06', source=self.study_source)
+            self.add_association(association)
 
         if row.gene1:
             gene = self.store.resource(str(ENTREZ_GENE.uri) + row.gene1.strip())
@@ -71,6 +72,7 @@ class TextminedhenoGenePhenoDS(RDFSource):
             association.add(OBO.RO_0002558, OBO.ECO_0007669)
             add_association_provenance(self.store, association, creator='Senay Kafkas', 
                 created_on='2019-01-06', source=self.study_source)
+            self.add_association(association)
 
         if row.gene2:
             for geneitem in row.gene2.split('##'):
@@ -80,6 +82,8 @@ class TextminedhenoGenePhenoDS(RDFSource):
                 association.add(OBO.RO_0002558, OBO.ECO_0007669)
                 add_association_provenance(self.store, association, creator='Senay Kafkas', 
                     created_on='2019-01-06', source=self.study_source)
+                self.add_association(association)
+
 
     def resolve_display(self):
         genes  = list(set(self.store.subjects(RDF.type, PHENO.Gene)))

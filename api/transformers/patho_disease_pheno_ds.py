@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class PathoDiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('PathoDiseasePhenoDS', target_dir)
+        super().__init__('pathopheno disease-phenotypes', [PHENO.Disease], target_dir)
         self.url = f'{self.sourcedir}/patho_diseases_phenotypes.json'
         self.df = None
         self.rdf_filename = "patho_diseasephenotype"
@@ -51,6 +51,7 @@ class PathoDiseasePhenoDS(RDFSource):
 
             add_association_provenance(self.store, association, creator='Senay Kafkas', 
                 created_on='2019-06-03', source='https://www.nature.com/articles/s41597-019-0090-x')
+            self.add_association(association)
 
     def resolve_display(self):
         diseases  = list(set(self.store.subjects(RDF.type, PHENO.Disease)))

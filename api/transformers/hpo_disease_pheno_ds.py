@@ -16,7 +16,7 @@ HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/l
 class HPODiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('HPODiseasePhenoDS', target_dir)
+        super().__init__('hpo disease-phenotypes', [PHENO.Disease], target_dir)
         self.url = f'{HPO_PIPELINE_BASE_URL}/phenotype_annotation.tab'
         self.df = None
         self.rdf_filename = "hpo_diseasephenotype"
@@ -99,6 +99,7 @@ class HPODiseasePhenoDS(RDFSource):
             sources.append(ref)
 
         add_association_provenance(self.store, association, creator=creator, created_on=created_on, source=sources)
+        self.add_association(association)
         
 
     def resolve_display(self):
