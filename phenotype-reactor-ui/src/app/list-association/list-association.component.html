@@ -2,6 +2,12 @@
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
+    <div class="col-2 p-2" *ngIf="associationsets.length > 1">
+        <select class="browser-default custom-select default ml-3" color="default" (change)="onDatasetSelect($event)">
+            <option value="">Select Dataset</option>
+            <option *ngFor="let associationset of associationsets" value="{{associationset['associationset']['value']}}" [selected]="associationsetFilter == associationset['associationset']['value']">{{associationset['associationsetLabel']['value']}}</option>
+        </select>
+    </div>
     <div class="col-2 p-2">
         <select class="browser-default custom-select default ml-3" color="default" (change)="onEvidenceSelect($event)">
             <option value="">Select Evidence</option>
@@ -15,6 +21,7 @@
     <tr>
         <th scope="col" sortable="name" (sort)="onSort($event)" class="pl-4">Name</th>
         <th scope="col" sortable="evidenceLabel" (sort)="onSort($event)" class="pl-4">Evidence</th>
+        <th scope="col" class="pl-4">Dataset</th>
         <th scope="col">Source</th>
         <th scope="col" sortable="created" (sort)="onSort($event)" class="pl-4">Created on</th>
     </tr>
@@ -30,7 +37,7 @@
             <i class="fas fa-info-circle"></i>
             </button>
         </td>
-        <td *ngIf="valueset != 'HP' && valueset!='MP'">
+        <td *ngIf="valueset != 'HP' && valueset!='MP'"  class="w-30">
             <a (click)="open(association.phenotype.value)" class="text-muted w-30">
             <h6>{{association.phenotypeLabel.value}}</h6><small class="text-muted">{{association.phenotype.value}}</small>
             </a>
@@ -39,12 +46,13 @@
             <i class="fas fa-info-circle"></i>
             </button>
         </td>
-        <td><a (click)="openInNewTab(association.evidence.value)" class="text-muted w-20">{{association.evidenceLabel.value}}</a></td>
-        <td><ul class="list-unstyled"><li *ngFor="let source of association.sources.value.split(','); let sourceIndex = index">
+        <td class="w-30"><a (click)="openInNewTab(association.evidence.value)" class="text-muted w-20">{{association.evidenceLabel.value}}</a></td>
+        <td class="w-20">{{association.associationsetLabel.value}}</td>
+        <td class="w-10"><ul class="list-unstyled"><li *ngFor="let source of association.sources.value.split(','); let sourceIndex = index">
             <a (click)="openInNewTab(source)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link {{ association.sources.value.split(',').length > 1 ? sourceIndex + 1 : ''}}</a>
             </li></ul>
         </td>
-        <td class="w-20">{{association.created ? association.created.value : ''}}</td>
+        <td class="w-10">{{association.created ? association.created.value : ''}}</td>
     </tr>
     </tbody>
     </table>
@@ -77,5 +85,6 @@
     <div class="spinner-border-sm text-primary" role="status" *ngIf="popEntity == null">
         <span class="sr-only">Loading...</span>
     </div>
-    <strong>{{popEntity?.label[0]}}</strong>
+    <strong *ngIf="popEntity && !geneValuesets.includes(popEntity.valueset)">{{popEntity?.label[0]}}</strong>
+    <strong *ngIf="popEntity && geneValuesets.includes(popEntity.valueset)"><b>{{popEntity?.label[0]}}</b> {{popEntity?.label[1]}}</strong>
 </ng-template>

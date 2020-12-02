@@ -35,8 +35,8 @@
     <div class="card-body justify-content-between">
         <a (click)="openInNewTab(entity.entity)" class="text-muted">
         <span>
-            <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset) < 0">{{entity.label[0]}}</span> 
-            <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset) > -1">{{entity.label[0] + '  ' + entity.label[1]}}</span> 
+            <span class="card-title" *ngIf="entity && !geneValuesets.includes(entity.valueset)">{{entity.label[0]}}</span> 
+            <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset)">{{entity.label[0] + '  ' + entity.label[1]}}</span> 
             <span class="card-title" *ngIf="!entity">Name</span>  
         </span>
         <small class="text-muted ml-2" *ngIf="entity?.identifier">{{entity.identifier}}</small>
@@ -126,8 +126,8 @@
     <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
         <span class="sr-only">Loading...</span>
     </div>
-    <strong *ngIf="entity && geneValuesets.includes(entity.valueset) < 0">{{popSimilarEntity?.label[0]}}</strong>
-    <strong *ngIf="entity && geneValuesets.includes(entity.valueset) > -1">{{popSimilarEntity?.label[0] + '  ' + popSimilarEntity?.label[1]}}</strong>
+    <strong *ngIf="popSimilarEntity && !geneValuesets.includes(popSimilarEntity.valueset)">{{popSimilarEntity?.label[0]}}</strong>
+    <strong *ngIf="popSimilarEntity && geneValuesets.includes(popSimilarEntity.valueset)"><b>{{popSimilarEntity?.label[0]}}</b> {{popSimilarEntity?.label[1]}}</strong>
 </ng-template>
 <div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && tabId === types.length + 1">
     <div class="card-body justify-content-between">

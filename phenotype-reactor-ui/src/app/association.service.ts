@@ -33,7 +33,7 @@ export class AssociationService {
 
   constructor(private http: HttpClient) { }
 
-  find(conceptIri: string, phenotypeIri: string, typeIri:string, evidenceIri:string, limit:number, offset:number, orderBy:string) {
+  find(conceptIri: string, phenotypeIri: string, typeIri:string, evidenceIri:string, associationsetIri:string, limit:number, offset:number, orderBy:string) {
     var query_string = '';
     if (conceptIri) {
       query_string += 'concept=' + conceptIri;
@@ -52,6 +52,11 @@ export class AssociationService {
     if (evidenceIri) {
       query_string += query_string ? '&' : '';
       query_string += 'evidence=' + evidenceIri;
+    }
+
+    if (associationsetIri) {
+      query_string += query_string ? '&' : '';
+      query_string += 'associationset=' + associationsetIri;
     }
 
     if (limit) {
@@ -82,6 +87,10 @@ export class AssociationService {
 
     var url = `${this.URL}/_mostsimilar?${query_string}`;
     return this.http.get(url, this.options);
+  }
+  
+  findAssociationset() {
+    return this.http.get(`/api/associationset`, this.options);
   }
   
 }

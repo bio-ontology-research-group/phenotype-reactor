@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
 import { AssociationService } from '../association.service';
 import { LookupService } from '../lookup.service';
+import { _ } from 'underscore';
 
 export type SortColumn = 'name' | 'evidenceLabel' | 'created' | '';
 export type SortDirection = 'asc' | 'desc' | '';
@@ -61,7 +62,10 @@ export class ListAssociationComponent implements OnInit {
   orderBy = '';
   EVIDENCE : any = [];
   evidenceFilter = '';
+  associationsetFilter = '';
   popEntity = null;
+  geneValuesets=[]
+  associationsets : any = []
 
   constructor(private router: Router,
     private route: ActivatedRoute, 
@@ -69,9 +73,16 @@ export class ListAssociationComponent implements OnInit {
     private alertConfig: NgbAlertConfig,
     private lookupService: LookupService) { 
     alertConfig.type = 'secondary';
+    this.geneValuesets = lookupService.GENE_VALUESETS;
     for (var key in this.associationService.EVIDENCE) {
       this.EVIDENCE.push(this.associationService.EVIDENCE[key])
     }
+
+    this.associationService.findAssociationset().subscribe(res => {
+      this.associationsets = res['results']['bindings'];
+      this.associationsets = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
+      this.sort(this.associationsets)
+    })
   }
 
   ngOnInit() {
@@ -93,6 +104,13 @@ export class ListAssociationComponent implements OnInit {
     this.getPage();
   }
 
+  onDatasetSelect(event) {
+    this.similarEntities = {};
+    this.page = 1;
+    this.associationsetFilter = event.target.value;
+    this.getPage();
+  }
+
   getPage() {
     if (this.iri && this.type) { 
       var findAssociation = null;
@@ -102,9 +120,9 @@ export class ListAssociationComponent implements OnInit {
       }
 
       if (this.type.name == 'Phenotype') {
-        findAssociation = this.associationService.find(this.iri, null, null, this.evidenceFilter, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(this.iri, null, null, this.evidenceFilter, this.associationsetFilter, this.pageSize, offset, this.orderBy)
       } else {
-        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.associationsetFilter, this.pageSize, offset, this.orderBy)
       }
       
       findAssociation.subscribe(data => {
@@ -168,5 +186,10 @@ export class ListAssociationComponent implements OnInit {
     this.lookupService.findEntityByIris(iris, data => {
       this.popEntity = data[0]
     });
+  }
+
+
+  sort(lookupList) {
+    return lookupList.sort((one, two) => (one.name < two.name ? -1 : 1));
   }
 }
