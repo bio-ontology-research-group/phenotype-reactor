@@ -25,14 +25,11 @@ class NCBIGeneValueset(Source):
     def __init__(self):
         super().__init__('NCBIGene', 'Gene')
         self.valueset = None
-        self.entities = None
-        self.url = 'http://ftp.ncbi.nih.gov/gene/DATA/gene_info.gz'
+        self.entities = []
+        self.url_homosapiens = 'https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz'
+        self.url_musmusculus = 'https://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Mus_musculus.gene_info.gz'
         self.df = None
-
-    def fetch(self):
-        logger.info("Started fetching data for valueset %s", self.name)
-        self.df = pd.read_csv(self.url, compression='gzip', sep='\t', error_bad_lines=False, 
-            names=[
+        self.columns = [
                 'tax_id',
                 'GeneID',
                 'Symbol',
@@ -49,23 +46,34 @@ class NCBIGeneValueset(Source):
                 'Other_designations',
                 'Modification_date',
                 'Feature_type',
-            ]) 
-        logger.info("Finished fetching data: entities=%d", self.df.size)
+            ]
+        self.organism_type=['Homo sapiens', 'Mus musculus']
+
+    def fetch(self):
+        logger.info("Started fetching data for valueset %s", self.name)
+        self.df_homo = pd.read_csv(self.url_homosapiens, compression='gzip', sep='\t', error_bad_lines=False, names=self.columns) 
+        self.df_mus = pd.read_csv(self.url_musmusculus, compression='gzip', sep='\t', error_bad_lines=False, names=self.columns) 
+        logger.info("Finished fetching data homo sapien: entities=%d", self.df_homo.size)
+        logger.info("Finished fetching data mus mus musculus: entities=%d", self.df_mus.size)
 
     def map(self):
         self.valueset = {
             "valueset" : self.name,
             "name" : "NCBI Gene"
         }
+        self.map_gene(self.df_homo, self.organism_type[0])
+        self.map_gene(self.df_mus, self.organism_type[1])
 
-        self.df =  self.df[self.df['Symbol'] != 'NEWENTRY']
-        self.df['GeneID'] = self.df['GeneID'].astype(str)
-        self.df['GeneID'] = str(ENTREZ_GENE.uri) + self.df['GeneID']
-        self.df['Synonyms'] = self.df['Synonyms'].astype(str)
-        self.df['Other_designations'] = self.df['Other_designations'].astype(str)
-        logger.info('head: %s', self.df.head())
-        self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
-        logger.info("Finished mapping data: entities=%d", len(self.entities))
+    def map_gene(self, df, organism_type):
+        df =  df[df['Symbol'] != 'NEWENTRY']
+        df['GeneID'] = df['GeneID'].astype(str)
+        df['GeneUri'] = str(ENTREZ_GENE.uri) + df['GeneID']
+        df['Synonyms'] = df['Synonyms'].astype(str)
+        df['Other_designations'] = df['Other_designations'].astype(str)
+        df['organism_type'] = organism_type
+        logger.info('head: %s', df.head())
+        self.entities = self.entities + list(map(lambda row:self.map_entity(row), df.itertuples()))
+        logger.info("Finished mapping data: entities=%d|type=%s", len(self.entities), organism_type)
 
     def write(self):
         logger.info("Started indexing valueset %s", self.valueset)
@@ -86,8 +94,8 @@ class NCBIGeneValueset(Source):
 
     def map_entity(self, row):
         obj = {}
-        obj["entity"] =  getattr(row, 'GeneID')
-        obj["label"] =  [getattr(row, 'Symbol')] #TODO : 'nan' symbol index error
+        obj["entity"] =  getattr(row, 'GeneUri')
+        obj["label"] =  [getattr(row, 'Symbol'), getattr(row, 'description') + ' ( ' + getattr(row, 'organism_type') + ' )'] #TODO : 'nan' symbol index error
 
         tax_num = getattr(row, 'tax_id')
         if isinstance(tax_num, int):
@@ -111,7 +119,7 @@ class NCBIGeneValueset(Source):
             synonym = synonym + other_designations.split('|')
 
         obj["synonym"] =  synonym
-        obj["definition"] = [getattr(row, 'description')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["identifier"] = getattr(row, 'GeneID')
         return obj
