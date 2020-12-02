@@ -95,7 +95,7 @@ class NCBIGeneValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'GeneUri')
-        obj["label"] =  [getattr(row, 'Symbol'), getattr(row, 'description') + ' ( ' + getattr(row, 'organism_type') + ' )'] #TODO : 'nan' symbol index error
+        obj["label"] =  [getattr(row, 'Symbol'), getattr(row, 'description') + ' (' + getattr(row, 'organism_type') + ')'] #TODO : 'nan' symbol index error
 
         tax_num = getattr(row, 'tax_id')
         if isinstance(tax_num, int):

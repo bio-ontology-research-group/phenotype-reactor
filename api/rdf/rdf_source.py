@@ -49,8 +49,11 @@ class RDFSource(Source):
         for iri in iris:
             try:
                 index = next(idx for idx in indices if idx['entity'] == iri)
-                if index:
+                if index and index['valueset'] in ['MGI', 'NCBIGene']:
+                    self.store.add((URIRef(iri), RDFS.label, Literal(index['label'][0] + '  ' + index['label'][1], datatype = XSD.string)))
+                elif index:
                     self.store.add((URIRef(iri), RDFS.label, Literal(index['label'][0], datatype = XSD.string)))
+                
             except StopIteration as e:
                 logger.warning("Did not find label for:" + iri)
                 continue
