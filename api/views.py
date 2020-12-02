@@ -32,11 +32,12 @@ class FindAssociation(APIView):
             phenotype = request.GET.get('phenotype', None)
             concept_type = request.GET.get('type', None)
             evidence = request.GET.get('evidence', None)
+            associationset = request.GET.get('associationset', None)
             limit = request.GET.get('limit', None)
             offset = request.GET.get('offset', None)
             order_by = request.GET.get('orderBy', None)
 
-            (response, query) = self.service.find(concept, phenotype, concept_type, evidence, limit, offset, order_by) 
+            (response, query) = self.service.find(concept, phenotype, concept_type, evidence, associationset, limit, offset, order_by) 
             
             if response.status_code == requests.codes.ok:
                 result = response.json()
@@ -67,6 +68,26 @@ class FindMostSimilar(APIView):
             
             if response.status_code == requests.codes.bad_request:
                 raise Exception(response.text)
+        except Exception as e:
+            logger.exception("message")
+
+
+class FindAssociationset(APIView):
+    """
+    List associationsets
+    """
+
+    service = Associations()
+    def get(self, request, format=None):
+        try:
+            (response, query) = self.service.find_associationsets()
+            if response.status_code == requests.codes.ok:
+                return Response(response.json())
+            
+            if response.status_code == requests.codes.bad_request:
+                raise Exception(response.text)
+        except Exception as e:
+            logger.exception("message")
         except Exception as e:
             logger.exception("message")
 
