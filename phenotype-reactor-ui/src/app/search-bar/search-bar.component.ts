@@ -26,6 +26,7 @@ export class SearchBarComponent implements OnInit {
   searching = false;
   searchFailed = false;
   valuesets : any = [];
+  geneValuesets = [];
 
   formatter: any;
   
@@ -45,7 +46,9 @@ export class SearchBarComponent implements OnInit {
   constructor(private lookupService: LookupService,
     private router: Router,
     private titlecasePipe:TitleCasePipe,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal) { 
+      this.geneValuesets = lookupService.GENE_VALUESETS;
+    }
 
   ngOnInit() {
     this.formatter = (x: {label: { value: string}}) => x.label ? this.toTitleCase(x.label.value) : null;

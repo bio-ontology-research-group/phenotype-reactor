@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
   typeFilter='';
   mostSimilarQueryOrderBy = '';
   popSimilarEntity = null;
+  geneValuesets = []
 
 
   page = 1;
@@ -86,6 +87,7 @@ export class HomeComponent implements OnInit {
           this.initAssociation()
         }
       });
+      this.geneValuesets = lookupService.GENE_VALUESETS;
   }
 
   ngOnInit() {

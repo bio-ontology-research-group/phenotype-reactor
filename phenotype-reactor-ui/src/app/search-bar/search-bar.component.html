@@ -40,7 +40,8 @@
     </div>
 </div>
 <ng-template #rt let-r="result" let-t="term">
-  <ngb-highlight [result]="toTitleCase(r.label[0])" [term]="t"></ngb-highlight> 
+  <ngb-highlight [result]="r.label[0]" [term]="t" *ngIf="geneValuesets.includes(r.valueset) < 0"></ngb-highlight> 
+  <ngb-highlight [result]="r.label[0] + '  ' + r.label[1]" [term]="t" *ngIf="geneValuesets.includes(r.valueset) > -1"></ngb-highlight> 
   <small *ngIf="selectedValueset == ''" class="font-italic">{{' ' + r.valueset}}</small> <br />
   <small>{{r.entity}}</small>
 </ng-template> 

@@ -29,7 +29,7 @@ class MGIValueset(Source):
             "name" : "Mouse Genome Informatics"
         }
 
-        self.df['MGI Accession ID'] = self.df['MGI Accession ID'].replace(regex=['MGI:'], value=MGI.uri + 'MGI:')
+        self.df['mgi_uri'] = self.df['MGI Accession ID'].replace(regex=['MGI:'], value=MGI.uri + 'MGI:')
         logger.info('head: %s', self.df.head())
         self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
         logger.info("Finished mapping data: entities=%d", len(self.entities))
@@ -44,9 +44,10 @@ class MGIValueset(Source):
 
     def map_entity(self, row):
         obj = {}
-        obj["entity"] =  getattr(row, '_1')
-        obj["label"] =  [getattr(row, '_7')]
+        obj["entity"] =  getattr(row, 'mgi_uri')
+        obj["label"] =  [getattr(row, '_7') , getattr(row, '_9')]
         obj["synonym"] =  [getattr(row, '_9')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["identifier"] = getattr(row, '_1')
         return obj

@@ -29,7 +29,7 @@ class PubchemValueset(Source):
             "name" : self.name
         }
 
-        self.df['id'] = self.df['id'].replace(regex=['CID'], value=PUBCHEM.uri)
+        self.df['uri'] = self.df['id'].replace(regex=['CID'], value=PUBCHEM.uri)
         logger.info('head: %s', self.df.head())
         self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
         logger.info("Finished mapping data: entities=%d", len(self.entities))
@@ -46,8 +46,9 @@ class PubchemValueset(Source):
 
     def map_entity(self, row):
         obj = {}
-        obj["entity"] =  getattr(row, 'id')
+        obj["entity"] =  getattr(row, 'uri')
         obj["label"] =  [getattr(row, 'name')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["identifier"] = getattr(row, 'id')
         return obj

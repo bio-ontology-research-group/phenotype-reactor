@@ -33,7 +33,7 @@ class OMIMValueset(Source):
 
         self.df =  self.df[self.df['prefix'] != "Caret"]
         self.df['mim_number'] = self.df['mim_number'].astype(str)
-        self.df['mim_number'] = str(OMIM.uri) + self.df['mim_number']
+        self.df['mim_number_uri'] = str(OMIM.uri) + self.df['mim_number']
         self.df['preferred_title'] = self.df['preferred_title'].astype(str)
         self.df['alternative_titles'] = self.df['alternative_titles'].astype(str)
         self.df['included_titles'] = self.df['included_titles'].astype(str)
@@ -52,7 +52,7 @@ class OMIMValueset(Source):
 
     def map_entity(self, row):
         obj = {}
-        obj["entity"] =  getattr(row, 'mim_number')
+        obj["entity"] =  getattr(row, 'mim_number_uri')
         obj["label"] =  [getattr(row, 'preferred_title')]
         obj["synonym"] = [] 
         pref_titles = getattr(row, 'preferred_title')
@@ -69,4 +69,5 @@ class OMIMValueset(Source):
 
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["identifier"] = getattr(row, 'mim_number')
         return obj

@@ -22,6 +22,8 @@ export class LookupService {
 
   PREFIX_TO_VALUESET_DICT = {}
 
+  GENE_VALUESETS = ['MGI', 'NCBIGene']
+
   constructor(private http: HttpClient) { 
     this.PREFIX_TO_VALUESET_DICT[this.OBO_PREFIX + 'HP_'] = 'HP';
     this.PREFIX_TO_VALUESET_DICT[this.OBO_PREFIX + 'MP_'] = 'MP';

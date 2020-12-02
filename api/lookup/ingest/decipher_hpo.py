@@ -31,8 +31,8 @@ class DecipherValueset(Source):
 
         self.df =  self.df[self.df['#disease-db'] == self.name]
         self.df['disease-identifier'] = self.df['disease-identifier'].astype(str)
-        self.df['disease_iri'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
-        self.df['disease_iri'] = self.df['disease_iri'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
+        self.df['disease_oboid'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
+        self.df['disease_iri'] = self.df['disease_oboid'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
         logger.info('head: %s', self.df.head())
         self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
         logger.info("Finished mapping data: entities=%d", len(self.entities))
@@ -58,4 +58,5 @@ class DecipherValueset(Source):
         obj["label"] =  [getattr(row, '_3')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["identifier"] = getattr(row, 'disease_oboid')
         return obj
