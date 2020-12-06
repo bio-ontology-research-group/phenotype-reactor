@@ -75,7 +75,7 @@ export class AssociationService {
     return this.http.get(url, this.options);
   }
 
-  findMostSimilar(iri: string, typeIri: string, orderBy:string) {
+  findMostSimilar(iri: string, typeIri: string, orderBy:string, limit:number) {
     var query_string = 'concept=' + iri;
     if (typeIri) {
       query_string = query_string + '&type=' + typeIri
@@ -85,6 +85,9 @@ export class AssociationService {
       query_string += '&orderBy=' + orderBy;
     }
 
+    if (limit) {
+      query_string += '&limit=' + limit;
+    }
     var url = `${this.URL}/_mostsimilar?${query_string}`;
     return this.http.get(url, this.options);
   }

@@ -60,7 +60,11 @@ class FindMostSimilar(APIView):
             concept = request.GET.get('concept', None)
             type_iri = request.GET.get('type', None)
             order_by = request.GET.get('orderBy', None)
-            (response, query) = self.service.find_similar_concepts(concept, type_iri, order_by) 
+            limit = request.GET.get('limit', None)
+            if limit:
+                (response, query) = self.service.find_similar_concepts(concept, type_iri, order_by, limit) 
+            else :
+                (response, query) = self.service.find_similar_concepts(concept, type_iri, order_by) 
             if response.status_code == requests.codes.ok:
                 result = response.json()
                 result['query'] = query

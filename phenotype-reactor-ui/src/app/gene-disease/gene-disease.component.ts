@@ -65,6 +65,7 @@ export class GeneDiseaseComponent implements OnInit {
   similarEntityType = []
 
   mostSimilarConcepts : any = [];
+  mostSimilarConceptsPlusSelectedEntity : any = [];
   mostSimilarConceptsFiltered : any = [];
   mostSimilarQueryOrderBy = '';
   similarityQuery='';
@@ -181,10 +182,11 @@ export class GeneDiseaseComponent implements OnInit {
     } else {
       typeFilter = typeFilter + this.types[0]
     }
-    this.similarEntityType = [typeFilter];
-
-    this.associationService.findMostSimilar(this.iri, typeFilter, this.mostSimilarQueryOrderBy).subscribe( data => {
+    // this.similarEntityType = [typeFilter];
+    this.similarEntityType = [this.BASE_PREFIX + this.types[0], this.BASE_PREFIX + this.types[1]];
+    this.associationService.findMostSimilar(this.iri, typeFilter, this.mostSimilarQueryOrderBy, null).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
+      this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);
       this.similarityQuery = data ? data['query'] : '';
       this.query = this.similarityQuery;
       this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
@@ -192,6 +194,14 @@ export class GeneDiseaseComponent implements OnInit {
         this.associationService.findCommonPhenotypes(this.iri, concept.concept.value).subscribe( data => {
           this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
         })
+      });
+
+      // To get coordinates of entity selected
+      this.associationService.findMostSimilar(this.iri, '', this.mostSimilarQueryOrderBy, 1).subscribe( data => {
+        var selectedEntityCoordinates = data ? data['results']['bindings'][0] : null;
+        if (selectedEntityCoordinates) {
+          this.mostSimilarConceptsPlusSelectedEntity.push(selectedEntityCoordinates);
+        }
       });
     });
 

@@ -138,16 +138,16 @@
                 </div>
             </ng-template>
         </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Neighbourhood Visualization</a>
+            <ng-template ngbNavContent>
+                <app-plot-scatter-chart [similarConcepts]="mostSimilarConceptsPlusSelectedEntity" [similarEntities]="similarEntityType"></app-plot-scatter-chart>
+            </ng-template>
+        </li>
         <li [ngbNavItem]="3">
             <a ngbNavLink>Phenotype Associations</a>
             <ng-template ngbNavContent>
                 <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  [valuesetList]="valuesets" (annontationQuery)="onQueryChange($event)"></app-list-association>
-            </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-            <a ngbNavLink>Neighbourhood Visualization</a>
-            <ng-template ngbNavContent>
-                <app-plot-scatter-chart [similarConcepts]="mostSimilarConcepts" [similarEntities]="similarEntityType"></app-plot-scatter-chart>
             </ng-template>
         </li>
     </ul>

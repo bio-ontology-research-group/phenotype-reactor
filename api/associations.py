@@ -76,7 +76,7 @@ class Associations:
         # logger.debug("Query : %s", query)  
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
 
-    def find_similar_concepts(self, concept_iri, type_iri, order_by):
+    def find_similar_concepts(self, concept_iri, type_iri, order_by, limit = 100):
         order_clause = self.create_orderby_clause(order_by)
         query = 'PREFIX b2v: <http://bio2vec.net/function#> \
                 \nPREFIX b2vd: <http://bio2vec.net/dataset#> \
@@ -84,7 +84,7 @@ class Associations:
                 \nSELECT ?concept ?conceptLabel ?type ?val ?x ?y \
                 \nWHERE { \
                 \n    SERVICE <https://bio2vec.cbrc.kaust.edu.sa/ds/query> {  \
-                \n        (?concept ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <' + concept_iri + '> 100 ' \
+                \n        (?concept ?val ?x ?y) b2v:mostSimilar(b2vd:dataset_4 <' + concept_iri + '> ' + str(limit) + ' ' \
                             + (('<' + type_iri + '>' ) if type_iri else '') + ') .  \
                 \n    }  \
                 \n    GRAPH <http://phenomebrowser.net> { \

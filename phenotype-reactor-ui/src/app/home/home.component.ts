@@ -216,7 +216,7 @@ export class HomeComponent implements OnInit {
   }
   
   findMostSimilar() {
-    this.associationService.findMostSimilar(this.iri, this.typeFilter, this.mostSimilarQueryOrderBy).subscribe( data => {
+    this.associationService.findMostSimilar(this.iri, this.typeFilter, this.mostSimilarQueryOrderBy, null).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
       this.similarityQuery = data ? data['query'] : '';
       this.query = this.similarityQuery;
