@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssociationService } from '../association.service';
 import { _ } from 'underscore';
 import { LookupService } from '../lookup.service';
-import { NgbNavChangeEvent, NgbAlertConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavChangeEvent, NgbAlertConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 export type SortColumn = 'conceptLabel' | 'val' | '';
@@ -60,7 +60,8 @@ export class HomeComponent implements OnInit {
   typeFilter='';
   mostSimilarQueryOrderBy = '';
   popSimilarEntity = null;
-  geneValuesets = []
+  commonPhenotypes = [];
+  geneValuesets = [];
 
 
   page = 1;
@@ -78,7 +79,8 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute, 
     private associationService: AssociationService,
     private lookupService: LookupService,
-    private alertConfig: NgbAlertConfig) { 
+    private alertConfig: NgbAlertConfig,
+    private modalService: NgbModal) { 
       alertConfig.type = 'secondary';
       this.route.params.subscribe( params => {
         this.iri = decodeURIComponent(params.iri);
@@ -193,6 +195,7 @@ export class HomeComponent implements OnInit {
     var similarConceptsPage =  this.mostSimilarConcepts ? this.mostSimilarConcepts
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+    
     return similarConceptsPage;
   }
 
@@ -244,6 +247,13 @@ export class HomeComponent implements OnInit {
 
   index(i: number, obj: any) {
     return i;
+  }
+
+  openCommonPhenotypeModel(target, content) {
+    this.associationService.findCommonPhenotypes(this.entity.entity, target).subscribe( data => {
+      this.commonPhenotypes = data ? data['results']['bindings'] : [];
+      this.modalService.open(content, { size: 'lg' });
+    });
   }
 
 }

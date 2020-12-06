@@ -72,6 +72,7 @@
                     <tr>
                         <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
                         <th scope="col">Type</th>
+                        <th scope="col">Common Phenotypes</th>
                         <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
                     </tr>
                     </thead>
@@ -86,8 +87,9 @@
                             <i class="fas fa-info-circle"></i>
                             </button>
                         </td>
-                        <td class="w-30">{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
-                        <td class="w-30">{{similarConcept.val?.value}}<td>
+                        <td class="w-20">{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
+                        <td class="w-20"><button type="button" class="btn btn-link" (click)="openCommonPhenotypeModel(similarConcept.concept.value, commonPhenotypeContent)">Common Phenotypes</button></td>
+                        <td class="w-20">{{similarConcept.val?.value}}<td>
                     </tr>
                     </tbody>
                     </table>
@@ -143,4 +145,24 @@
         <app-sparql-form [query]="query"></app-sparql-form>
     </div>
 </div>
+<ng-template #commonPhenotypeContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Common Phenotypes</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div id="search-examples">
+        <ul>
+            <li *ngFor="let phenotype of commonPhenotypes">{{phenotype['phenotypeLabel']['value']}} 
+                <span class="ml-5"> - {{phenotype['phenotype']['value']}}</span>
+            </li>
+        </ul>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
 <app-bind-schema [entity]="entity"></app-bind-schema>

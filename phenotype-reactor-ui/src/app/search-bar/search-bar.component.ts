@@ -79,7 +79,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   findTerm(term) {
-      return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValueset)
+      return this.lookupService.findEntityByLabelStartsWith(term, [this.selectedValueset]);
   }
 
   sort(lookupList) {
