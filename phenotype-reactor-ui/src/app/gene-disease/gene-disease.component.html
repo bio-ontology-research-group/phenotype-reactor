@@ -117,7 +117,7 @@
                             </button>
                         </td>
                         <td class="w-40"><ul><li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
-                        <a (click)="openConcept(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}}</a></li></ul>
+                        <a (click)="openConcept(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a></li></ul>
                         <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1"> no common phenotypes found</span></td>
                         <td class="w-20">{{similarConcept.val?.value}}<td>
                     </tr>
