@@ -22,6 +22,7 @@ import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-cha
 import { NgxJsonLdModule } from '@ngx-lite/json-ld';
 import { BindSchemaComponent } from './bind-schema/bind-schema.component';
 import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
+import { ListAssociationsetComponent } from './list-associationset/list-associationset.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
     SparqlFormComponent,
     PlotScatterChartComponent,
     BindSchemaComponent,
-    GeneDiseaseComponent
+    GeneDiseaseComponent,
+    ListAssociationsetComponent
   ],
   imports: [
     BrowserModule,

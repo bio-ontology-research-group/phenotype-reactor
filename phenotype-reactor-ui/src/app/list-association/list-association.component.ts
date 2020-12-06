@@ -88,10 +88,12 @@ export class ListAssociationComponent implements OnInit {
       if (this.type.name != 'Phenotype') {
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
       } else {
-        this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
-        this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
+        if (this.valuesetList) {
+          this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+          this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
+        }
       }
-      this.sort(this.associationsetsFiltered)
+      this.sortAssociationset(this.associationsetsFiltered)
     })
   }
 
@@ -105,8 +107,10 @@ export class ListAssociationComponent implements OnInit {
       this.previousPage = 1;
       this.pageSize = 20;
       this.getPage();
-      this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
-      this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
+      if (this.valuesetList) {
+        this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+        this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
+      }
     }
   }
 
@@ -202,7 +206,7 @@ export class ListAssociationComponent implements OnInit {
   }
 
 
-  sort(lookupList) {
-    return lookupList.sort((one, two) => (one.name < two.name ? -1 : 1));
+  sortAssociationset(lookupList) {
+    return lookupList.sort((one, two) => (one.associationsetLabel.value  < two.associationsetLabel.value ? -1 : 1));
   }
 }
