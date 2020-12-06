@@ -150,10 +150,10 @@ def delete_valueset(valueset_name):
 def find_entity_by_startswith(term, valueset):
   try:
     criteria = None
-    if valueset.strip():
+    if valueset and len(valueset) > 0:
       criteria = [
               { "prefix": { "label": { "value": term } }}, 
-              { "term": { "valueset": valueset } }
+              { "terms": { "valueset": valueset } }
             ] 
     else:
       criteria = [ { "prefix": { "label": { "value": term }}} ] 

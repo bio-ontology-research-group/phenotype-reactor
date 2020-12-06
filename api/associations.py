@@ -108,6 +108,21 @@ class Associations:
         logger.debug("Executing find all associationset query")
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
 
+    
+    def find_common_phenotypes(self, source_iri, target_iri):
+        query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                \nPREFIX pb: <http://phenomebrowser.net/> \
+                \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
+                \nSELECT ?phenotype ?phenotypeLabel \
+                \nFROM <http://phenomebrowser.net> \
+                \nWHERE { \
+                \n  <' + source_iri + '> obo:RO_0002200 ?phenotype . \
+                \n  <' + target_iri + '> obo:RO_0002200 ?phenotype . \
+                \n  ?phenotype rdfs:label ?phenotypeLabel . \
+                \n}  ORDER BY asc(?phenotypeLabel)'
+        logger.debug("Executing find all associationset query")
+        return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+
     def create_orderby_clause(self, order_by):
         order_clause = ''
         if order_by :

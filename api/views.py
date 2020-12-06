@@ -71,6 +71,29 @@ class FindMostSimilar(APIView):
         except Exception as e:
             logger.exception("message")
 
+class FindCommonPhenotypes(APIView):
+    """
+    List of common phenotypes between two biomedical concepts
+    """
+
+    service = Associations()
+
+    def get(self, request, format=None):
+        try:
+            source = request.GET.get('source', None)
+            target = request.GET.get('target', None)
+
+            (response, query) = self.service.find_common_phenotypes(source, target)
+            
+            if response.status_code == requests.codes.ok:
+                result = response.json()
+                result['query'] = query
+                return Response(result)
+            
+            if response.status_code == requests.codes.bad_request:
+                raise Exception(response.text)
+        except Exception as e:
+            logger.exception("message")
 
 class FindAssociationset(APIView):
     """
@@ -127,8 +150,8 @@ class FindEntityByLabelStartsWith(APIView):
     def get(self, request, format=None):
         try:
             term = request.GET.get('term', None)
-            valueset = request.GET.get('valueset', None)
-
+            valueset = request.GET.getlist('valueset')
+            print("val", valueset)
             result = lookup_es.find_entity_by_startswith(term, valueset) 
             return Response(result)
         except Exception as e:

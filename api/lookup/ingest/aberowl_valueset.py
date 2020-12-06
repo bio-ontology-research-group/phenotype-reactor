@@ -29,7 +29,8 @@ class AberowlValueset(Source):
         self.valueset = {
                 "valueset" : self.ontology['ontology'],
                 "name" : self.ontology['name'],
-                "description" : self.ontology['description']
+                "description" : self.ontology['description'],
+                "entity_type" : self.entity_type
             }
     
         self.entities = list(map(lambda entity:self.map_entity(entity), self.data))
