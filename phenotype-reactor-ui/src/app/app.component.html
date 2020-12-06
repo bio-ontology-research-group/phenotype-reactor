@@ -7,6 +7,14 @@
             <li class="nav-item active waves-light" mdbWavesEffect>
                 <a class="nav-link" routerLink="">Home <span class="sr-only">(current)</span></a>
             </li>
+            <li ngbDropdown class="nav-item">
+                <a href (click)="false" class="nav-link waves-effect waves-light" ngbDropdownToggle>
+                    Browse
+                </a>
+                <div ngbDropdownMenu>
+                    <button ngbDropdownItem routerLink="genedisease">Gene Disease Connections</button>
+                </div>
+            </li>
             <li class="nav-item waves-light" mdbWavesEffect>
                 <a class="nav-link" routerLink="isparql">SPARQL</a>
             </li>

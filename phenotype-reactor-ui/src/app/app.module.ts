@@ -12,7 +12,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { TitleCasePipe } from '@angular/common';
 import { LookupService } from './lookup.service';
 import { AssociationService }  from './association.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ListAssociationComponent, ListAssoicationSortableHeader} from './list-association/list-association.component';
 import { DownloadsComponent } from './downloads/downloads.component';
@@ -21,6 +21,7 @@ import { ArchiveService } from './archive.service';
 import { PlotScatterChartComponent } from './plot-scatter-chart/plot-scatter-chart.component';
 import { NgxJsonLdModule } from '@ngx-lite/json-ld';
 import { BindSchemaComponent } from './bind-schema/bind-schema.component';
+import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
 
 @NgModule({
   declarations: [
@@ -34,11 +35,13 @@ import { BindSchemaComponent } from './bind-schema/bind-schema.component';
     DownloadsComponent,
     SparqlFormComponent,
     PlotScatterChartComponent,
-    BindSchemaComponent
+    BindSchemaComponent,
+    GeneDiseaseComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
     MDBBootstrapModule.forRoot(),

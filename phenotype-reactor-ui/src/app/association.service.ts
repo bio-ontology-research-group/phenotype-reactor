@@ -88,6 +88,11 @@ export class AssociationService {
     var url = `${this.URL}/_mostsimilar?${query_string}`;
     return this.http.get(url, this.options);
   }
+
+  findCommonPhenotypes(sourceIri: string, targetIri: string) {
+    var url = `api/association/common-phenotype?source=${sourceIri}&target=${targetIri}`;
+    return this.http.get(url, this.options);
+  }
   
   findAssociationset() {
     return this.http.get(`/api/associationset`, this.options);

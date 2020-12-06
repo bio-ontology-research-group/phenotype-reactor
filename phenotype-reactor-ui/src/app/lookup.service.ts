@@ -43,12 +43,16 @@ export class LookupService {
     return this.http.get(`/api/valueset`, this.options);
   }
 
-  findEntityByLabelStartsWith(term: string, valueset: string) {
+  findEntityByLabelStartsWith(term: string, valueset: string[]) {
     if (term === '') {
       return of([]);
     }
 
-    return this.http.get(`/api/entity/_startswith?term=${term}&valueset=${valueset}`, this.options);
+    var queryStr = `term=${term}`;
+    valueset.forEach(function (value) {
+      queryStr = queryStr + "&valueset=" + value;
+    });
+    return this.http.get(`/api/entity/_startswith?${queryStr}`, this.options);
   }
 
   findEntityByIris(iris: any[], callback) {
