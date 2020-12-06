@@ -5,7 +5,7 @@
     <div class="col-2 p-2" *ngIf="associationsets.length > 1">
         <select class="browser-default custom-select default ml-3" color="default" (change)="onDatasetSelect($event)">
             <option value="">Select Dataset</option>
-            <option *ngFor="let associationset of associationsets" value="{{associationset['associationset']['value']}}" [selected]="associationsetFilter == associationset['associationset']['value']">{{associationset['associationsetLabel']['value']}}</option>
+            <option *ngFor="let associationset of associationsetsFiltered" value="{{associationset['associationset']['value']}}" [selected]="associationsetFilter == associationset['associationset']['value']">{{associationset['associationsetLabel']['value']}}</option>
         </select>
     </div>
     <div class="col-2 p-2">

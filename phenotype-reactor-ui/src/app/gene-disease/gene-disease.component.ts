@@ -69,6 +69,7 @@ export class GeneDiseaseComponent implements OnInit {
   mostSimilarQueryOrderBy = '';
   similarityQuery='';
   query='';
+  active = 1;
 
   page = 1;
   pageSize = 20;
@@ -115,6 +116,7 @@ export class GeneDiseaseComponent implements OnInit {
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset ? params.valueset : ''
         if (this.iri && this.valueset) {
+          this.active = 1;
           if (this.valuesets && this.valuesets.length > 0) {
             this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
           }
@@ -134,7 +136,9 @@ export class GeneDiseaseComponent implements OnInit {
 
     this.lookupService.findValueset().subscribe(res => {
       this.valuesets = res
-      this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
+      if (this.valueset) {
+        this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
+      }
       this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
     })
   }
@@ -154,6 +158,7 @@ export class GeneDiseaseComponent implements OnInit {
   }
 
   findTerm(term) {
+      console.log('findterm', this.selectedValuesets)
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValuesets)
   }
 
@@ -262,4 +267,9 @@ export class GeneDiseaseComponent implements OnInit {
     return i;
   }
 
+  onQueryChange(query) {
+    // if (query) {
+    //   this.query = query;
+    // }
+  }
 }

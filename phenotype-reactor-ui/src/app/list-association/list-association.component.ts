@@ -49,6 +49,7 @@ export class ListAssociationComponent implements OnInit {
   @Input() mostSimilarConcepts = [];
   @Input() similarEntities = {};
   @Input() valueset = {};
+  @Input() valuesetList = [];
   @Output() annontationQuery = new EventEmitter<any>();
 
   @ViewChildren(ListAssoicationSortableHeader) headers: QueryList<ListAssoicationSortableHeader>;
@@ -66,6 +67,10 @@ export class ListAssociationComponent implements OnInit {
   popEntity = null;
   geneValuesets=[]
   associationsets : any = []
+  associationsetsFiltered : any = []
+  valuesetEntityType = '';
+
+  BASE_PREFIX = "http://phenomebrowser.net/"
 
   constructor(private router: Router,
     private route: ActivatedRoute, 
@@ -81,13 +86,17 @@ export class ListAssociationComponent implements OnInit {
     this.associationService.findAssociationset().subscribe(res => {
       this.associationsets = res['results']['bindings'];
       if (this.type.name != 'Phenotype') {
-        this.associationsets = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
+        this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
+      } else {
+        this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+        this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
       }
-      this.sort(this.associationsets)
+      this.sort(this.associationsetsFiltered)
     })
   }
 
   ngOnInit() {
+
   }
 
   ngOnChanges(change: SimpleChange) {
@@ -96,6 +105,8 @@ export class ListAssociationComponent implements OnInit {
       this.previousPage = 1;
       this.pageSize = 20;
       this.getPage();
+      this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+      this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
     }
   }
 

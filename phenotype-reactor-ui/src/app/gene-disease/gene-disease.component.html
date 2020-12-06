@@ -75,59 +75,86 @@
     <div class="row"> 
         <div class="col-12 p-2 pt-3 ml-3">
             <label><h3>
-            <span *ngIf="valusetEntityType() == 'Gene'">Similar Diseases</span>
-            <span *ngIf="valusetEntityType() == 'Disease'">Similar Gene</span>  
-            <span *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">({{mostSimilarConcepts.length}})</span></h3></label>
+            </h3></label>
         </div>
     </div>  
-    <form>
-    <div class="form-group form-inline">
-        Filter: <input class="form-control ml-2" type="text" [formControl]="filter"/>
-    </div>
-    </form>
-    <div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
-        <table class="table table-striped">
-        <thead color="default">
-        <tr>
-            <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
-            <th scope="col">Common Phenotypes</th>
-            <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
-            <td class="w-40">
-                <a (click)="openGeneDisease(similarConcept.concept.value)" class="text-muted">
-                    <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
-                </a>
-                <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
-                        [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
-                <i class="fas fa-info-circle"></i>
-                </button>
-            </td>
-            <td class="w-40"><ul><li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
-            <a (click)="openConcept(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}}</a></li></ul>
-            <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1"> no common phenotypes found</span></td>
-            <td class="w-20">{{similarConcept.val?.value}}<td>
-        </tr>
-        </tbody>
-        </table>
-        <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
-            [maxSize]="5" class="pl-3">
-        </ngb-pagination>
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink><span *ngIf="valusetEntityType() == 'Gene'">Disease Associations</span>
+                <span *ngIf="valusetEntityType() == 'Disease'">Gene Associations</span>  
+                <span *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0"> ({{mostSimilarConcepts.length}})</span></a>
+            <ng-template ngbNavContent>
+                <div class="row">
+                    <div class="col-1 p-2 pt-3 ml-3">
+                        <label><strong>Filter By:</strong></label>
+                    </div>
+                    <div class="col-2 p-2">
+                    <form>
+                        <div class="form-group form-inline">
+                            <input class="form-control ml-2" type="text" [formControl]="filter"/>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                <div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
+                    <table class="table table-striped">
+                    <thead color="default">
+                    <tr>
+                        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
+                        <th scope="col">Common Phenotypes</th>
+                        <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
+                        <td class="w-40">
+                            <a (click)="openGeneDisease(similarConcept.concept.value)" class="text-muted">
+                                <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
+                            </a>
+                            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
+                                    [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
+                            <i class="fas fa-info-circle"></i>
+                            </button>
+                        </td>
+                        <td class="w-40"><ul><li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
+                        <a (click)="openConcept(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}}</a></li></ul>
+                        <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1"> no common phenotypes found</span></td>
+                        <td class="w-20">{{similarConcept.val?.value}}<td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
+                        [maxSize]="5" class="pl-3">
+                    </ngb-pagination>
 
-        <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-            <option [ngValue]="10">10 items per page</option>
-            <option [ngValue]="20">20 items per page</option>
-            <option [ngValue]="50">50 items per page</option>
-        </select>
-    </div>
-    <div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1)">
-        <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
-    </div>
+                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+                        <option [ngValue]="10">10 items per page</option>
+                        <option [ngValue]="20">20 items per page</option>
+                        <option [ngValue]="50">50 items per page</option>
+                    </select>
+                </div>
+                <div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1)">
+                    <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
+                </div>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+            <a ngbNavLink>Phenotype Associations</a>
+            <ng-template ngbNavContent>
+                <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  [valuesetList]="valuesets" (annontationQuery)="onQueryChange($event)"></app-list-association>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Neighbourhood Visualization</a>
+            <ng-template ngbNavContent>
+                <app-plot-scatter-chart [similarConcepts]="mostSimilarConcepts" [similarEntities]="similarEntityType"></app-plot-scatter-chart>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
 </div>
-<div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
+<!--<div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
     <div class="card-body justify-content-between">
         <span>
             <span class="card-title" *ngIf="entity">Neighbourhood Visualization</span> 
@@ -135,7 +162,7 @@
         </span>
         <app-plot-scatter-chart [similarConcepts]="mostSimilarConcepts" [similarEntities]="similarEntityType"></app-plot-scatter-chart>
     </div>
-</div>
+</div>-->
 <ng-template #rt let-r="result" let-t="term">
   <ngb-highlight [result]="r.label[0]" [term]="t" *ngIf="!geneValuesets.includes(r.valueset)"></ngb-highlight> 
   <ngb-highlight [result]="r.label[0] + '  ' + r.label[1]" [term]="t" *ngIf="geneValuesets.includes(r.valueset)"></ngb-highlight> 
