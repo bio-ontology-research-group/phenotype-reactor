@@ -26,7 +26,8 @@ class DecipherValueset(Source):
     def map(self):
         self.valueset = {
             "valueset" : self.name,
-            "name" : self.name
+            "name" : self.name,
+            "entity_type" : self.entity_type
         }
 
         self.df =  self.df[self.df['#disease-db'] == self.name]

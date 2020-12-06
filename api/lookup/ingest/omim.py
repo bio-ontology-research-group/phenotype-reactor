@@ -28,7 +28,8 @@ class OMIMValueset(Source):
     def map(self):
         self.valueset = {
             "valueset" : self.name,
-            "name" : "Online Mendelian Inheritance in Man"
+            "name" : "Online Mendelian Inheritance in Man",
+            "entity_type" : self.entity_type
         }
 
         self.df =  self.df[self.df['prefix'] != "Caret"]

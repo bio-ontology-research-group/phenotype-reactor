@@ -26,7 +26,8 @@ class MGIValueset(Source):
     def map(self):
         self.valueset = {
             "valueset" : self.name,
-            "name" : "Mouse Genome Informatics"
+            "name" : "Mouse Genome Informatics",
+            "entity_type" : self.entity_type
         }
 
         self.df['mgi_uri'] = self.df['MGI Accession ID'].replace(regex=['MGI:'], value=MGI.uri + 'MGI:')

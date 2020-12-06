@@ -59,7 +59,8 @@ class NCBIGeneValueset(Source):
     def map(self):
         self.valueset = {
             "valueset" : self.name,
-            "name" : "NCBI Gene"
+            "name" : "NCBI Gene",
+            "entity_type" : self.entity_type
         }
         self.map_gene(self.df_homo, self.organism_type[0])
         self.map_gene(self.df_mus, self.organism_type[1])

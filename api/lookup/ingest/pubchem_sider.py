@@ -26,7 +26,8 @@ class PubchemValueset(Source):
     def map(self):
         self.valueset = {
             "valueset" : self.name,
-            "name" : self.name
+            "name" : self.name,
+            "entity_type" : self.entity_type
         }
 
         self.df['uri'] = self.df['id'].replace(regex=['CID'], value=PUBCHEM.uri)
