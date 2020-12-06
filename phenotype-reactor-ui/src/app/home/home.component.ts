@@ -86,6 +86,7 @@ export class HomeComponent implements OnInit {
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset ? params.valueset : ''
         if (this.iri && this.valueset) {
+          this.active=1;
           this.initAssociation()
         }
       });
