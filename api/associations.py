@@ -94,20 +94,6 @@ class Associations:
                 \n}' + order_clause
         logger.debug("Executing query for search criteria: concept_iri=" + concept_iri)
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
-
-    def find_associationsets(self):
-        query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                \nPREFIX pb: <http://phenomebrowser.net/> \
-                \nSELECT ?associationset ?associationsetLabel ?type \
-                \nFROM <http://phenomebrowser.net> \
-                \nWHERE { \
-                \n  ?associationset rdf:type pb:AssociationSet . \
-                \n  ?associationset rdfs:label ?associationsetLabel . \
-                \n  ?associationset pb:includeTypes ?type . \
-                \n}'
-        logger.debug("Executing find all associationset query")
-        return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
-
     
     def find_common_phenotypes(self, source_iri, target_iri):
         query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
@@ -119,7 +105,7 @@ class Associations:
                 \n  <' + source_iri + '> obo:RO_0002200 ?phenotype . \
                 \n  <' + target_iri + '> obo:RO_0002200 ?phenotype . \
                 \n  ?phenotype rdfs:label ?phenotypeLabel . \
-                \n}  ORDER BY asc(?phenotypeLabel)'
+                \n} ORDER BY asc(?phenotypeLabel)'
         logger.debug("Executing find all associationset query")
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
 

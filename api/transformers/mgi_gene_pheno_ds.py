@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MGIGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('mgi gene-phenotypes', [PHENO.Gene], target_dir)
+        super().__init__('mgi_gene_phenotypes', target_dir)
         self.url = f'http://www.informatics.jax.org/downloads/reports/MGI_PhenoGenoMP.rpt'
         self.df = None
         self.rdf_filename = "mgi_genephenotype"

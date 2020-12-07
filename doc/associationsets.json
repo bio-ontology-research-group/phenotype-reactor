@@ -1,0 +1,79 @@
+{
+    "deeppheno" : {
+        "name" : "deeppheno",
+        "includeTypes": ["http://phenomebrowser.net/Gene"],
+        "description" : "Predicts single gene loss-of-function phenotypes using an ontology-aware hierarchical classifier",
+        "download":"",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008453"
+    },
+    "textmined_disease_phenotypes" : {
+        "name" : "textmined disease-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Disease"],
+        "description" : "Uses an ontology-based approach in combination with statistical methods to text mine disease-phenotype associations from the literature. It discovers disease phenotypes form DO, HP and MP ontologies",
+        "download":"",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30809638/"
+    },
+    "sider_drug_phenotypes" : {
+        "name" : "sider drug-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Drug"],
+        "description" : "SIDER drug phenotypes map side effects in SIDER to HPO, MP or MPATH ontology using lexical mapping between the two. Some of SIDER's side effects are diseases, there it uses the text mined list of DOID disease to phenotypes mapping to get their phenotypes.",
+        "download":"http://phenomebrowser.net/archive/sider_drug_phenotype.txt",
+        "url": "http://phenomebrowser.net/downloads#sider"
+    },
+    "hpo_disease_phenotypes" : {
+        "name" : "hpo disease-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Disease"],
+        "description" : "HPO phenotype annontations contains manual and semi-automated annotations created by the HPO-team. These are annotations of OMIM-, Orphanet-, and DECIPHER-entries",
+        "download":"http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/phenotype_annotation.tab",
+        "url": "https://hpo.jax.org/app/download/annotation"
+    },
+    "hpo_gene_phenotypes" : {
+        "name" : "hpo gene-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Gene"],
+        "description" : "HPO gene phenotype annontations a link between genes and HPO terms. All phenotype terms associated with any disease that is associated with variants in a gene are assigned to that gene in this file.",
+        "download":"http://compbio.charite.de/jenkins/job/hpo.annotations/lastSuccessfulBuild/artifact/util/annotation/genes_to_phenotype.txt",
+        "url": "https://hpo.jax.org/app/download/annotation"
+    },
+    "textmined_metabolite_phenotypes" : {
+        "name" : "textmined metabolite-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Metabolite"],
+        "description" : "Uses an ontology-based approach in combination with statistical methods to text mine metabolite-phenotype associations from the literature. It extracts metabolite phenotypes form CHEBI, HP and MP ontologies",
+        "download":"",
+        "url": "https://www.ncbi.nlm.nih.gov/pubmed/30809638"
+    },
+    "mgi_gene_phenotypes" : {
+        "name" : "mgi gene-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Gene"],
+        "description" : "All Genotypes and Mammalian Phenotype Annotations from MGI",
+        "download":"http://www.informatics.jax.org/downloads/reports/MGI_PhenoGenoMP.rpt",
+        "url": "http://www.informatics.jax.org/downloads/reports/index.html#pheno"
+    },
+    "textmined_mondo_disease_phenotypes" : {
+        "name" : "textmined mondo disease-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Disease"],
+        "description" : "Uses an ontology-based approach in combination with statistical methods to text mine disease-phenotype associations from the literature. It extracts disease phenotypes form MONDO, HP and MP ontologies",
+        "download": "",
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30809638"
+    },
+    "pathopheno_disease_phenotypes" : {
+        "name" : "pathopheno disease-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Disease"],
+        "description" : "A dataset containing disease-to-phenotype associations. It relies on ontology-based text mining as well as manual curation to associate pathogen host disease and phenotypes",
+        "download":"",
+        "url": "https://www.nature.com/articles/s41597-019-0090-x"
+    },
+    "pathopheno_pathogen_phenotypes" : {
+        "name" : "pathopheno pathogen-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Pathogen"],
+        "description" : "PathoPhenoDB, a database containing pathogen-to-phenotype associations. PathoPhenoDB relies on manual curation of pathogen-disease relations, on ontology-based text mining as well as manual curation to associate host disease phenotypes with infectious agents",
+        "download":"http://patho.phenomebrowser.net/#/downloads",
+        "url": "https://www.nature.com/articles/s41597-019-0090-x"
+    },
+    "textmined gene-phenotypes" : {
+        "name" : "textmined gene-phenotypes",
+        "includeTypes": ["http://phenomebrowser.net/Gene"],
+        "description" : "Uses an ontology-based approach in combination with statistical methods to text mine gene-phenotype associations from the literature. It discovers gene phenotypes form MGI, HP and MP ontologies",
+        "download":"",
+        "url": "https://www.ncbi.nlm.nih.gov/pubmed/30809638"
+    }
+}

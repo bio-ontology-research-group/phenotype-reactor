@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DrugPhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('sider drug-phenotypes', [PHENO.Drug], target_dir)
+        super().__init__('sider_drug_phenotypes', target_dir)
         self.url = f'{self.sourcedir}/drug_phenotypes_sara.txt'
         self.df = None
         self.rdf_filename = "drugphenotype"

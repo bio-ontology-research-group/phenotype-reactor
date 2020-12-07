@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DOIDDiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('textmined disease-phenotypes', [PHENO.Disease], target_dir)
+        super().__init__('textmined_disease_phenotypes', target_dir)
         self.url = f'{self.sourcedir}/doid_phenotypes_sara.txt'
         self.df = None
         self.rdf_filename = "doid_diseasephenotype"

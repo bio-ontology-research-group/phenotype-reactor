@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class PathoDiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('pathopheno disease-phenotypes', [PHENO.Disease], target_dir)
+        super().__init__('pathopheno_disease_phenotypes', target_dir)
         self.url = f'{self.sourcedir}/patho_diseases_phenotypes.json'
         self.df = None
         self.rdf_filename = "patho_diseasephenotype"

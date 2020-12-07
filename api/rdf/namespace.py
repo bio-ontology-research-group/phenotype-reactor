@@ -10,7 +10,7 @@ PHENO = ClosedNamespace(
         "AssociationSet", 
 
         #Properties
-        "url", "includeTypes", "association"
+        "url", "includeTypes", "association", "download"
     ]
 )
 

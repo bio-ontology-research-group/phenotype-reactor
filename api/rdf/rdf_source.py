@@ -11,18 +11,20 @@ from api.rdf.association_model import create_graph, create_associationset
 from rdflib.namespace import RDFS
 from rdflib.term import URIRef
 from rdflib import RDF, XSD, Literal
+from api.associationsets import Associationsets
 
 
 logger = logging.getLogger(__name__)
 
 class RDFSource(Source):
 
-    def __init__(self, name, types, target_dir) :
+    def __init__(self, name, target_dir) :
         super().__init__(name, '')
         self.target_dir = target_dir
         self.rdf_ext = RDFLIB_FORMAT_DIC[settings.EXPORT_FORMAT]
         self.store = create_graph()
-        self.associationset = create_associationset(self.store, name, types)
+        if name in Associationsets.ASSOCIATIONSETS:
+            self.associationset = create_associationset(self.store, Associationsets.ASSOCIATIONSETS[name])
 
     def add_phenotype_label(self):
         phenotypes  = list(set(self.store.subjects(RDF.type, PHENO.Phenotype)))

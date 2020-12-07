@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MgiGenePhenoSenayDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('mgi gene-phenotypes provided by senay', [PHENO.Gene],  target_dir)
+        super().__init__('mgi gene-phenotypes provided by senay',  target_dir)
         self.url = f'{self.sourcedir}/MGI.gene_pheno.4sim.txt'
         self.rows = []
         self.rdf_filename = "mgi_genephenotype"

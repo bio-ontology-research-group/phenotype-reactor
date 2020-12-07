@@ -16,7 +16,7 @@ HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/l
 class HPOGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('hpo gene-phenotypes', [PHENO.Gene], target_dir)
+        super().__init__('hpo_gene_phenotypes', target_dir)
         self.url = f'{HPO_PIPELINE_BASE_URL}/genes_to_phenotype.txt'
         self.df = None
         self.rdf_filename = "hpo_genephenotype"

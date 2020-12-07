@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MetabolitePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('textmined metabolite-phenotypes', [PHENO.Metabolite], target_dir)
+        super().__init__('textmined_metabolite_phenotypes', target_dir)
         self.url = f'{self.sourcedir}/metabolite_pheno_shenay.txt'
         self.df = None
         self.rdf_filename = "metabolitephenotype"

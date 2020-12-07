@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DeepphenoGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('deeppheno', [PHENO.Gene], target_dir)
+        super().__init__('deeppheno', target_dir)
         self.url = f'{self.sourcedir}/deeppheno_maxat.txt'
         self.df = None
         self.rdf_filename = "deep_genephenotype"

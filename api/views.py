@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from api.associations import Associations
+from api.associationsets import Associationsets
 from api.bio2vec_api import find_most_similar
 
 
@@ -104,7 +105,7 @@ class FindAssociationset(APIView):
     List associationsets
     """
 
-    service = Associations()
+    service = Associationsets()
     def get(self, request, format=None):
         try:
             (response, query) = self.service.find_associationsets()

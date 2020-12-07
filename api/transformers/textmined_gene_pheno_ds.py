@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class TextminedhenoGenePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
-        super().__init__('textmined gene-phenotypes', [PHENO.Gene], target_dir)
+        super().__init__('textmined_gene_phenotypes', target_dir)
         self.url = f'{self.sourcedir}/genephenotypes_textmined_senay.txt'
         self.df = None
         self.rdf_filename = "textmined_genephenotype"
