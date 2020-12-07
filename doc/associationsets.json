@@ -69,7 +69,7 @@
         "download":"http://patho.phenomebrowser.net/#/downloads",
         "url": "https://www.nature.com/articles/s41597-019-0090-x"
     },
-    "textmined gene-phenotypes" : {
+    "textmined_gene_phenotypes" : {
         "name" : "textmined gene-phenotypes",
         "includeTypes": ["http://phenomebrowser.net/Gene"],
         "description" : "Uses an ontology-based approach in combination with statistical methods to text mine gene-phenotype associations from the literature. It discovers gene phenotypes form MGI, HP and MP ontologies",
