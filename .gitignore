@@ -10,3 +10,5 @@ phenotype-reactor-ui/\.editorconfig
 static
 core/support/virtuoso/data
 core/deploy/.snakemake
+boost
+*.done
