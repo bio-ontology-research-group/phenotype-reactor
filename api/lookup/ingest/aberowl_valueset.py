@@ -33,7 +33,7 @@ class AberowlValueset(Source):
                 "entity_type" : self.entity_type
             }
     
-        self.entities = list(map(lambda entity:self.map_entity(entity), self.data))
+        self.entities = list(filter(lambda entity: entity, map(lambda entity:self.map_entity(entity), self.data)))
 
     def write(self):
         logger.info("Started indexing valueset %s", self.valueset)

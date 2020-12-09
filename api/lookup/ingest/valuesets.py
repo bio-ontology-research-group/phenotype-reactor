@@ -14,7 +14,7 @@ class ORDO(AberowlValueset):
 
 class NCBITAXON(AberowlValueset):
     def __init__(self):
-        super().__init__("NCBITAXON", "Pahtogen")
+        super().__init__("NCBITAXON", "Pathogen")
 
 class DOID(AberowlValueset):
     def __init__(self):
@@ -23,6 +23,13 @@ class DOID(AberowlValueset):
 class MONDO(AberowlValueset):
     def __init__(self):
         super().__init__("MONDO", "Disease")
+    
+
+    def map_entity(self, entity):
+        if self.name + '_' not in entity['class']:
+            return None
+
+        return super().map_entity(entity)
 
 class CHEBI(AberowlValueset):
     def __init__(self):
