@@ -55,7 +55,7 @@ export class SearchBarComponent implements OnInit {
 
     this.lookupService.findValueset().subscribe(res => {
       this.valuesets = res
-      this.valuesets = _.filter(this.valuesets, (obj) => obj.valueset != 'ECO');
+      this.valuesets = _.filter(this.valuesets, (obj) => obj.valueset != 'ECO' && !obj.custom);
       this.sort(this.valuesets)
     })
   }

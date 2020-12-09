@@ -11,6 +11,7 @@ from api.lookup.ingest.pubchem_sider import PubchemValueset
 from api.lookup.ingest.mgi import MGIValueset
 from api.lookup.ingest.omim import OMIMValueset
 from api.lookup.ingest.ncbi_gene import NCBIGeneValueset
+from api.lookup.ingest.ncbitaxon_pathopheno import NCBITaxonPathophenoValueset
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ sources_map = {
         'mp': MP(),
         'ordo': ORDO(), 
         'ncbitaxon': NCBITAXON(), 
+        'ncbitaxon_pathopheno': NCBITaxonPathophenoValueset(), 
         'doid': DOID(), 
         'mondo': MONDO(), 
         'chebi': CHEBI(),
