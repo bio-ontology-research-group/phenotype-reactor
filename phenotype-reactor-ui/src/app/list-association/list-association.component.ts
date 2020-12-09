@@ -207,6 +207,6 @@ export class ListAssociationComponent implements OnInit {
 
 
   sortAssociationset(lookupList) {
-    return lookupList.sort((one, two) => (one.associationsetLabel.value  < two.associationsetLabel.value ? -1 : 1));
+    return lookupList.sort((one, two) => (one.label.value  < two.label.value ? -1 : 1));
   }
 }

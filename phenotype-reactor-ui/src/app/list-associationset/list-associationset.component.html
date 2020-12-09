@@ -1,1 +1,30 @@
-<p>list-associationset works!</p>
+<div class="card mb-4 wow fadeIn">
+    <div class="card-body justify-content-between">
+    <div class="row">
+        <div class="col-12 p-3">
+            <h2>Datasets List</h2>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table">
+        <thead color="default">
+        <tr>
+            <th class="pl-2">Name</th>
+            <th class="pl-2">Description</th>
+            <th class="pl-2">Publication</th>
+            <th class="pl-2">Download</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let associationset of associationsets; let assocIndex = index">
+            <td class="w-20"><a [href]="'dataset/' + associationset.associationset.value">{{associationset.label.value}}</a></td>
+            <td class="w-40">{{associationset.description.value}}</td>
+            <td class="w-20"><a [href]="associationset.source.value" target="_blank">Reference</a></td>
+            <td class="w-10"><a [href]="associationset.download.value" target="_blank" *ngIf="associationset.download.value">Download</a></td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+

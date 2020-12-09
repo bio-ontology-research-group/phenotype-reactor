@@ -7,6 +7,7 @@ import api.rdf.virtuoso as virt
 logger = logging.getLogger(__name__)
 
 class Associationsets:
+    MIME_TYPE_JSON = "application/json"
     ASSOCIATIONSETS = {}
 
     def __init__(self) :
@@ -17,12 +18,17 @@ class Associationsets:
     def find_associationsets(self):
         query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 \nPREFIX pb: <http://phenomebrowser.net/> \
-                \nSELECT ?associationset ?associationsetLabel ?type \
+                \nPREFIX dcterms: <http://purl.org/dc/terms/> \
+                \nPREFIX dc: <http://purl.org/dc/elements/1.1/> \
+                \nSELECT ?associationset ?label ?type ?description ?source ?download \
                 \nFROM <http://phenomebrowser.net> \
                 \nWHERE { \
                 \n  ?associationset rdf:type pb:AssociationSet . \
-                \n  ?associationset rdfs:label ?associationsetLabel . \
+                \n  ?associationset rdfs:label ?label . \
+                \n  ?associationset dc:description ?description . \
+                \n  OPTIONAL { ?associationset dcterms:source ?source . }\
+                \n  OPTIONAL { ?associationset pb:download ?download . } \
                 \n  ?associationset pb:includeTypes ?type . \
-                \n} ORDER BY asc(?associationsetLabel)'
+                \n} ORDER BY asc(?label)'
         logger.debug("Executing find all associationset query")
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
