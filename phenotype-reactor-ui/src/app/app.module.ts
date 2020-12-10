@@ -23,6 +23,8 @@ import { NgxJsonLdModule } from '@ngx-lite/json-ld';
 import { BindSchemaComponent } from './bind-schema/bind-schema.component';
 import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
 import { ListAssociationsetComponent } from './list-associationset/list-associationset.component';
+import { ListSimilarAssociationsComponent } from './list-similar-associations/list-similar-associations.component';
+import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-host-target.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { ListAssociationsetComponent } from './list-associationset/list-associat
     PlotScatterChartComponent,
     BindSchemaComponent,
     GeneDiseaseComponent,
-    ListAssociationsetComponent
+    ListAssociationsetComponent,
+    ListSimilarAssociationsComponent,
+    PathogenHostTargetComponent
   ],
   imports: [
     BrowserModule,

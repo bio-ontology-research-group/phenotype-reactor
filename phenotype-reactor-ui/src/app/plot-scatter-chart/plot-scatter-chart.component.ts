@@ -10,7 +10,6 @@ import d3Tip from "d3-tip"
 export class PlotScatterChartComponent implements OnInit {
 
   @Input() similarConcepts = []
-  @Input() similarEntities = []
   @ViewChild("chart" , {static: true}) chartEle: ElementRef;
 
   x = null;
@@ -33,11 +32,16 @@ export class PlotScatterChartComponent implements OnInit {
 
   ngOnChanges(change: SimpleChange) {
     if(change && change['similarConcepts']) {
-      this.plot(this.similarConcepts)
+      var types = new Set<string>();
+      var that = this
+      this.similarConcepts.forEach(function(d) {
+        types.add(that.localName(d.type.value));
+      });
+      this.plot(this.similarConcepts, types)
     }
   }
 
-  plot(data) {
+  plot(data, types) {
     var that = this
     var width = this.outerWidth - this.margin.left - this.margin.right;
     var height = this.outerHeight - this.margin.top - this.margin.bottom;
@@ -45,10 +49,7 @@ export class PlotScatterChartComponent implements OnInit {
     var padding = 0;
     var currentTransform = null;
 
-    var types = new Set<string>();
-    data.forEach(function(d) {
-      types.add(that.localName(d.type.value));
-    });
+    
     var typeArray = [...types];
     this.x = d3.scaleLinear()
       .domain(d3.extent(data, d => {
@@ -87,12 +88,7 @@ export class PlotScatterChartComponent implements OnInit {
       .attr('class', 'd3-tip')
       .offset([-10, 0])
       .html(function(d) {
-        var entity = that.similarEntities[d.concept.value]
-        if (entity) {
-          return "name: " + entity['label'][0] + "<br>" + "id : " + d.concept.value;
-        } else {
           return "name: " + d.conceptLabel.value + "<br>" + "id : " + d.concept.value;
-        }
       })
     
     d3.select("svg").remove(); 

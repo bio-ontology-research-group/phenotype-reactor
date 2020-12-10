@@ -48,6 +48,7 @@ class NCBITaxonPathophenoValueset(Source):
     def map_entity(self, iri):
         result = lookup_es.find_entity_by_iris([iri], 'NCBITAXON')
         if len(result) > 0:
+            result[0]['valueset'] = self.valueset['valueset']
             return result[0]
 
         logger.info("not found: %s", iri)

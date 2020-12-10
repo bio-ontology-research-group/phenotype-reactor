@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-1 p-2 pt-3 ml-3">
+        <label><strong>Filter By:</strong></label>
+    </div>
+    <div class="col-2 p-2">
+    <form>
+        <div class="form-group form-inline">
+            <input class="form-control ml-2" type="text" [formControl]="filter"/>
+        </div>
+    </form>
+    </div>
+</div>
+<div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
+    <table class="table table-striped">
+    <thead color="default">
+    <tr>
+        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
+        <th scope="col">Matching Phenotypes</th>
+        <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Similarity Score</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
+        <td class="w-40">
+            <a (click)="geneDiseaseRef(similarConcept.concept.value)" class="text-muted">
+                <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
+            </a>
+            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
+                    [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
+            <i class="fas fa-info-circle"></i>
+            </button>
+        </td>
+        <td class="w-40"><ul><li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
+        <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a></li></ul>
+        <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1"> no common phenotypes found</span></td>
+        <td class="w-20">{{similarConcept.val?.value}}<td>
+    </tr>
+    </tbody>
+    </table>
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
+        [maxSize]="5" class="pl-3">
+    </ngb-pagination>
+
+    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
+        <option [ngValue]="10">10 items per page</option>
+        <option [ngValue]="20">20 items per page</option>
+        <option [ngValue]="50">50 items per page</option>
+    </select>
+</div>
+<hr />
+<div class="card-body justify-content-between mt-4">
+    <span>
+        <span class="card-title" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">Neighbourhood Visualization</span> 
+    </span>
+    <app-plot-scatter-chart [similarConcepts]="mostSimilarConceptsPlusSelectedEntity"></app-plot-scatter-chart>
+</div>
+<div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1)">
+    <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
+</div>
+<ng-template #similarPopContent>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <span *ngIf="popSimilarEntity != null">
+    <span *ngIf="popSimilarEntity.definition && popSimilarEntity.definition.length > 0"><strong>Definition:</strong> {{popSimilarEntity.definition}}<br/></span>
+    <strong>Type:</strong> {{popSimilarEntity.entity_type}} <br />
+    <strong>Database:</strong> {{popSimilarEntity.valueset}} <br /> 
+    <strong>URL:</strong>&nbsp;<a [href]="popSimilarEntity.entity" target="_blank">{{popSimilarEntity.entity}}</a><br />
+    </span>
+</ng-template>
+<ng-template #similarPopTitle>
+    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <strong *ngIf="popSimilarEntity && !targetType.includes('Gene')">{{popSimilarEntity?.label[0]}}</strong>
+    <strong *ngIf="popSimilarEntity && targetType.includes('Gene')"><b>{{popSimilarEntity?.label[0]}}</b> {{popSimilarEntity?.label[1]}}</strong>
+</ng-template>

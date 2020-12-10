@@ -1,42 +1,11 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit, Directive, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LookupService } from '../lookup.service';
 import { Observable, of, Subject, merge } from 'rxjs';
-import {debounceTime, distinctUntilChanged, tap, switchMap, catchError, startWith, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rxjs/operators';
 import { _ } from 'underscore';
-import { AssociationService } from '../association.service';
-import { FormControl } from '@angular/forms';
-
-export type SortColumn = 'conceptLabel' | 'val' | '';
-export type SortDirection = 'asc' | 'desc' | '';
-const rotate: {[key: string]: SortDirection} = { 'asc': 'desc', 'desc': '', '': 'asc' };
-
-export interface SortEvent {
-  column: SortColumn;
-  direction: SortDirection;
-}
-
-@Directive({
-  selector: 'th[sortable]',
-  host: {
-    '[class.asc]': 'direction === "asc"',
-    '[class.desc]': 'direction === "desc"',
-    '(click)': 'rotate()'
-  }
-})
-export class ListSimilarEntitiesSortableHeader {
-
-  @Input() sortable: SortColumn = '';
-  @Input() direction: SortDirection = '';
-  @Output() sort = new EventEmitter<SortEvent>();
-
-  rotate() {
-    this.direction = rotate[this.direction];
-    this.sort.emit({column: this.sortable, direction: this.direction});
-  }
-}
 
 @Component({
   selector: 'app-gene-disease',
@@ -44,11 +13,13 @@ export class ListSimilarEntitiesSortableHeader {
   styleUrls: ['./gene-disease.component.css']
 })
 export class GeneDiseaseComponent implements OnInit {
-  @ViewChildren(ListSimilarEntitiesSortableHeader) headers: QueryList<ListSimilarEntitiesSortableHeader>;
+
+  BASE_PREFIX = "http://phenomebrowser.net/"
   focus$ = new Subject<string>();
 
   selectedType = 'Gene'
   types = ['Gene', 'Disease']
+  targetType = null;
   typesDisplay = {'Gene' : 'Gene by Symbol or Name', 'Disease' : 'Disease Name'};
   term = null;
   searching = false;
@@ -56,29 +27,13 @@ export class GeneDiseaseComponent implements OnInit {
   valuesets : any = [];
   selectedValuesets : any = [];
   geneValuesets = [];
-  conceptPhenotypesMap = {};
-  filter = new FormControl('');
 
   iri = null;
   valueset = null;
   entity = null;
-  similarEntityType = []
 
-  mostSimilarConcepts : any = [];
-  mostSimilarConceptsPlusSelectedEntity : any = [];
-  mostSimilarConceptsFiltered : any = [];
-  mostSimilarQueryOrderBy = '';
-  similarityQuery='';
-  query='';
   active = 1;
-
-  page = 1;
-  pageSize = 20;
-  collectionSize = 0;
-
-  popSimilarEntity = null;
-
-  BASE_PREFIX = "http://phenomebrowser.net/"
+  similarEntityTypes = [this.BASE_PREFIX + this.types[0], this.BASE_PREFIX + this.types[1]];
 
   formatter: any;
   
@@ -96,40 +51,24 @@ export class GeneDiseaseComponent implements OnInit {
     ));
   }
 
-  conceptfilter = (text: string): [] => {
-    return this.mostSimilarConcepts.filter(concept => {
-      const term = text.toLowerCase();
-      if (concept.conceptLabel) {
-        return concept.conceptLabel.value.toLowerCase().includes(term);
-      } else {
-        return false;
-      }
-    });
-  }
-
   constructor(private lookupService: LookupService,
     private router: Router,
     private route: ActivatedRoute, 
-    private associationService: AssociationService,
     private titlecasePipe:TitleCasePipe,
     private modalService: NgbModal) { 
       this.route.params.subscribe( params => {
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset ? params.valueset : ''
-        if (this.iri && this.valueset) {
+        if (params.iri && params.valueset) {
           this.active = 1;
           if (this.valuesets && this.valuesets.length > 0) {
             this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
           }
-          this.findMostSimilar();
+          this.updateTargetType();
           this.resolveEntity();
         }
       });
       this.geneValuesets = lookupService.GENE_VALUESETS;
-      this.filter.valueChanges.pipe(
-        startWith(''),
-        map(text => this.conceptfilter(text))
-      ).subscribe(data => {this.mostSimilarConceptsFiltered = data;});
     }
 
   ngOnInit() {
@@ -146,7 +85,6 @@ export class GeneDiseaseComponent implements OnInit {
 
   onTermSelect(event) {
     if (event.item && event.item.valueset) {
-      this.conceptPhenotypesMap = {};
       this.entity = event.item 
       this.router.navigate(['/genedisease', encodeURIComponent(event.item.entity), event.item.valueset]);
     }
@@ -155,7 +93,7 @@ export class GeneDiseaseComponent implements OnInit {
   onTypeSelect(event) {
     this.selectedType = event.target.value;
     this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-    this.conceptPhenotypesMap = {};
+    this.updateTargetType();
   }
 
   findTerm(term) {
@@ -175,64 +113,8 @@ export class GeneDiseaseComponent implements OnInit {
     window.open(url, "_blank");
   }
 
-  findMostSimilar() {
-    var typeFilter = this.BASE_PREFIX;
-    if (this.selectedType == this.types[0]) {
-      typeFilter = typeFilter + this.types[1]
-    } else {
-      typeFilter = typeFilter + this.types[0]
-    }
-    // this.similarEntityType = [typeFilter];
-    this.similarEntityType = [this.BASE_PREFIX + this.types[0], this.BASE_PREFIX + this.types[1]];
-    this.associationService.findMostSimilar(this.iri, typeFilter, this.mostSimilarQueryOrderBy, null).subscribe( data => {
-      this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
-      this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);
-      this.similarityQuery = data ? data['query'] : '';
-      this.query = this.similarityQuery;
-      this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
-      this.mostSimilarConcepts.forEach(concept => {
-        this.associationService.findCommonPhenotypes(this.iri, concept.concept.value).subscribe( data => {
-          this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
-        })
-      });
-
-      // To get coordinates of entity selected
-      this.associationService.findMostSimilar(this.iri, '', this.mostSimilarQueryOrderBy, 1).subscribe( data => {
-        var selectedEntityCoordinates = data ? data['results']['bindings'][0] : null;
-        if (selectedEntityCoordinates) {
-          this.mostSimilarConceptsPlusSelectedEntity.push(selectedEntityCoordinates);
-        }
-      });
-    });
-
-  }
-
   sortType(types){
     return types.sort((one, two) => (one.replace(this.BASE_PREFIX, "") < two.replace(this.BASE_PREFIX, "")) ? -1 : 1);
-  }
-
-  get similarConceptsPage() {
-    this.collectionSize = this.mostSimilarConceptsFiltered ? this.mostSimilarConceptsFiltered.length : 0;
-    var similarConceptsPage =  this.mostSimilarConceptsFiltered ? this.mostSimilarConceptsFiltered
-      .map((concept, i) => ({id: i + 1, ...concept}))
-      .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
-    return similarConceptsPage;
-  }
-
-  onSort({column, direction}: SortEvent) {
-    // resetting other headers
-    this.headers.forEach(header => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
-
-    if (direction === '' || column === '') {
-      this.mostSimilarQueryOrderBy = '';
-    } else {
-      this.mostSimilarQueryOrderBy = direction + ":" + column;
-    }
-    this.findMostSimilar();
   }
 
   valusetEntityType(){
@@ -250,9 +132,10 @@ export class GeneDiseaseComponent implements OnInit {
     });
   }
 
-  openConcept(concept) {
-    var valueset = this.lookupService.findValuesetName(concept)
-    this.router.navigate(['/association', concept, valueset]);
+  onQueryChange(query) {
+    // if (query) {
+    //   this.query = query;
+    // }
   }
 
   openGeneDisease(concept) {
@@ -261,25 +144,16 @@ export class GeneDiseaseComponent implements OnInit {
     this.router.navigate(['/genedisease', concept, valueset]);
   }
 
-  displayConcept(concept) {
-    var iris = [concept]
-    this.popSimilarEntity = null;
-    this.lookupService.findEntityByIris(iris, data => {
-      this.popSimilarEntity = data[0]
-    });
-  }
-
   openHelp(content) {
     this.modalService.open(content, { size: 'lg' });
   }
 
-  index(i: number, obj: any) {
-    return i;
-  }
-
-  onQueryChange(query) {
-    // if (query) {
-    //   this.query = query;
-    // }
+  updateTargetType(){
+    this.targetType = this.BASE_PREFIX;
+    if (this.selectedType == this.types[0]) {
+      this.targetType = this.targetType + this.types[1]
+    } else {
+      this.targetType = this.targetType + this.types[0]
+    }
   }
 }

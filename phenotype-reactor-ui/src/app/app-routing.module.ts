@@ -6,6 +6,7 @@ import { ISparqlComponent } from './isparql/isparql.component';
 import { DownloadsComponent } from './downloads/downloads.component';
 import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
 import { ListAssociationsetComponent } from './list-associationset/list-associationset.component';
+import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-host-target.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,8 @@ const routes: Routes = [
   {path: 'isparql',component: ISparqlComponent},
   {path: 'genedisease',component: GeneDiseaseComponent},
   {path: 'genedisease/:iri/:valueset',component: GeneDiseaseComponent},
+  {path: 'pathogenhosttarget',component: PathogenHostTargetComponent},
+  {path: 'pathogenhosttarget/:iri',component: PathogenHostTargetComponent},
   {path: 'dataset',component: ListAssociationsetComponent},
 ];
 

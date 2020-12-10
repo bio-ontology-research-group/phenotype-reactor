@@ -1,0 +1,100 @@
+<div class="content mt-2">
+<div class="card mb-4 wow fadeIn">
+    <div class="card-body justify-content-between">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+            <form class="form-inline w-100">
+                <input id="search" type="text" class="form-control ml-3 w-80" (ngModel)="term" #searchInput
+                    [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search for pathogen" [resultTemplate]="rt"
+                    (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
+            </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-9 pl-5"> 
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">e.g</li>
+                    <li class="list-inline-item">
+                        <a type="button" [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_64320')" class="text-primary btn-link">Zika Virus</a> |
+                    </li>
+                    <li class="list-inline-item">
+                        <a type="button" [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_10255')" class="text-primary btn-link">Variola virus</a> |
+                    </li>
+                    <li class="list-inline-item">
+                        <a type="button" [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_5833')" class="text-primary btn-link">Plasmodium falciparum</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="card mb-3 wow fadeInx" *ngIf="iri == null || iri == undefined">
+    <div class="card-body justify-content-between p-4">
+        <span class="card-title">Pathogen Host Targets</span>
+        <p class="mt-3">Pathogen host targets provides an ability to discover host and pathogen interations based on phenotypic 
+        similarity between the pathogen and host proteins. Where a phenotype-based computational analysis method can uncover machanisms of virulence
+        and pathogenicity. </p>
+        <p>To visualize similarity between the pathogen and gene in a 2 dimensional space, it provides a scatter plot with phenotypically related genes 
+        closer to the pathogen. Additionally, the tool provide list of diseases and phenotypes related to pathogen. </p>
+    </div>
+</div>
+<div class="card mb-4 wow fadeIn col-9" *ngIf="iri == null || iri == undefined">
+    <div class="card-body justify-content-between p-4">
+        <span class="card-title">Search Examples</span>
+        <p> Search examples suggesting our method's ability to predict candidate interacting protien are following:</p>
+        <ul>
+            <li><a [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_64320')" class="text-primary">Zika Virus</a> 
+            targets human <a href="https://pubmed.ncbi.nlm.nih.gov/27212660/">STAT2 (signal transducer and activator of transcription 2) to inhibit type I interferon signaling</a>. Where evidence in phenotype anontations suggest that Zika virus and STAT2 have several matching phenotypes such as
+            <a [href]="conceptRef('http://purl.obolibrary.org/obo/MP_0002418', 'MP')" class="text-primary" target="_blank">increased susceptibility to viral infection</a>, 
+            <a [href]="conceptRef('http://purl.obolibrary.org/obo/HP_0003326', 'HP')" class="text-primary" target="_blank">Myalgia</a> and <a [href]="conceptRef('http://purl.obolibrary.org/obo/MP_0003746', 'MP')" class="text-primary" target="_blank">stomatitis</a> .
+            </li>
+            <li class="mt-3"><a href="https://pubmed.ncbi.nlm.nih.gov/3552078" class="text-primary">Research</a> suggests that <a [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_5833')" class="text-primary">Plasmodium falciparum</a> (malaria)
+            can adapt itself to grow in these variant RBCs by producing its own G6PD (glucose-6-phosphate dehydrogenase).  Similar to above example Plasmodium falciparum and G6PD have matching phenotypes such as
+            <a [href]="conceptRef('http://purl.obolibrary.org/obo/HP_0004802', 'HP')" class="text-primary" target="_blank">episodic hemolytic anemia</a> and <a [href]="conceptRef('http://purl.obolibrary.org/obo/MP_0010163', 'MP')" class="text-primary" target="_blank">hemolysis</a>.
+            </li>
+        </ul> 
+    </div>
+</div>
+
+<div class="card mb-4 wow fadeIn" *ngIf="iri">
+    <div class="card-body justify-content-between">
+    <a (click)="openInNewTab(entity.entity)" class="text-muted">
+    <span>
+        <span class="card-title" *ngIf="entity">{{entity.label[0]}}</span> 
+        <span class="card-title" *ngIf="!entity">Name</span>  
+    </span>
+    <small class="text-muted ml-2" *ngIf="entity?.identifier">{{entity.identifier}}</small>
+    </a>
+    <h6 class="card-subtitle mt-3" *ngIf="entity">
+        <span>{{entity.definition ? entity.definition[0]: ''}}</span> 
+    </h6> 
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink>Host Targets</a>
+            <ng-template ngbNavContent>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Gene'"></app-list-similar-associations>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Disease Associations</a>
+            <ng-template ngbNavContent>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Disease'"></app-list-similar-associations>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+            <a ngbNavLink>Phenotype Associations</a>
+            <ng-template ngbNavContent>
+                <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  [valuesetList]="valuesets" (annontationQuery)="onQueryChange($event)"></app-list-association>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div>
+</div>
+<ng-template #rt let-r="result" let-t="term">
+  <ngb-highlight [result]="r.label[0]" [term]="t"></ngb-highlight> <br />
+  <small>{{r.entity}}</small>
+</ng-template> 
