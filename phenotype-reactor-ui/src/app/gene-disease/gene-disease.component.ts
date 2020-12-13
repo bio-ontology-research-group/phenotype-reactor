@@ -19,6 +19,7 @@ export class GeneDiseaseComponent implements OnInit {
 
   selectedType = 'Gene'
   types = ['Gene', 'Disease']
+  conceptRedirect = "genedisease"
   targetType = null;
   typesDisplay = {'Gene' : 'Gene by Symbol or Name', 'Disease' : 'Disease Name'};
   term = null;
@@ -62,9 +63,18 @@ export class GeneDiseaseComponent implements OnInit {
         if (params.iri && params.valueset) {
           this.active = 1;
           if (this.valuesets && this.valuesets.length > 0) {
-            this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
+            this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+            this.updateTargetType();
+          } else {
+            this.lookupService.findValueset().subscribe(res => {
+              this.valuesets = res
+              if (this.valueset) {
+                this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+              }
+              this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
+              this.updateTargetType();
+            })
           }
-          this.updateTargetType();
           this.resolveEntity();
         }
       });
@@ -74,13 +84,6 @@ export class GeneDiseaseComponent implements OnInit {
   ngOnInit() {
     this.formatter = (x: {label: { value: string}}) => x.label ? this.toTitleCase(x.label.value) : null;
 
-    this.lookupService.findValueset().subscribe(res => {
-      this.valuesets = res
-      if (this.valueset) {
-        this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
-      }
-      this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-    })
   }
 
   onTermSelect(event) {
@@ -97,7 +100,6 @@ export class GeneDiseaseComponent implements OnInit {
   }
 
   findTerm(term) {
-      console.log('findterm', this.selectedValuesets)
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValuesets)
   }
 
@@ -121,7 +123,7 @@ export class GeneDiseaseComponent implements OnInit {
     if (this.valuesets && this.valuesets.length < 1) {
       return this.selectedType;
     }
-    return _.filter(this.valuesets, (obj) => obj.valueset == this.valueset)[0].entity_type;
+    return _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
   }
 
   resolveEntity() {

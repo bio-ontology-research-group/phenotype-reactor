@@ -22,7 +22,7 @@
     <tbody>
     <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
         <td class="w-40">
-            <a (click)="geneDiseaseRef(similarConcept.concept.value)" class="text-muted">
+            <a [href]="conceptRedirectRef(similarConcept.concept.value)" class="text-muted">
                 <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
             </a>
             <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"

@@ -55,6 +55,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   @Input() valueset = null;
   @Input() selectedType = null;
   @Input() targetType = null;
+  @Input() conceptRedirect = null;
 
   mostSimilarConcepts : any = [];
   mostSimilarConceptsPlusSelectedEntity : any = [];
@@ -96,10 +97,10 @@ export class ListSimilarAssociationsComponent implements OnInit {
   }
 
   ngOnChanges(change: SimpleChange) {
-    if(change && change['iri'] && this.iri) {
+    if((change && this.iri && this.targetType)) {
       this.conceptPhenotypesMap = {};
       this.findMostSimilar();
-    }
+    } 
   }
 
 
@@ -132,9 +133,9 @@ export class ListSimilarAssociationsComponent implements OnInit {
     return `/association/${encodeURIComponent(concept)}/${valueset}`;
   }
 
-  geneDiseaseRef(concept) {
+  conceptRedirectRef(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
-    return `/genedisease/${encodeURIComponent(concept)}/${valueset}`;
+    return `/${this.conceptRedirect}/${encodeURIComponent(concept)}/${valueset}`;
   }
 
   displayConcept(concept) {
@@ -150,6 +151,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   }
 
   findMostSimilar() {
+    console.log(this.targetType)
     this.associationService.findMostSimilar(this.iri, this.targetType, this.mostSimilarQueryOrderBy, null).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
       this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);

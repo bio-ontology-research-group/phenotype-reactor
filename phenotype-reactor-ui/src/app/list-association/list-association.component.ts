@@ -48,7 +48,7 @@ export class ListAssociationComponent implements OnInit {
   @Input() type = null;
   @Input() mostSimilarConcepts = [];
   @Input() similarEntities = {};
-  @Input() valueset = {};
+  @Input() valueset = null;
   @Input() valuesetList = [];
   @Output() annontationQuery = new EventEmitter<any>();
 
@@ -89,7 +89,7 @@ export class ListAssociationComponent implements OnInit {
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
       } else {
         if (this.valuesetList) {
-          this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+          this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
           this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
         }
       }
@@ -108,7 +108,7 @@ export class ListAssociationComponent implements OnInit {
       this.pageSize = 20;
       this.getPage();
       if (this.valuesetList) {
-        this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset == this.valueset)[0].entity_type;
+        this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
       }
     }

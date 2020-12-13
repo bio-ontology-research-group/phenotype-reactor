@@ -20,6 +20,7 @@ export class PathogenHostTargetComponent implements OnInit {
   term = null;
   searching = false;
   searchFailed = false;
+  conceptRedirect = "association";
 
   iri = null;
   valueset = 'NCBITaxon_Pathopheno';

@@ -2,33 +2,36 @@
 <div class="card mb-4 wow fadeIn">
     <div class="card-body justify-content-between">
         <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
             <form class="form-inline w-100">
                 <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
                     <option *ngFor="let type of types" value="{{type}}" [selected]='selectedType == type'>{{typesDisplay[type]}}</option>
                 </select>
-                <input id="search" type="text" class="form-control ml-3 w-40" (ngModel)="term" #searchInput
+                <input id="search" type="text" class="form-control ml-3 w-60" (ngModel)="term" #searchInput
                     [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search" [resultTemplate]="rt"
                     (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
                 <button type="button" class="btn btn-light ml-3" (click)="openHelp(content)"><i class="fas fa-question-circle"></i></button>
             </form>
+            </div>
         </div>
         <div class="row">
-    <div class="col-2">
-    </div> 
-    <div class="col-9"> 
-        <ul class="list-inline mb-0">
-            <li class="list-inline-item">e.g</li>
-            <li class="list-inline-item">
-                <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button> |
-            </li>
-            <li class="list-inline-item">
-                <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> |
-            </li>
-            <li class="list-inline-item">
-                <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>
-            </li>
-        </ul>
-    </div>
+            <div class="col-4">
+            </div> 
+            <div class="col-6"> 
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item">e.g</li>
+                    <li class="list-inline-item">
+                        <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button> |
+                    </li>
+                    <li class="list-inline-item">
+                        <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> |
+                    </li>
+                    <li class="list-inline-item">
+                        <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>
+                    </li>
+                </ul>
+            </div>
 </div>
     </div>
 </div>
@@ -72,13 +75,13 @@
                 <span *ngIf="valusetEntityType() == 'Disease'">Gene Associations</span>  
                 <span *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0"> ({{mostSimilarConcepts.length}})</span></a>
             <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType" [conceptRedirect]="conceptRedirect"></app-list-similar-associations>
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
             <a ngbNavLink>Phenotype Associations</a>
             <ng-template ngbNavContent>
-                <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  [valuesetList]="valuesets" (annontationQuery)="onQueryChange($event)"></app-list-association>
+                <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  [valuesetList]="valuesets" (annontationQuery)="onQueryChange($event)" ></app-list-association>
             </ng-template>
         </li>
     </ul>
