@@ -88,57 +88,7 @@
             <li [ngbNavItem]="types.length + 1">
                 <a ngbNavLink>Similar Entities</a>
                 <ng-template ngbNavContent>
-                <div class="row"> 
-                    <div class="col-1 p-2 pt-3 ml-3">
-                        <label><strong>Filter By:</strong></label>
-                    </div>
-                    <div class="col-2 p-2">
-                        <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
-                            <option value="">Select Type</option>
-                            <option *ngFor="let type of TYPES" value="{{type.uri}}" [selected]='typeFilter == type.uri'>{{type.name}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
-                    <table class="table table-striped">
-                    <thead color="default">
-                    <tr>
-                        <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Common Phenotypes</th>
-                        <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Score</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
-                        <td class="w-40">
-                            <a (click)="openConcept(similarConcept.concept.value)" class="text-muted">
-                                <h6 *ngIf="similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
-                            </a>
-                            <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
-                                    [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
-                            <i class="fas fa-info-circle"></i>
-                            </button>
-                        </td>
-                        <td class="w-20">{{similarConcept.type ? similarConcept.type.value.split('/')[similarConcept.type.value.split('/').length - 1] : ''}}</td>
-                        <td class="w-20"><button type="button" class="btn btn-link" (click)="openCommonPhenotypeModel(similarConcept.concept.value, commonPhenotypeContent)">Common Phenotypes</button></td>
-                        <td class="w-20">{{similarConcept.val?.value}}<td>
-                    </tr>
-                    </tbody>
-                    </table>
-                    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [rotate]="true" 
-                        [maxSize]="5" class="pl-3">
-                    </ngb-pagination>
-
-                    <select class="custom-select" style="width: auto" [(ngModel)]="pageSize">
-                        <option [ngValue]="10">10 items per page</option>
-                        <option [ngValue]="20">20 items per page</option>
-                        <option [ngValue]="50">50 items per page</option>
-                    </select>
-                </div>
-                <div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1)">
-                    <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
-                </div>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="typeFilter" [targetType]="" [conceptRedirect]="conceptRedirect" (similarityQuery)="onSimilarQueryChange($event)"></app-list-similar-associations>
                 </ng-template>
             </li>
         </ul>
@@ -146,56 +96,4 @@
     </div>
 </div>
 </div>
-<ng-template #similarPopContent>
-    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
-        <span class="sr-only">Loading...</span>
-    </div>
-    <span *ngIf="popSimilarEntity != null">
-    <span *ngIf="popSimilarEntity.definition && popSimilarEntity.definition.length > 0"><strong>Definition:</strong> {{popSimilarEntity.definition}}<br/></span>
-    <strong>Type:</strong> {{popSimilarEntity.entity_type}} <br />
-    <strong>Database:</strong> {{popSimilarEntity.valueset}} <br /> 
-    <strong>URL:</strong>&nbsp;<a (click)="openInNewTab(popSimilarEntity.entity)">{{popSimilarEntity.entity}}</a><br />
-    </span>
-</ng-template>
-<ng-template #similarPopTitle>
-    <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
-        <span class="sr-only">Loading...</span>
-    </div>
-    <strong *ngIf="popSimilarEntity && !geneValuesets.includes(popSimilarEntity.valueset)">{{popSimilarEntity?.label[0]}}</strong>
-    <strong *ngIf="popSimilarEntity && geneValuesets.includes(popSimilarEntity.valueset)"><b>{{popSimilarEntity?.label[0]}}</b> {{popSimilarEntity?.label[1]}}</strong>
-</ng-template>
-<div class="card mb-4 wow fadeIn" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && tabId === types.length + 1">
-    <div class="card-body justify-content-between">
-        <span>
-            <span class="card-title" *ngIf="entity">Neighbourhood Visualization</span> 
-            <hr />
-        </span>
-        <app-plot-scatter-chart [similarConcepts]="mostSimilarConcepts"></app-plot-scatter-chart>
-    </div>
-</div>
-<div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
-    <div class="card-body justify-content-between">
-        <app-sparql-form [query]="query"></app-sparql-form>
-    </div>
-</div>
-<ng-template #commonPhenotypeContent let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Common Phenotypes</h4>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div id="search-examples">
-        <ul>
-            <li *ngFor="let phenotype of commonPhenotypes">{{phenotype['phenotypeLabel']['value']}} 
-                <span class="ml-5"> - {{phenotype['phenotype']['value']}}</span>
-            </li>
-        </ul>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">Close</button>
-  </div>
-</ng-template>
 <app-bind-schema [entity]="entity"></app-bind-schema>

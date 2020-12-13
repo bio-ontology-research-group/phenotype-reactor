@@ -76,19 +76,13 @@
         <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
         <span *ngIf="!entity">Definition</span>  
     </h6> 
-    <div class="row"> 
-        <div class="col-12 p-2 pt-3 ml-3">
-            <label><h3>
-            </h3></label>
-        </div>
-    </div>  
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <li [ngbNavItem]="1">
             <a ngbNavLink><span *ngIf="valusetEntityType() == 'Gene'">Disease Associations</span>
                 <span *ngIf="valusetEntityType() == 'Disease'">Gene Associations</span>  
                 <span *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0"> ({{mostSimilarConcepts.length}})</span></a>
             <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType" [conceptRedirect]="conceptRedirect"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType" [conceptRedirect]="conceptRedirect" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
             </ng-template>
         </li>
         <li [ngbNavItem]="2">

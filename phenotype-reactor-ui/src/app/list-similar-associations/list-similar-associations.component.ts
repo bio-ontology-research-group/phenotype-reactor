@@ -51,6 +51,8 @@ export class ListSimilarAssociationsComponent implements OnInit {
   @ViewChildren(ListSimilarEntitiesSortableHeader) headers: QueryList<ListSimilarEntitiesSortableHeader>;
   focus$ = new Subject<string>();
 
+  @Output() similarityQuery = new EventEmitter<any>();
+
   @Input() iri = null;
   @Input() valueset = null;
   @Input() selectedType = null;
@@ -62,7 +64,6 @@ export class ListSimilarAssociationsComponent implements OnInit {
   mostSimilarConceptsFiltered : any = [];
   mostSimilarQueryOrderBy = '';
   conceptPhenotypesMap = {};
-  similarityQuery='';
   query='';
 
   filter = new FormControl('');
@@ -155,8 +156,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
     this.associationService.findMostSimilar(this.iri, this.targetType, this.mostSimilarQueryOrderBy, null).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
       this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);
-      this.similarityQuery = data ? data['query'] : '';
-      this.query = this.similarityQuery;
+      this.similarityQuery.emit(data ? data['query'] : '')
       this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
       this.mostSimilarConcepts.forEach(concept => {
         this.associationService.findCommonPhenotypes(this.iri, concept.concept.value).subscribe( data => {
