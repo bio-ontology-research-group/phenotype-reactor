@@ -40,15 +40,28 @@
 <div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
     <div class="card-body justify-content-between p-4">
         <span class="card-title">Gene Disease Connection</span>
-        <p class="mt-3">Gene Disease Connection is designed to provide discovery of gene causing diseases or candidate genes for a disease 
+        <p class="mt-3">Gene Disease Connection is designed to provide discovery of gene causing diseases and candidate genes for a disease 
         based on phenotypic similarity between the two. </p>
         <p>Gene and disease phenotypes data is integrated from Mouse Genome Informatics database (MGI), HPO and several research studies using 
-        computational methods to identify phenotypes. <br />
-        Example searches: Disease, Region and Phenotype, Multiple Genes
-        <a (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="text-primary">HPO phenotype annontations</a>.</p>
+        computational methods to identify phenotypes.</p>
     </div>
 </div>
-
+<div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
+    <div class="card-body justify-content-between p-4">
+        <span class="card-title">Search Examples</span>
+        <p> Search examples suggesting our method's ability to predict candidate interacting protien are following:</p>
+        <ul>
+            <li><a href="https://www.alzheimers.org.uk/about-dementia/risk-factors-and-prevention/alzheimers-disease-and-genes')" class="text-primary">Studies of Alzheimer disease</a> 
+            suggest that mutation in <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button> or 
+            <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> gene can cause Alzheimer.
+            Our search results from searching for PSEN1 or Amyloid precursor protein suggests that both genes have number of matching phenotypes.
+            </li>
+            <li class="mt-3">Similarly, <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>, we can
+            find that APP - Amyloid precursor protein gene have many matching phenotypes with the alzheimer.
+            </li>
+        </ul> 
+    </div>
+</div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
     <a (click)="openInNewTab(entity.entity)" class="text-muted">
@@ -106,15 +119,15 @@
         <ul>
             <li>
                 <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button>
-                <span class="ml-5"> - by gene symbol (mutation in PSEN1 gene can cause Alzheimer)</span>
+                <span class="ml-5"> - by gene symbol</span>
             </li>
             <li>
                 <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> 
-                <span class="ml-5"> - by gene name (similar to PSEN1, mutation in Amyloid precursor protein or AAP gene can cause Alzheimer disease) </span>
+                <span class="ml-5"> - by gene name</span>
             </li>
             <li>
                 <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>
-                <span class="ml-5"> - by disease name such as Alzheimer's disease to find related gene</span>
+                <span class="ml-5"> - by disease name from MONDO, ORDO, OMIM, DOID and Decipher</span>
             </li>
         </ul>
     </div>

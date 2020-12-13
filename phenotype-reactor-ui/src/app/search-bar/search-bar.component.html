@@ -1,21 +1,24 @@
 <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
     <form class="form-inline w-100">
         <select class="browser-default custom-select default ml-3" color="default" (change)="onSearchValuesetSelect($event)">
             <option value="">All Databases</option>
             <option *ngFor="let valueset of valuesets" value="{{valueset.valueset}}" [selected]='selectedValueset == valueset.valueset'>{{valueset.valueset}}</option>
         </select>
-         <input id="search" type="text" class="form-control ml-3 w-40" (ngModel)="term" #searchInput
+         <input id="search" type="text" class="form-control ml-3 w-60" (ngModel)="term" #searchInput
             [inputFormatter]="formatter" [ngbTypeahead]="search" placeholder="Search" [resultTemplate]="rt"
             (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
         <button type="button" class="btn btn-light ml-3" (click)="openHelp(content)"><i class="fas fa-question-circle"></i></button>
         <!-- <button mdbBtn size="md" color="default" class="my-0 waves-light"
             mdbWavesEffect type="submit">Search</button> -->
     </form>
+    </div>
 </div>
 <div class="row">
-    <div class="col-1">
+    <div class="col-3">
     </div> 
-    <div class="col-9 ml-4"> 
+    <div class="col-8 pl-5"> 
         <ul class="list-inline mb-0">
             <li class="list-inline-item">e.g</li>
             <li class="list-inline-item">
@@ -31,10 +34,7 @@
                 <button type="button" (click)="openConcept('https://pubchem.ncbi.nlm.nih.gov/compound/105310993')" class="btn btn-link p-0 mb-1">acipimox</button> |
             </li>
             <li class="list-inline-item">
-                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/NCBITaxon_10255')" class="btn btn-link p-0 mb-1">Variola virus</button> |
-            </li>
-            <li class="list-inline-item">
-                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/HP_0000988')" class="btn btn-link p-0 mb-1">Rash</button>
+                <button type="button" (click)="openConcept('http://purl.obolibrary.org/obo/NCBITaxon_10255')" class="btn btn-link p-0 mb-1">Variola virus</button> 
             </li>
         </ul>
     </div>
@@ -62,7 +62,10 @@
                 <span class="ml-5"> - by disease</span>
             </li>
             <li><button type="button" (click)="openConcept('https://www.ncbi.nlm.nih.gov/gene/38')" class="btn btn-link p-0 mb-1">ACAT1</button>
-                <span class="ml-5"> - by gene</span>
+                <span class="ml-5"> - by gene symbol</span>
+            </li>
+            <li><button type="button" (click)="openConcept('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button>
+                <span class="ml-5"> - by gene name</span>
             </li>
             <li><button type="button" (click)="openConcept('https://pubchem.ncbi.nlm.nih.gov/compound/105310993')" class="btn btn-link p-0 mb-1">acipimox</button>
                 <span class="ml-5"> - by drug</span>

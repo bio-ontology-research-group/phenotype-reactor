@@ -152,3 +152,9 @@ th[sortable].desc:after {
     text-align: right;
     height:75px;
 }
+.btn-primary {
+    background-color: #08c;
+}
+.browse-card-content {
+    min-height: 130px !important;
+}

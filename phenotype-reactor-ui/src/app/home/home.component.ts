@@ -257,4 +257,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  open(url) {
+    this.router.navigate([url]);
+  }
 }

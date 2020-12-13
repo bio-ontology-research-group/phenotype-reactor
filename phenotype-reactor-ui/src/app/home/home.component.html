@@ -16,6 +16,38 @@
         <a (click)="openInNewTab('https://hpo.jax.org/app/download/annotation')" class="text-primary">HPO phenotype annontations</a>.</p>
     </div>
 </div>
+<div class="content mt-2" *ngIf="!(iri && valueset)">
+    <div class="card-deck mb-3 text-center">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Explore Gene Disease Connections</h4>
+        </div>
+        <div class="card-body">
+        <p class="browse-card-content">Gene Disease Connection is designed to provide discovery of gene causing diseases and candidate genes for a disease 
+        based on phenotypic similarity between the two.</p>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/genedisease')">Explore Gene Disease Connections Browser</button>
+        </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Explore Pathogen Host Targets</h4>
+        </div>
+        <div class="card-body">
+        <p class="browse-card-content">Pathogen host targets provides an ability to discover host and pathogen interations based on phenotypic 
+        similarity between the pathogen and host proteins. It uses phenotype based computational analysis method to uncover molecular machanisms.</p>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/pathogenhosttarget')" >Explore Gene Disease Connections Browser</button>
+        </div>
+    </div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Phenotype Annontation Datasets</h4>
+        </div>
+        <div class="card-body">
+        <p class="browse-card-content">Phenomebrowser platform have bunch of phenotype annontation aggregated into it from community resources and research studies.</p>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/dataset')">List of Datasets</button>
+        </div>
+    </div>
+    </div>
 <!--<div class="row">
     <div class="card text-white bg-primary mt-4 ml-5 col-5 project-card" *ngIf="!(iri && valueset)">
         <a (click)="openInNewTab('http://patho.phenomebrowser.net')">
