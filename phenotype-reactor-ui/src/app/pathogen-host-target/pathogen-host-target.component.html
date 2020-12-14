@@ -43,7 +43,7 @@
 <div class="card mb-4 wow fadeIn" *ngIf="iri == null || iri == undefined">
     <div class="card-body justify-content-between p-4">
         <span class="card-title">Search Examples</span>
-        <p> Search examples suggesting our method's ability to predict candidate interacting protien are following:</p>
+        <p> Search examples suggesting our method's ability to predict candidate interacting protein are following:</p>
         <ul>
             <li><a [href]="pathogenHostTargetRef('http://purl.obolibrary.org/obo/NCBITaxon_64320')" class="text-primary">Zika Virus</a> 
             targets human <a href="https://pubmed.ncbi.nlm.nih.gov/27212660/">STAT2 (signal transducer and activator of transcription 2) to inhibit type I interferon signaling</a> where  the evidence in phenotype anontations suggest that Zika virus and STAT2 have several matching phenotypes such as
@@ -79,7 +79,7 @@
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
-            <a ngbNavLink>Disease Associations</a>
+            <a ngbNavLink>Similar Diseases</a>
             <ng-template ngbNavContent>
                 <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Disease'" [conceptRedirect]="conceptRedirect" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
             </ng-template>
