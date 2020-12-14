@@ -5,10 +5,17 @@
     <div class="col-2 p-2">
     <form>
         <div class="form-group form-inline">
-            <input class="form-control ml-2" type="text" [formControl]="filter"/>
+            <input class="form-control ml-2" type="text" [formControl]="filter" placeholder="search for name"/>
         </div>
     </form>
     </div>
+    <div class="col-2 p-2" *ngIf="showTypeFilter">
+        <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
+            <option value="">Select Type</option>
+            <option *ngFor="let type of TYPES" value="{{type.uri}}" [selected]='typeFilter == type.uri'>{{type.name}}</option>
+        </select>
+    </div>
+
 </div>
 <div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">
     <table class="table table-striped">

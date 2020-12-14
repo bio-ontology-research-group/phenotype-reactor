@@ -75,13 +75,13 @@
         <li [ngbNavItem]="1">
             <a ngbNavLink>Host Targets</a>
             <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Gene'" [conceptRedirect]="conceptRedirect" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Gene'" [conceptRedirect]="conceptRedirect"  [showTypeFilter]="" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
             <a ngbNavLink>Similar Diseases</a>
             <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Disease'" [conceptRedirect]="conceptRedirect" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="sourceType" [targetType]="BASE_PREFIX + 'Disease'" [conceptRedirect]="conceptRedirect"  [showTypeFilter]="" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
             </ng-template>
         </li>
         <li [ngbNavItem]="3">

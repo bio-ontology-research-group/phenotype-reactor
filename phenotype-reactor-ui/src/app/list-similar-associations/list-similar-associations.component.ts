@@ -58,13 +58,16 @@ export class ListSimilarAssociationsComponent implements OnInit {
   @Input() selectedType = null;
   @Input() targetType = null;
   @Input() conceptRedirect = null;
+  @Input() showTypeFilter = false;
 
   mostSimilarConcepts : any = [];
   mostSimilarConceptsPlusSelectedEntity : any = [];
   mostSimilarConceptsFiltered : any = [];
   mostSimilarQueryOrderBy = '';
   conceptPhenotypesMap = {};
-  query='';
+  query = '';
+  typeFilter = '';
+  TYPES = [];
 
   filter = new FormControl('');
 
@@ -92,13 +95,16 @@ export class ListSimilarAssociationsComponent implements OnInit {
       startWith(''),
       map(text => this.conceptfilter(text))
     ).subscribe(data => {this.mostSimilarConceptsFiltered = data;});
+    for (var key in this.associationService.TYPES) {
+      this.TYPES.push(this.associationService.TYPES[key])
+    }
   }
 
   ngOnInit() {
   }
 
   ngOnChanges(change: SimpleChange) {
-    if((change && this.iri && this.targetType)) {
+    if((change && this.iri && (this.targetType != undefined || this.targetType != null))) {
       this.conceptPhenotypesMap = {};
       this.findMostSimilar();
     } 
@@ -152,8 +158,16 @@ export class ListSimilarAssociationsComponent implements OnInit {
   }
 
   findMostSimilar() {
-    console.log(this.targetType)
-    this.associationService.findMostSimilar(this.iri, this.targetType, this.mostSimilarQueryOrderBy, null).subscribe( data => {
+    var type;
+    if (this.showTypeFilter) {
+      type = this.typeFilter;
+    } else {
+      type = this.targetType;
+    }
+
+
+    this.filter.setValue('')
+    this.associationService.findMostSimilar(this.iri, type, this.mostSimilarQueryOrderBy, null).subscribe( data => {
       this.mostSimilarConcepts = data ? data['results']['bindings'] : [];
       this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);
       this.similarityQuery.emit(data ? data['query'] : '')
@@ -173,6 +187,12 @@ export class ListSimilarAssociationsComponent implements OnInit {
       });
     });
 
+  }
+
+
+  onTypeSelect(event) {
+    this.typeFilter = event.target.value;
+    this.findMostSimilar();
   }
 
 }

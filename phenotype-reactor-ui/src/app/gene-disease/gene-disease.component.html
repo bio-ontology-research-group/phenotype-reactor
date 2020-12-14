@@ -82,7 +82,7 @@
                 <span *ngIf="valusetEntityType() == 'Disease'">Gene Associations</span>  
                 <span *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0"> ({{mostSimilarConcepts.length}})</span></a>
             <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType" [conceptRedirect]="conceptRedirect" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="selectedType" [targetType]="targetType" [conceptRedirect]="conceptRedirect"  [showTypeFilter]="" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
             </ng-template>
         </li>
         <li [ngbNavItem]="2">

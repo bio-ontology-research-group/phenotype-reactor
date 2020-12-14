@@ -30,14 +30,13 @@ export class HomeComponent implements OnInit {
   query='';
   annontationQuery='';
   similarityQuery='';
-  typeFilter='';
   geneValuesets = [];
+  showTypeFilter = true;
 
 
   currentJustify = 'start';
 
   BASE_PREFIX = "http://phenomebrowser.net/"
-  TYPES = [];
   tabId = 0;
 
   constructor(
@@ -60,9 +59,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    for (var key in this.associationService.TYPES) {
-      this.TYPES.push(this.associationService.TYPES[key])
-    }
   }
 
   onTermSelect(lookupResource) {
@@ -104,10 +100,6 @@ export class HomeComponent implements OnInit {
       this.types = [this.associationService.TYPES['Phenotype']]
     }
     this.resolveEntities(null);
-  }
-
-  onTypeSelect(event) {
-    this.typeFilter = event.target.value;
   }
 
   resolveEntities(associations){
