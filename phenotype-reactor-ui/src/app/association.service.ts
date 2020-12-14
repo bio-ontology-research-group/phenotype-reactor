@@ -33,7 +33,7 @@ export class AssociationService {
 
   constructor(private http: HttpClient) { }
 
-  find(conceptIri: string, phenotypeIri: string, typeIri:string, evidenceIris:string[], associationsetIri:string, limit:number, offset:number, orderBy:string) {
+  find(conceptIri: string, phenotypeIri: string, typeIri:string, evidenceIris:string[], associationsetIris:string[], limit:number, offset:number, orderBy:string) {
     var query_string = '';
     if (conceptIri) {
       query_string += 'concept=' + conceptIri;
@@ -54,9 +54,9 @@ export class AssociationService {
       query_string += 'evidence=' + evidenceIris[i];
     }
 
-    if (associationsetIri) {
+    for (var i=0; i < associationsetIris.length; i++) {
       query_string += query_string ? '&' : '';
-      query_string += 'associationset=' + associationsetIri;
+      query_string += 'associationset=' + associationsetIris[i];
     }
 
     if (limit) {

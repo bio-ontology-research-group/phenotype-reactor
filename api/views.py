@@ -33,12 +33,12 @@ class FindAssociation(APIView):
             phenotype = request.GET.get('phenotype', None)
             concept_type = request.GET.get('type', None)
             evidences = request.GET.getlist('evidence')
-            associationset = request.GET.get('associationset', None)
+            associationsets = request.GET.getlist('associationset')
             limit = request.GET.get('limit', None)
             offset = request.GET.get('offset', None)
             order_by = request.GET.get('orderBy', None)
 
-            (response, query) = self.service.find(concept, phenotype, concept_type, evidences, associationset, limit, offset, order_by) 
+            (response, query) = self.service.find(concept, phenotype, concept_type, evidences, associationsets, limit, offset, order_by) 
             
             if response.status_code == requests.codes.ok:
                 result = response.json()

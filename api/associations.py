@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 class Associations:
     MIME_TYPE_JSON = "application/json"
 
-    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iri=None, limit=10, offset=None, order_by=None):
+    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iris=None, limit=10, offset=None, order_by=None):
         if not concept_iri and not phenotype_iri:
            raise RuntimeException("atleast one of concept and phenotype field is required")
         
@@ -25,12 +25,9 @@ class Associations:
         type_subj = '?concept' if not concept_iri else '<{iri}>'.format(iri=concept_iri)
         type_stmt = (type_subj + ' rdf:type <' + concept_type_iri + '> .' ) if concept_type_iri else type_subj + ' rdf:type  ?conceptType .'
 
-        associationset_stmt = ('<' + associationset_iri + '>' if associationset_iri else '?associationset') + ' pb:association ?association .' 
-        associationsetLabel_stmt = ('<' + associationset_iri + '>' if associationset_iri else '?associationset') + ' rdfs:label ?associationsetLabel .'
 
         concept_var = '?concept' if not concept_iri else '(<{iri}> as ?concept)'.format(iri=concept_iri)
         type_var = '?conceptType' if not concept_type_iri else '(<{iri}> as ?conceptType)'.format(iri=concept_type_iri)
-        associationset_var = '?associationset' if not associationset_iri else '(<{iri}> as ?associationset)'.format(iri=associationset_iri)
         phenotype_var = '?phenotype' if not phenotype_iri else '(<{iri}> as ?phenotype)'.format(iri=phenotype_iri)
 
         order_clause = self.create_orderby_clause(order_by)
@@ -40,8 +37,8 @@ class Associations:
                     ' + phenotype_stmt + ' \
                     ' + concept_stmt + ' \
                 \n    ' + type_stmt + ' \
-                \n    ' + associationset_stmt + ' \
-                \n    ' + associationsetLabel_stmt + ' \
+                \n    ' + self.associationset_stmt(associationset_iris) + ' \
+                \n    ?associationset rdfs:label ?associationsetLabel . \
                 \n    ' + self.evidence_stmt(evidence_iris) + ' \
                 \n    ?evidence rdfs:label ?evidenceLabel . \
                 \n    ?association dc:provenance ?prov . \
@@ -59,7 +56,7 @@ class Associations:
                 \n{\n { \
                 \n  SELECT ?association ' + concept_var + ' ' + type_var + ' ' + phenotype_var + ' ?phenotypeLabel ?conceptLabel \
                 \n  ?evidence ?evidenceLabel ?creator (group_concat(distinct ?source;separator=",") as ?sources) ?created \
-                \n  ' + associationset_var + ' ?associationsetLabel \
+                \n  ?associationset ?associationsetLabel \
                 \n  FROM <http://phenomebrowser.net> \
                 \n  ' + graph_pattern + page + ' \
                 \n  } \
@@ -124,7 +121,13 @@ class Associations:
         return "values ?evidence " + self.values_content(evidence_iris) + " . \
         \n    " + stmt
 
-
+    def associationset_stmt(self, associationset_iris):
+        stmt = '?associationset pb:association ?association .'
+        if len(associationset_iris) < 1:
+            return stmt
+        
+        return "values ?associationset " + self.values_content(associationset_iris) + " . \
+        \n    " + stmt
 
     def values_content(self, values):
         stmt = "{"

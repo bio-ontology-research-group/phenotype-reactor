@@ -2,23 +2,29 @@
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
-    <div class="col-2 p-2" *ngIf="associationsetsFiltered.length > 1">
-        <select class="browser-default custom-select default ml-3" color="default" (change)="onDatasetSelect($event)">
-            <option value="">Select Dataset</option>
-            <option *ngFor="let associationset of associationsetsFiltered" value="{{associationset['associationset']['value']}}" [selected]="associationsetFilter == associationset['associationset']['value']">{{associationset['label']['value']}}</option>
-        </select>
+    <div class="col-3 mt-2" *ngIf="associationsetsFiltered.length > 1">
+        <ng-select
+            [items]="associationsetsFiltered"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [searchable]="false"
+            bindLabel="label.value"
+            placeholder="datasets"
+            [(ngModel)]="selectedDataset"
+            (change)="onDatasetSelect($event)" >
+    </ng-select>
     </div>
-    <div class="col-3 mt-2">
-        <ng-select class
+    <div class="col-4 mt-2">
+        <ng-select
             [items]="EVIDENCE"
             [multiple]="true"
             [closeOnSelect]="false"
             [searchable]="false"
             bindLabel="name"
-            placeholder="Select Evidence"
+            placeholder="evidences"
             [(ngModel)]="selectedEvidence"
             (change)="onEvidenceSelect($event)" >
-</ng-select>
+    </ng-select>
     </div>
 </div>
 <div class="row" *ngIf="associations.length > 0">

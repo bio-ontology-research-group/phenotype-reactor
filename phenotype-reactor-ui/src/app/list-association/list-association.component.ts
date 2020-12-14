@@ -63,13 +63,14 @@ export class ListAssociationComponent implements OnInit {
   orderBy = '';
   EVIDENCE = [];
   evidenceFilter = [];
-  associationsetFilter = '';
+  associationsetFilter = [];
   popEntity = null;
   geneValuesets=[]
   associationsets : any = []
   associationsetsFiltered : any = []
   valuesetEntityType = '';
   selectedEvidence = [];
+  selectedDataset = [];
 
   BASE_PREFIX = "http://phenomebrowser.net/"
 
@@ -116,7 +117,6 @@ export class ListAssociationComponent implements OnInit {
   }
 
   onEvidenceSelect(event) {
-    console.log(event)
     this.similarEntities = {};
     this.page = 1;
     this.evidenceFilter = _.map(event, obj => obj.uri);
@@ -126,7 +126,7 @@ export class ListAssociationComponent implements OnInit {
   onDatasetSelect(event) {
     this.similarEntities = {};
     this.page = 1;
-    this.associationsetFilter = event.target.value;
+    this.associationsetFilter = _.map(event, obj => obj.associationset.value);
     this.getPage();
   }
 
