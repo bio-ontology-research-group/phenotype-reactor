@@ -32,6 +32,7 @@
               "node_modules/angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss",
               "node_modules/angular-bootstrap-md/assets/scss/mdb.scss",
               "node_modules/animate.css/animate.css",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css",
               "src/styles.css"
             ],
             "scripts": [

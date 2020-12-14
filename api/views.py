@@ -32,13 +32,13 @@ class FindAssociation(APIView):
             concept = request.GET.get('concept', None)
             phenotype = request.GET.get('phenotype', None)
             concept_type = request.GET.get('type', None)
-            evidence = request.GET.get('evidence', None)
+            evidences = request.GET.getlist('evidence')
             associationset = request.GET.get('associationset', None)
             limit = request.GET.get('limit', None)
             offset = request.GET.get('offset', None)
             order_by = request.GET.get('orderBy', None)
 
-            (response, query) = self.service.find(concept, phenotype, concept_type, evidence, associationset, limit, offset, order_by) 
+            (response, query) = self.service.find(concept, phenotype, concept_type, evidences, associationset, limit, offset, order_by) 
             
             if response.status_code == requests.codes.ok:
                 result = response.json()
@@ -156,7 +156,6 @@ class FindEntityByLabelStartsWith(APIView):
         try:
             term = request.GET.get('term', None)
             valueset = request.GET.getlist('valueset')
-            print("val", valueset)
             result = lookup_es.find_entity_by_startswith(term, valueset) 
             return Response(result)
         except Exception as e:

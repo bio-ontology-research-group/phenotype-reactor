@@ -21,6 +21,7 @@
     "@angular/router": "~8.2.14",
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@ng-bootstrap/ng-bootstrap": "^5.2.2",
+    "@ng-select/ng-select": "^3.0.0",
     "@ngx-lite/json-ld": "^0.6.2",
     "@types/chart.js": "^2.9.13",
     "angular-bootstrap-md": "^8.9.0",

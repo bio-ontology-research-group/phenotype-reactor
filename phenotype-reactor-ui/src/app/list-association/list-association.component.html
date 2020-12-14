@@ -8,11 +8,17 @@
             <option *ngFor="let associationset of associationsetsFiltered" value="{{associationset['associationset']['value']}}" [selected]="associationsetFilter == associationset['associationset']['value']">{{associationset['label']['value']}}</option>
         </select>
     </div>
-    <div class="col-2 p-2">
-        <select class="browser-default custom-select default ml-3" color="default" (change)="onEvidenceSelect($event)">
-            <option value="">Select Evidence</option>
-            <option *ngFor="let evidence of EVIDENCE" value="{{evidence.uri}}" [selected]='evidenceFilter == evidence.uri'>{{evidence.name}}</option>
-        </select>
+    <div class="col-3 mt-2">
+        <ng-select class
+            [items]="EVIDENCE"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [searchable]="false"
+            bindLabel="name"
+            placeholder="Select Evidence"
+            [(ngModel)]="selectedEvidence"
+            (change)="onEvidenceSelect($event)" >
+</ng-select>
     </div>
 </div>
 <div class="row" *ngIf="associations.length > 0">

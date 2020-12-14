@@ -25,6 +25,7 @@ import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
 import { ListAssociationsetComponent } from './list-associationset/list-associationset.component';
 import { ListSimilarAssociationsComponent } from './list-similar-associations/list-similar-associations.component';
 import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-host-target.component';
+import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -48,13 +49,14 @@ import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-hos
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    NgSelectModule,
     HttpClientModule,
     NgbModule,
     MDBBootstrapModule.forRoot(),
     NgxJsonLdModule,
     AppRoutingModule
   ],
-  providers: [LookupService, AssociationService, ArchiveService, TitleCasePipe],
+  providers: [LookupService, AssociationService, ArchiveService, TitleCasePipe, NgSelectConfig],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
