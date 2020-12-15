@@ -26,6 +26,7 @@ export class PathogenHostTargetComponent implements OnInit {
   valueset = 'NCBITaxon_Pathopheno';
   entity = null;
   sourceType = this.BASE_PREFIX + 'Pathogen';
+  query = '';
 
   active = 1;
 
@@ -108,8 +109,8 @@ export class PathogenHostTargetComponent implements OnInit {
   }
 
   onQueryChange(query) {
-    // if (query) {
-    //   this.query = query;
-    // }
+    if (query) {
+      this.query = query;
+    }
   }
 }

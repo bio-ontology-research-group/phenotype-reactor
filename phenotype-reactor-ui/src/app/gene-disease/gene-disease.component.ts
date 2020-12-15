@@ -32,6 +32,7 @@ export class GeneDiseaseComponent implements OnInit {
   iri = null;
   valueset = null;
   entity = null;
+  query = '';
 
   active = 1;
   similarEntityTypes = [this.BASE_PREFIX + this.types[0], this.BASE_PREFIX + this.types[1]];
@@ -135,9 +136,9 @@ export class GeneDiseaseComponent implements OnInit {
   }
 
   onQueryChange(query) {
-    // if (query) {
-    //   this.query = query;
-    // }
+    if (query) {
+      this.query = query;
+    }
   }
 
   openGeneDisease(concept) {

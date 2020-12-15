@@ -23,7 +23,7 @@
         <h4 class="my-0 font-weight-normal">Explore Gene Disease Connections</h4>
         </div>
         <div class="card-body">
-        <p class="browse-card-content">Gene Disease Connection is designed to provide discovery of gene causing diseases and candidate genes for a disease 
+        <p class="browse-card-content">Gene Disease Connections is designed to provide discovery of gene causing diseases and candidate genes for a disease 
         based on phenotypic similarity between the two.</p>
         <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/genedisease')">Explore Gene Disease Connections Browser</button>
         </div>
@@ -35,7 +35,7 @@
         <div class="card-body">
         <p class="browse-card-content">Pathogen host targets provides an ability to discover host and pathogen interations based on phenotypic 
         similarity between the pathogen and host proteins. It uses phenotype based computational analysis method to uncover molecular machanisms.</p>
-        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/pathogenhosttarget')" >Explore Gene Disease Connections Browser</button>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/pathogenhosttarget')" >Explore Pathogen Host Targets Browser</button>
         </div>
     </div>
     <div class="card mb-4 shadow-sm">
@@ -88,12 +88,17 @@
             <li [ngbNavItem]="types.length + 1">
                 <a ngbNavLink>Similar Entities</a>
                 <ng-template ngbNavContent>
-                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="" [targetType]="''" [conceptRedirect]="conceptRedirect" [showTypeFilter]="showTypeFilter" (similarityQuery)="onSimilarQueryChange($event)"></app-list-similar-associations>
+                <app-list-similar-associations [iri]="iri" [valueset]="valueset" [selectedType]="" [targetType]="''" [conceptRedirect]="conceptRedirect" [showTypeFilter]="showTypeFilter" (similarityQuery)="onQueryChange($event)"></app-list-similar-associations>
                 </ng-template>
             </li>
         </ul>
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
 </div>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
+    <div class="card-body justify-content-between">
+        <app-sparql-form [query]="query"></app-sparql-form>
+    </div>
 </div>
 <app-bind-schema [entity]="entity"></app-bind-schema>
