@@ -1,4 +1,4 @@
-<div class="row"> 
+<div class="row" *ngIf="!associationLoading"> 
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
@@ -27,7 +27,12 @@
     </ng-select>
     </div>
 </div>
-<div class="row" *ngIf="associations.length > 0">
+<div class="text-center py-md-5" *ngIf="associationLoading">
+    <div class="spinner-border  loading-spinner" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<div class="row" *ngIf="associations.length > 0 && !associationLoading">
     <table class="table table-striped">
     <thead color="default">
     <tr>
@@ -79,7 +84,7 @@
     </select>
 </div>
 
-<div class="row mt-2" *ngIf="associations.length < 1">
+<div class="row mt-2" *ngIf="associations.length < 1 && !associationLoading">
     <p class="col-12 text-center"><ngb-alert class="alert-secondary" [dismissible]="false">No results found</ngb-alert></p>
 </div>
 <ng-template #popContent>

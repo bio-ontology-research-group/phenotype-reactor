@@ -158,3 +158,6 @@ th[sortable].desc:after {
 .browse-card-content {
     min-height: 130px !important;
 }
+.loading-spinner {
+    color: #84B1D9
+}

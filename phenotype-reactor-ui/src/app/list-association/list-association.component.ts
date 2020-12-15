@@ -71,6 +71,7 @@ export class ListAssociationComponent implements OnInit {
   valuesetEntityType = '';
   selectedEvidence = [];
   selectedDataset = [];
+  associationLoading = false;
 
   BASE_PREFIX = "http://phenomebrowser.net/"
 
@@ -85,8 +86,11 @@ export class ListAssociationComponent implements OnInit {
       this.EVIDENCE.push(this.associationService.EVIDENCE[key])
     }
 
+
+    this.associationLoading = true;
     this.associationService.findAssociationset().subscribe(res => {
       this.associationsets = res['results']['bindings'];
+      this.associationLoading = false;
       if (this.type.name != 'Phenotype') {
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
       } else {
@@ -144,11 +148,14 @@ export class ListAssociationComponent implements OnInit {
         findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.associationsetFilter, this.pageSize, offset, this.orderBy)
       }
       
+
+      this.associationLoading = true;
       findAssociation.subscribe(data => {
         let result = data ? data['results']['bindings'] : [];
         this.associations = result.length > 1 ? result.slice(0,result.length - 1): []; 
         this.annontationQuery.emit(data ? data['query'] : '')
         this.collectionSize = result.length > 1 ? result[result.length - 1]['total']['value'] : 0;
+        this.associationLoading = false;
       })
     }
   }

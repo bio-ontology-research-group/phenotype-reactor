@@ -76,6 +76,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   collectionSize = 0;
 
   popSimilarEntity = null;
+  associationLoading = false;
 
   conceptfilter = (text: string): [] => {
     return this.mostSimilarConcepts.filter(concept => {
@@ -112,10 +113,12 @@ export class ListSimilarAssociationsComponent implements OnInit {
 
 
   get similarConceptsPage() {
+    this.associationLoading = true;
     this.collectionSize = this.mostSimilarConceptsFiltered ? this.mostSimilarConceptsFiltered.length : 0;
     var similarConceptsPage =  this.mostSimilarConceptsFiltered ? this.mostSimilarConceptsFiltered
       .map((concept, i) => ({id: i + 1, ...concept}))
       .slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize) : []; 
+    this.associationLoading = false;
     return similarConceptsPage;
   }
 
@@ -158,6 +161,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   }
 
   findMostSimilar() {
+    this.associationLoading = true;
     var type;
     if (this.showTypeFilter) {
       type = this.typeFilter;
@@ -178,6 +182,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
         })
       });
 
+      this.associationLoading = false;
       // To get coordinates of entity selected
       this.associationService.findMostSimilar(this.iri, '', this.mostSimilarQueryOrderBy, 1).subscribe( data => {
         var selectedEntityCoordinates = data ? data['results']['bindings'][0] : null;
