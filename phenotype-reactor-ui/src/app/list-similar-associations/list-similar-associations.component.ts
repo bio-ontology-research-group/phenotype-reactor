@@ -65,6 +65,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   mostSimilarConceptsFiltered : any = [];
   mostSimilarQueryOrderBy = '';
   conceptPhenotypesMap = {};
+  conceptSuperclassPhenotypesMap = {};
   query = '';
   typeFilter = '';
   TYPES = [];
@@ -177,8 +178,13 @@ export class ListSimilarAssociationsComponent implements OnInit {
       this.similarityQuery.emit(data ? data['query'] : '')
       this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
       this.mostSimilarConcepts.forEach(concept => {
-        this.associationService.findCommonPhenotypes(this.iri, concept.concept.value).subscribe( data => {
+        this.associationService.findMatchingPhenotypes(this.iri, concept.concept.value).subscribe( data => {
           this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
+          if (this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value].length < 1) {
+            this.associationService.findMatchingPhenotypeSuperClasses(this.iri, concept.concept.value).subscribe( data => {
+              this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? this.sortAberowlClasses(data) : [];
+            });
+          }
         })
       });
 
@@ -198,6 +204,10 @@ export class ListSimilarAssociationsComponent implements OnInit {
   onTypeSelect(event) {
     this.typeFilter = event.target.value;
     this.findMostSimilar();
+  }
+
+  sortAberowlClasses(classes) {
+    return classes.sort((one, two) => (one.label < two.label ? -1 : 1));
   }
 
 }

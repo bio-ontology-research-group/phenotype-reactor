@@ -27,7 +27,7 @@
     <thead color="default">
     <tr>
         <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
-        <th scope="col">Matching Phenotypes</th>
+        <th scope="col">Matched Phenotypes</th>
         <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4">Similarity Score</th>
     </tr>
     </thead>
@@ -42,9 +42,22 @@
             <i class="fas fa-info-circle"></i>
             </button>
         </td>
-        <td class="w-40"><ul><li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
-        <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a></li></ul>
-        <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1"> no common phenotypes found</span></td>
+        <td class="w-40">
+            <ul *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
+                <li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
+                <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a>
+                </li>
+            </ul>
+            <span *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
+                <strong>Matched Phenotype super classes</strong><br />
+                <ul>
+                    <li *ngFor="let commonPhenotype of conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value]">
+                    <a [href]="conceptRef(commonPhenotype.class)" class="text-muted">{{commonPhenotype.label}} <small> <i>{{commonPhenotype.class.split('/').pop().replace('_', ':')}}</i></small></a>
+                    </li>
+                </ul>
+            </span>
+            <span *ngIf="(conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)
+            && (conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)"> no matching phenotypes found</span></td>
         <td class="w-20">{{similarConcept.val?.value}}<td>
     </tr>
     </tbody>

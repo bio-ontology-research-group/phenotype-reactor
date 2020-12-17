@@ -92,8 +92,13 @@ export class AssociationService {
     return this.http.get(url, this.options);
   }
 
-  findCommonPhenotypes(sourceIri: string, targetIri: string) {
-    var url = `api/association/common-phenotype?source=${sourceIri}&target=${targetIri}`;
+  findMatchingPhenotypes(sourceIri: string, targetIri: string) {
+    var url = `api/association/matching-phenotypes?source=${sourceIri}&target=${targetIri}`;
+    return this.http.get(url, this.options);
+  }
+
+  findMatchingPhenotypeSuperClasses(sourceIri: string, targetIri: string) {
+    var url = `api/association/matching-phenotype-superclasses?source=${sourceIri}&target=${targetIri}`;
     return this.http.get(url, this.options);
   }
   

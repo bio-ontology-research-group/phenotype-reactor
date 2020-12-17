@@ -76,9 +76,9 @@ class FindMostSimilar(APIView):
         except Exception as e:
             logger.exception("message")
 
-class FindCommonPhenotypes(APIView):
+class FindMatchingPhenotypes(APIView):
     """
-    List of common phenotypes between two biomedical concepts
+    List of matching phenotypes between two biomedical concepts
     """
 
     service = Associations()
@@ -88,7 +88,7 @@ class FindCommonPhenotypes(APIView):
             source = request.GET.get('source', None)
             target = request.GET.get('target', None)
 
-            (response, query) = self.service.find_common_phenotypes(source, target)
+            (response, query) = self.service.find_matching_phenotypes(source, target)
             
             if response.status_code == requests.codes.ok:
                 result = response.json()
@@ -97,6 +97,23 @@ class FindCommonPhenotypes(APIView):
             
             if response.status_code == requests.codes.bad_request:
                 raise Exception(response.text)
+        except Exception as e:
+            logger.exception("message")
+
+class FindMatchingPhenotypesSuperclasses(APIView):
+    """
+    List of matching phenotype super classes between two biomedical concepts
+    """
+
+    service = Associations()
+
+    def get(self, request, format=None):
+        try:
+            source = request.GET.get('source', None)
+            target = request.GET.get('target', None)
+
+            result = self.service.find_matching_phenotype_superclasses(source, target)
+            return Response(result)
         except Exception as e:
             logger.exception("message")
 

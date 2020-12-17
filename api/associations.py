@@ -1,3 +1,4 @@
+import requests
 import api.rdf.virtuoso as virt
 import logging
 
@@ -87,8 +88,9 @@ class Associations:
                 \n}' + order_clause
         logger.debug("Executing query for search criteria: concept_iri=" + concept_iri)
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+
     
-    def find_common_phenotypes(self, source_iri, target_iri):
+    def find_matching_phenotypes(self, source_iri, target_iri):
         query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 \nPREFIX pb: <http://phenomebrowser.net/> \
                 \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
@@ -101,6 +103,50 @@ class Associations:
                 \n} ORDER BY asc(?phenotypeLabel)'
         logger.debug("Executing find all associationset query")
         return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+
+    def find_all_phenotypes(self, concept_iri):
+        query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                \nPREFIX pb: <http://phenomebrowser.net/> \
+                \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
+                \nSELECT ?phenotype ?phenotypeLabel \
+                \nFROM <http://phenomebrowser.net> \
+                \nWHERE { \
+                \n   <' + concept_iri + '> obo:RO_0002200 ?phenotype . \
+                \n  ?phenotype rdfs:label ?phenotypeLabel . \
+                \n} ORDER BY asc(?phenotypeLabel)'
+        logger.debug("Executing find all phenotypes query for a concept: %s", concept_iri)
+        return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+
+    
+    def find_matching_phenotype_superclasses(self, source_iri, target_iri):
+        (source_phenos, query) = self.find_all_phenotypes(source_iri)
+        (target_phenos, query) = self.find_all_phenotypes(target_iri)
+
+        source_pheno_iris = list(map(lambda x: x['phenotype']['value'], source_phenos.json()['results']['bindings']))
+        source_hp_phenos = list(filter(lambda x: 'HP_' in x, source_pheno_iris))
+        source_mp_phenos = list(filter(lambda x: 'MP_' in x, source_pheno_iris))
+
+        target_pheno_iris = list(map(lambda x: x['phenotype']['value'], target_phenos.json()['results']['bindings']))
+        target_hp_phenos = list(filter(lambda x: 'HP_' in x, target_pheno_iris))
+        target_mp_phenos = list(filter(lambda x: 'MP_' in x, target_pheno_iris))
+
+        logger.debug("Executing find matching phenotype superclasses for source: %s, target: %s", source_iri, target_iri)
+        matching_phenos_hp = self.request_matching_superclasses(source_hp_phenos, target_hp_phenos, 'HP')
+        matching_phenos_mp = self.request_matching_superclasses(source_mp_phenos, target_mp_phenos, 'MP')
+
+        matching_phenos = matching_phenos_hp + matching_phenos_mp
+        return matching_phenos
+
+
+    def request_matching_superclasses(self, source_classes, targert_classes, ontology):
+        if len(source_classes) < 1 or len(targert_classes) < 1:
+            return []
+            
+        request_data = { "source_classes": source_classes, "target_classes": targert_classes }
+        url = f"http://aber-owl.net/api/ontology/{ontology}/class/_matchsuperclasses"
+        result = requests.post(url, json=request_data)
+        return result.json()['result']
+
 
     def create_orderby_clause(self, order_by):
         order_clause = ''
