@@ -61,6 +61,9 @@
 
 <div class="card mb-4 wow fadeIn" *ngIf="iri">
     <div class="card-body justify-content-between">
+    <div class="row">
+        <div class="ml-auto mr-3"><a href="/pathogenhosttarget"><i class="fa fa-arrow-left mr-2"></i><strong>Back</strong></a></div>
+    </div>
     <a (click)="openInNewTab(entity.entity)" class="text-muted">
     <span>
         <span class="card-title" *ngIf="entity">{{entity.label[0]}}</span> 
