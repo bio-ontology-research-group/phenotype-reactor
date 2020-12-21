@@ -8,20 +8,20 @@ import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rx
 import { _ } from 'underscore';
 
 @Component({
-  selector: 'app-gene-disease',
-  templateUrl: './gene-disease.component.html',
-  styleUrls: ['./gene-disease.component.css']
+  selector: 'app-drug-target',
+  templateUrl: './drug-target.component.html',
+  styleUrls: ['./drug-target.component.css']
 })
-export class GeneDiseaseComponent implements OnInit {
+export class DrugTargetComponent implements OnInit {
 
   BASE_PREFIX = "http://phenomebrowser.net/"
   focus$ = new Subject<string>();
 
-  selectedType = 'Gene'
-  types = ['Gene', 'Disease']
-  conceptRedirect = "genedisease"
+  selectedType = 'Drug'
+  types = ['Drug', 'Gene']
+  conceptRedirect = "drugtarget"
   targetType = null;
-  typesDisplay = {'Gene' : 'Gene by Symbol or Name', 'Disease' : 'Disease Name'};
+  typesDisplay = {'Drug' : 'Drug Name', 'Gene' : 'Gene by Symbol or Name'};
   term = null;
   searching = false;
   searchFailed = false;
@@ -97,7 +97,7 @@ export class GeneDiseaseComponent implements OnInit {
   onTermSelect(event) {
     if (event.item && event.item.valueset) {
       this.entity = event.item 
-      this.router.navigate(['/genedisease', encodeURIComponent(event.item.entity), event.item.valueset]);
+      this.router.navigate(['/drugtarget', encodeURIComponent(event.item.entity), event.item.valueset]);
     }
   }
 
@@ -108,6 +108,7 @@ export class GeneDiseaseComponent implements OnInit {
   }
 
   findTerm(term) {
+      console.log(this.selectedType, this.targetType, this.selectedValuesets)
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValuesets)
   }
 
@@ -148,10 +149,10 @@ export class GeneDiseaseComponent implements OnInit {
     }
   }
 
-  openGeneDisease(concept) {
+  openDrugTarget(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
     this.modalService.dismissAll();
-    this.router.navigate(['/genedisease', concept, valueset]);
+    this.router.navigate(['/drugtarget', concept, valueset]);
   }
 
   openHelp(content) {
@@ -167,3 +168,4 @@ export class GeneDiseaseComponent implements OnInit {
     }
   }
 }
+

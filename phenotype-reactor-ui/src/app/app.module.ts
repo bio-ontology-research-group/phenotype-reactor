@@ -26,6 +26,7 @@ import { ListAssociationsetComponent } from './list-associationset/list-associat
 import { ListSimilarAssociationsComponent } from './list-similar-associations/list-similar-associations.component';
 import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-host-target.component';
 import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
+import { DrugTargetComponent } from './drug-target/drug-target.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
     GeneDiseaseComponent,
     ListAssociationsetComponent,
     ListSimilarAssociationsComponent,
-    PathogenHostTargetComponent
+    PathogenHostTargetComponent,
+    DrugTargetComponent
   ],
   imports: [
     BrowserModule,
