@@ -64,7 +64,7 @@ export class ListSimilarAssociationsComponent implements OnInit {
   mostSimilarConcepts : any = [];
   mostSimilarConceptsPlusSelectedEntity : any = [];
   mostSimilarConceptsFiltered : any = [];
-  mostSimilarQueryOrderBy = '';
+  mostSimilarQueryOrderBy = 'desc:val';
   conceptPhenotypesMap = {};
   conceptSuperclassPhenotypesMap = {};
   query = '';
