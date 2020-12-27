@@ -87,10 +87,8 @@ export class ListAssociationComponent implements OnInit {
     }
 
 
-    this.associationLoading = true;
     this.associationService.findAssociationset().subscribe(res => {
       this.associationsets = res['results']['bindings'];
-      this.associationLoading = false;
       if (this.type.name != 'Phenotype') {
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
       } else {
