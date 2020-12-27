@@ -24,7 +24,6 @@ export interface SortEvent {
     '(click)': 'rotate()'
   }
 })
-
 @Component({
   selector: 'app-list-similar-associations',
   templateUrl: './list-similar-associations.component.html',
@@ -41,6 +40,8 @@ export class ListSimilarEntitiesSortableHeader {
     this.sort.emit({column: this.sortable, direction: this.direction});
   }
 }
+
+const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
 @Component({
   selector: 'app-list-similar-associations',
@@ -132,11 +133,13 @@ export class ListSimilarAssociationsComponent implements OnInit {
     });
 
     if (direction === '' || column === '') {
-      this.mostSimilarQueryOrderBy = '';
+      this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
     } else {
-      this.mostSimilarQueryOrderBy = direction + ":" + column;
+      this.mostSimilarConceptsFiltered = this.mostSimilarConceptsFiltered.sort((a, b) => {
+        const res = compare(a[column]['value'], b[column]['value']);
+        return direction === 'asc' ? res : -res;
+      });
     }
-    this.findMostSimilar();
   }
 
   conceptRef(concept) {
