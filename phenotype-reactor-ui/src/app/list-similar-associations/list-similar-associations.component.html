@@ -22,6 +22,9 @@
         <span class="sr-only">Loading...</span>
     </div>
 </div>
+<div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1 && !associationLoading)">
+    <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
+</div>
 <div class="row" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && !associationLoading">
     <table class="table table-striped">
     <thead color="default">
@@ -73,14 +76,11 @@
     </select>
 </div>
 <hr />
-<div class="card-body justify-content-between mt-4" *ngIf="!associationLoading">
+<div class="card-body justify-content-between mt-4" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0 && !associationLoading">
     <span>
         <span class="card-title" *ngIf="mostSimilarConcepts && mostSimilarConcepts.length > 0">Neighbourhood Visualization</span> 
     </span>
     <app-plot-scatter-chart [similarConcepts]="mostSimilarConceptsPlusSelectedEntity"></app-plot-scatter-chart>
-</div>
-<div class="row mt-2" *ngIf="!mostSimilarConcepts || (mostSimilarConcepts && mostSimilarConcepts.length < 1 && !associationLoading)">
-    <p class="col-12 text-center"><ngb-alert [dismissible]="false">No results found</ngb-alert></p>
 </div>
 <ng-template #similarPopContent>
     <div class="spinner-border-sm text-primary" role="status" *ngIf="popSimilarEntity == null">
