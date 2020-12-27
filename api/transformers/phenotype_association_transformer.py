@@ -197,7 +197,7 @@ def transform_pathogen2phenotype():
                 association.add(OBO.RO_0002558, evidence)
 
             add_association_provenance(store, association, creator='Senay Kafkas', 
-                created_on='2019-06-03', source='https://www.nature.com/articles/s41597-019-0090-x')
+                created_on='2019-06-03', source='https://pubmed.ncbi.nlm.nih.gov/31160594')
 
     store.serialize('{folder}/pathogen2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))

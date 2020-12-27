@@ -60,7 +60,7 @@ class PathogenPhenoDS(RDFSource):
                 association.add(OBO.RO_0002558, evidence)
 
             add_association_provenance(self.store, association, creator='Senay Kafkas', 
-                created_on='2019-06-03', source='https://www.nature.com/articles/s41597-019-0090-x')
+                created_on='2019-06-03', source='https://pubmed.ncbi.nlm.nih.gov/31160594')
             self.add_association(association)
 
 

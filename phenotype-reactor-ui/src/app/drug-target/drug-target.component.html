@@ -22,13 +22,13 @@
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">e.g</li>
                     <li class="list-inline-item">
-                        <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button> |
+                        <button type="button" (click)="openDrugTarget('https://pubchem.ncbi.nlm.nih.gov/compound/100002244')" class="btn btn-link p-0 mb-1">aspirin</button> |
                     </li>
                     <li class="list-inline-item">
-                        <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> |
+                        <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/81704')" class="btn btn-link p-0 mb-1">DOCK8</button> |
                     </li>
                     <li class="list-inline-item">
-                        <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>
+                        <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/3665')" class="btn btn-link p-0 mb-1">interferon regulatory factor 7</button>
                     </li>
                 </ul>
             </div>
@@ -40,26 +40,10 @@
 <div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
     <div class="card-body justify-content-between p-4">
         <span class="card-title">Drug Targets</span>
-        <p class="mt-3">Gene Disease Connection is designed to provide discovery of gene causing diseases and candidate genes for a disease 
-        based on phenotypic similarity between the two. </p>
-        <p>Gene and disease phenotypes data is integrated from Mouse Genome Informatics database (MGI), HPO and several research studies using 
-        computational methods to identify phenotypes.</p>
-    </div>
-</div>
-<div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
-    <div class="card-body justify-content-between p-4">
-        <span class="card-title">Search Examples</span>
-        <p> Search examples suggesting our method's ability to predict candidate interacting protien are following:</p>
-        <ul>
-            <li><a href="https://www.alzheimers.org.uk/about-dementia/risk-factors-and-prevention/alzheimers-disease-and-genes')" class="text-primary">Studies of Alzheimer disease</a> 
-            suggest that mutation in <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button> or 
-            <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> gene can cause Alzheimer.
-            Our search results from searching for PSEN1 or Amyloid precursor protein suggests that both genes have number of matching phenotypes.
-            </li>
-            <li class="mt-3">Similarly, <button type="button" (click)="openDrugTarget('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>, we can
-            find that APP - Amyloid precursor protein gene have many matching phenotypes with the alzheimer.
-            </li>
-        </ul> 
+        <p class="mt-3">Drug targets browser is designed to provide a target discovery (to find potential targets) for a drug based on phenotypic similarity between the
+        gene that encodes for protein and the drug.</p>
+        <p>We have integrated drug phenotypes from <button type="button" (click)="openInNewTab('https://www.ncbi.nlm.nih.gov/pubmed/20087340')" class="btn btn-link p-0 mb-1">SIDER's 
+        side effects dataset</button> and gene phenotypes from Mouse Genome Informatics database (MGI), HPO and several research studies using computational methods to identify phenotypes.</p>
     </div>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
@@ -71,13 +55,16 @@
     <span>
         <span class="card-title" *ngIf="entity && !geneValuesets.includes(entity.valueset)">{{entity.label[0]}}</span> 
         <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset)">{{entity.label[0] + '  ' + entity.label[1]}}</span> 
-        <span class="card-title" *ngIf="!entity">Name</span>  
+        <span class="card-title" *ngIf="!entity">
+        <div class="spinner-border  loading-spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        </span>  
     </span>
     <small class="text-muted ml-2" *ngIf="entity?.identifier">{{entity.identifier}}</small>
     </a>
     <h6 class="card-subtitle mt-3">
         <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
-        <span *ngIf="!entity">Definition</span>  
     </h6> 
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
         <li [ngbNavItem]="1">
@@ -120,16 +107,16 @@
     <div id="search-examples">
         <ul>
             <li>
-                <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/5663')" class="btn btn-link p-0 mb-1">PSEN1</button>
+                <button type="button" (click)="openDrugTarget('https://pubchem.ncbi.nlm.nih.gov/compound/100002244')" class="btn btn-link p-0 mb-1">aspirin</button>
+                <span class="ml-5"> - by drug name</span>
+            </li>
+            <li>
+                <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/81704')" class="btn btn-link p-0 mb-1">DOCK8</button>
                 <span class="ml-5"> - by gene symbol</span>
             </li>
             <li>
-                <button type="button" (click)="openGeneDisease('https://www.ncbi.nlm.nih.gov/gene/351')" class="btn btn-link p-0 mb-1">Amyloid precursor protein</button> 
+                <button type="button" (click)="openDrugTarget('https://www.ncbi.nlm.nih.gov/gene/3665')" class="btn btn-link p-0 mb-1">interferon regulatory factor 7</button>
                 <span class="ml-5"> - by gene name</span>
-            </li>
-            <li>
-                <button type="button" (click)="openGeneDisease('http://purl.obolibrary.org/obo/DOID_10652')" class="btn btn-link p-0 mb-1">Alzheimer's disease</button>
-                <span class="ml-5"> - by disease name from MONDO, ORDO, OMIM, DOID and Decipher</span>
             </li>
         </ul>
     </div>

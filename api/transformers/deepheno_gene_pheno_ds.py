@@ -63,7 +63,7 @@ class DeepphenoGenePhenoDS(RDFSource):
         association = create_phenotypic_association(self.store, gene, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(self.store, association, creator='Maxat Kulmanov', 
-            created_on='2020-03-25', source='https://www.biorxiv.org/content/10.1101/839332v2')
+            created_on='2020-11-18', source='https://pubmed.ncbi.nlm.nih.gov/33206638')
         self.add_association(association)
 
     def resolve_display(self):

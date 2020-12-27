@@ -56,7 +56,7 @@ class HPOGenePhenoDS(RDFSource):
         association.add(OBO.RO_0002558, OBO.ECO_0000501)
         
         created_on = '2020-10-12'
-        sources = 'https://hpo.jax.org/app/download/annotation'
+        sources = 'https://pubmed.ncbi.nlm.nih.gov/30476213'
         creator = 'HPO'
         add_association_provenance(self.store, association, creator=creator, created_on=created_on, source=sources)
         self.add_association(association)

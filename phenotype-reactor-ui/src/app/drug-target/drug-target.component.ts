@@ -65,6 +65,7 @@ export class DrugTargetComponent implements OnInit {
           this.active = 1;
           if (this.valuesets && this.valuesets.length > 0) {
             this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+            this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
             this.updateTargetType();
           } else {
             this.lookupService.findValueset().subscribe(res => {
