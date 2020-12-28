@@ -50,7 +50,7 @@ class MetabolitePhenoDS(RDFSource):
         association = create_phenotypic_association(self.store, metabolite, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(self.store, association, creator='Senay Kafkas',
-         source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
+         source='https://pubmed.ncbi.nlm.nih.gov/30809638')
         self.add_association(association)
 
     def resolve_display(self):

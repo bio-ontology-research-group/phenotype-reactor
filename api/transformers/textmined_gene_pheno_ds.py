@@ -19,7 +19,7 @@ class TextminedhenoGenePhenoDS(RDFSource):
         self.url = f'{self.sourcedir}/genephenotypes_textmined_senay.txt'
         self.df = None
         self.rdf_filename = "textmined_genephenotype"
-        self.study_source = 'https://www.ncbi.nlm.nih.gov/pubmed/30809638'
+        self.study_source = 'https://pubmed.ncbi.nlm.nih.gov/30809638'
 
     def fetch(self):
         logger.info("Started reading dataset: %s", self.name)

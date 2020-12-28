@@ -74,6 +74,6 @@
         "includeTypes": ["http://phenomebrowser.net/Gene"],
         "description" : "Uses an ontology-based approach in combination with statistical methods to text mine gene-phenotype associations from the literature. It discovers gene phenotypes form MGI, HP and MP ontologies",
         "download":"",
-        "url": "https://www.ncbi.nlm.nih.gov/pubmed/30809638"
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30809638"
     }
 }

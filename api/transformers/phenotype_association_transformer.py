@@ -89,7 +89,7 @@ def transform_disease2phenotype():
         association = create_phenotypic_association(store, disease, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(store, association, creator='Sara Althubaiti',
-            source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
+            source='https://pubmed.ncbi.nlm.nih.gov/30809638')
     
 
     store.serialize('{folder}/disease2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
@@ -129,7 +129,7 @@ def transform_gene2phenotype_text_mined():
     print(df.head())
     
     split_count=1
-    source = 'https://www.ncbi.nlm.nih.gov/pubmed/30809638'
+    source = 'https://pubmed.ncbi.nlm.nih.gov/30809638'
     for index, row in df.iterrows():
         # print(row.mgi, row.phenotype, row.gene1, row.gene2)
         phenotype = store.resource(str(OBO.uri) + row.phenotype)
@@ -220,7 +220,7 @@ def transform_mondo2phenotype_top50():
         association = create_phenotypic_association(store, disease, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(store, association, creator='Senay Kafkas',
-         source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
+         source='https://pubmed.ncbi.nlm.nih.gov/30809638')
 
 
     store.serialize('{folder}/mondo2phenotype_top50.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
@@ -273,7 +273,7 @@ def transform_metabolites2phenotype():
         association = create_phenotypic_association(store, metabolite, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(store, association, creator='Senay Kafkas',
-         source='https://www.ncbi.nlm.nih.gov/pubmed/30809638')
+         source='https://pubmed.ncbi.nlm.nih.gov/30809638')
     
 
     store.serialize('{folder}/metabolite2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)

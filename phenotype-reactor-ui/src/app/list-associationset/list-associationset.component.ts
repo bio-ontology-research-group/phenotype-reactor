@@ -9,6 +9,7 @@ import { AssociationService } from '../association.service';
 })
 export class ListAssociationsetComponent implements OnInit {
 
+  PUBMED_PREFIX = "https://pubmed.ncbi.nlm.nih.gov/";
   associationsets = [];
 
   constructor(private router: Router,
@@ -19,5 +20,12 @@ export class ListAssociationsetComponent implements OnInit {
     this.associationService.findAssociationset().subscribe(res => {
       this.associationsets = res['results']['bindings'];
     });
+  }
+
+  normalizeRef(url:string) {
+    if (url.startsWith(this.PUBMED_PREFIX)){
+      return url.replace(this.PUBMED_PREFIX, 'PMID:')
+    }
+    return null;
   }
 }
