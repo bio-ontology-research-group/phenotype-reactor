@@ -18,7 +18,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
-from api.views import GetAssociationsetByLabel, GetLatestDataArchived, FindDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
+from api.views import GetAssociationsetByIdentifier, GetLatestDataArchived, FindDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
     FindEntityByIris, FindValueset, FindMostSimilar, FindAssociationset, FindMatchingPhenotypes, FindMatchingPhenotypesSuperclasses, \
     GetAssociationsetConfig
 
@@ -30,7 +30,7 @@ urlpatterns = [
     path('api/association/matching-phenotypes', FindMatchingPhenotypes.as_view()),
     path('api/association/matching-phenotype-superclasses', FindMatchingPhenotypesSuperclasses.as_view()),
     path('api/associationset', FindAssociationset.as_view()),
-    path('api/associationset/<identifier>', GetAssociationsetByLabel.as_view()),
+    path('api/associationset/<identifier>', GetAssociationsetByIdentifier.as_view()),
     path('api/associationset/config/settings', GetAssociationsetConfig.as_view()),
     path('api/entity/_startswith', FindEntityByLabelStartsWith.as_view()),
     path('api/entity/_findbyiri', FindEntityByIris.as_view()),
