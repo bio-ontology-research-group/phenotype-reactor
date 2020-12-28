@@ -13,13 +13,13 @@ Phenotype Reactor data model is a common structure for capturing phenotype assoc
 ## Sources
 The datasets aggregated from research studies and cummunity resources are follwoing:
 
-- Phenotypye Annontations from HPO. [Link](https://hpo.jax.org/app/download/annotation)
-- Ontology based text mining of gene-phenotype associations. [Link](https://www.ncbi.nlm.nih.gov/pubmed/30809638)
-- Ontology based text mining of disease-phenotype associations. [Link](https://www.ncbi.nlm.nih.gov/pubmed/30809638)
-- Ontology based text mining of disease classes in Mondo Disease ontology to phenotype associations. [Link](https://www.ncbi.nlm.nih.gov/pubmed/30809638)
-- Ontology based text mining of metabolites-phenotype associations. [Link](https://www.ncbi.nlm.nih.gov/pubmed/30809638)
+- Phenotypye Annontations from HPO. [Link](https://pubmed.ncbi.nlm.nih.gov/30476213)
+- Ontology based text mining of gene-phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
+- Ontology based text mining of disease-phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
+- Ontology based text mining of disease classes in Mondo Disease ontology to phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
+- Ontology based text mining of metabolites-phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
 - Drug-phentype association based on drug side effect resource. [Link](https://www.ncbi.nlm.nih.gov/pubmed/20087340)
-- PathoPhenoDB, linking human pathogens to their phenotypes in support of infectious disease research. [Link](https://www.nature.com/articles/s41597-019-0090-x)
+- PathoPhenoDB, linking human pathogens to their phenotypes in support of infectious disease research. [Link](https://pubmed.ncbi.nlm.nih.gov/31160594)
 - DeepPheno: Predicting single gene loss-of-function phenotypes using an ontology-aware hierarchical classifier. [Link](https://www.biorxiv.org/content/10.1101/839332v2)
 
 ## License 

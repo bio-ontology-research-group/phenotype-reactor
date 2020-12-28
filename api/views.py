@@ -136,6 +136,36 @@ class FindAssociationset(APIView):
         except Exception as e:
             logger.exception("message")
 
+
+
+class GetAssociationsetByIdentifier(APIView):
+    """
+    Get associationset by identifier
+    """
+
+    service = Associationsets()
+    def get(self, request, identifier, format=None):
+        try:
+            (response, query) = self.service.find_associationset_by_identifier(identifier)
+            if response.status_code == requests.codes.ok:
+                return Response(response.json())
+            
+            if response.status_code == requests.codes.bad_request:
+                raise Exception(response.text)
+        except Exception as e:
+            logger.exception("message")
+        except Exception as e:
+            logger.exception("message")
+
+
+class GetAssociationsetConfig(APIView):
+    """
+    Get Associationsets configuration
+    """
+
+    def get(self, request, format=None):
+        return Response(settings.ASSOCIATION_SET_CONFIG)
+
 class GetLatestDataArchived(APIView):
     """
     Get latest

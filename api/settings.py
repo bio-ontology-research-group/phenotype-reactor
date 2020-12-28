@@ -226,3 +226,50 @@ OMIM_DIR = config['omim']['dir']
 STATICFILES_DIRS = [
     ("schema", "schema")
 ]
+
+ASSOCIATION_SET_CONFIG = {
+    "deeppheno" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["NCBIGene"]
+    }, 
+    "textmined_disease_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["DOID"]
+    },
+    "sider_drug_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["PUBCHEM"]
+    },
+    "hpo_disease_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["OMIM", "DECIPHER", "ordo"]
+    },
+    "hpo_gene_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["NCBIGene"]
+    },
+    "textmined_metabolite_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["CHEBI"]
+    },
+    "mgi_gene_phenotypes" : {
+        "phenotype_reference_source" : ["MP"],
+        "biomedical_entity_reference_source" : ["MGI"]
+    },
+    "textmined_mondo_disease_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["MONDO"]
+    },
+    "pathopheno_disease_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["DOID"]
+    },
+    "pathopheno_pathogen_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["NCBITAXON"]
+    },
+    "textmined_gene_phenotypes" : {
+        "phenotype_reference_source" : ["HP", "MP"],
+        "biomedical_entity_reference_source" : ["MGI", "NCBIGene"]
+    }
+}

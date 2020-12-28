@@ -24,7 +24,7 @@ class RDFSource(Source):
         self.rdf_ext = RDFLIB_FORMAT_DIC[settings.EXPORT_FORMAT]
         self.store = create_graph()
         if name in Associationsets.ASSOCIATIONSETS:
-            self.associationset = create_associationset(self.store, Associationsets.ASSOCIATIONSETS[name])
+            self.associationset = create_associationset(self.store, name, Associationsets.ASSOCIATIONSETS[name])
 
     def add_phenotype_label(self):
         phenotypes  = list(set(self.store.subjects(RDF.type, PHENO.Phenotype)))
