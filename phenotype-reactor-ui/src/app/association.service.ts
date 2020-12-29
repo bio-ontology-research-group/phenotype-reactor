@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+const PUBMED_PREFIX = "https://pubmed.ncbi.nlm.nih.gov/";
 @Injectable()
 export class AssociationService {
 
-  URL = '/api/association'
+  URL = '/api/association';
 
   TYPES = {
-    'Drug' : { name: 'Drug',  uri: 'http://phenomebrowser.net/Drug' },
-    'Disease' : { name: 'Disease',  uri: 'http://phenomebrowser.net/Disease' },
-    'Gene' : { name: 'Gene', uri: 'http://phenomebrowser.net/Gene' },
-    'Metabolite' : { name: 'Metabolite', uri: 'http://phenomebrowser.net/Metabolite' },
-    'Pathogen' : { name: 'Pathogen', uri: 'http://phenomebrowser.net/Pathogen' },
-    'Phenotype' : { name: 'Phenotype', uri: 'http://phenomebrowser.net/Phenotype' }
+    'Disease' : { name: 'Disease',  uri: 'http://phenomebrowser.net/Disease', display: 'Disease Name' },
+    'Drug' : { name: 'Drug',  uri: 'http://phenomebrowser.net/Drug' , display: 'Drug Name'},
+    'Gene' : { name: 'Gene', uri: 'http://phenomebrowser.net/Gene', display: 'Gene by Symbol or Name' },
+    'Metabolite' : { name: 'Metabolite', uri: 'http://phenomebrowser.net/Metabolite', display: 'Metabolite Name' },
+    'Pathogen' : { name: 'Pathogen', uri: 'http://phenomebrowser.net/Pathogen', display: 'Pathogen Name' },
+    'Phenotype' : { name: 'Phenotype', uri: 'http://phenomebrowser.net/Phenotype', display: 'Phenotype Name' }
   }
 
   EVIDENCE = {
@@ -105,5 +106,19 @@ export class AssociationService {
   findAssociationset() {
     return this.http.get(`/api/associationset`, this.options);
   }
-  
+
+  getAssociationset(name) {
+    return this.http.get(`/api/associationset/${name}`, this.options);
+  }
+
+  getAssociationsetConfig() {
+    return this.http.get(`/api/associationset/config/settings`, this.options);
+  }
+
+  normalizeRef(url:string) {
+    if (url.startsWith(PUBMED_PREFIX)){
+      return url.replace(PUBMED_PREFIX, 'PMID:')
+    }
+    return null;
+  }
 }

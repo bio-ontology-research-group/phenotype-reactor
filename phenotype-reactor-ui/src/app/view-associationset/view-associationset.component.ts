@@ -1,27 +1,28 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbAlertConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LookupService } from '../lookup.service';
 import { Observable, of, Subject, merge } from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap, switchMap, catchError} from 'rxjs/operators';
 import { _ } from 'underscore';
+import { AssociationService } from '../association.service';
 
 @Component({
-  selector: 'app-drug-target',
-  templateUrl: './drug-target.component.html',
-  styleUrls: ['./drug-target.component.css']
+  selector: 'app-view-associationset',
+  templateUrl: './view-associationset.component.html',
+  styleUrls: ['./view-associationset.component.css']
 })
-export class DrugTargetComponent implements OnInit {
+export class ViewAssociationsetComponent implements OnInit {
 
   BASE_PREFIX = "http://phenomebrowser.net/"
   focus$ = new Subject<string>();
 
-  selectedType = 'Drug'
-  types = ['Drug', 'Gene']
-  conceptRedirect = "drugtarget"
+  selectedType = '';
+  types = [];
+  conceptRedirect = "associationset/"
   targetType = null;
-  typesDisplay = {'Drug' : 'Drug Name', 'Gene' : 'Gene by Symbol or Name'};
+  typesDisplay = {};
   term = null;
   searching = false;
   searchFailed = false;
@@ -29,12 +30,14 @@ export class DrugTargetComponent implements OnInit {
   selectedValuesets : any = [];
   geneValuesets = [];
 
+  datasetId = null;
   iri = null;
   valueset = null;
   entity = null;
   query = '';
+  dataset = null;
+  datasetConfig = null;
 
-  active = 1;
   similarEntityTypes = [this.BASE_PREFIX + this.types[0], this.BASE_PREFIX + this.types[1]];
 
   formatter: any;
@@ -54,32 +57,58 @@ export class DrugTargetComponent implements OnInit {
   }
 
   constructor(private lookupService: LookupService,
+    private associationService: AssociationService,
     private router: Router,
     private route: ActivatedRoute, 
     private titlecasePipe:TitleCasePipe,
-    private alertConfig: NgbAlertConfig,
     private modalService: NgbModal) { 
-      alertConfig.type = 'secondary';
       this.route.params.subscribe( params => {
+        this.datasetId = params.identifier ? params.identifier : ''
         this.iri = decodeURIComponent(params.iri);
         this.valueset = params.valueset ? params.valueset : ''
-        if (params.iri && params.valueset) {
-          this.active = 1;
-          if (this.valuesets && this.valuesets.length > 0) {
-            this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
-            this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-            this.updateTargetType();
-          } else {
-            this.lookupService.findValueset().subscribe(res => {
-              this.valuesets = res
-              if (this.valueset) {
+
+        if (params.identifier) {
+          associationService.getAssociationset(this.datasetId).subscribe(res => {
+            this.dataset = res['results']['bindings'] && res['results']['bindings'].length > 0 ? res['results']['bindings'][0] : null;
+            associationService.getAssociationsetConfig().subscribe(res => {
+              this.datasetConfig = res[this.datasetId];
+              this.setSelectedValuesets();
+              this.lookupService.findValueset().subscribe(res => {
+                this.valuesets = res
+                this.types = [];
+                this.types.push(_.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.datasetConfig.biomedical_entity_reference_source[0].toLowerCase())[0].entity_type);
+                this.types.push('Phenotype');
+                this.typesDisplay = {};
+                this.types.forEach(item => {
+                  this.typesDisplay[item] = this.associationService.TYPES[item].display;
+                });
+                this.updateTargetType();
+                if (!(params.iri && params.valueset)) {
+                  this.selectedType = this.types[0];
+                }
+              });
+            });
+
+            if (params.iri && params.valueset) {
+              if (this.valuesets && this.valuesets.length > 0) {
                 this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+                this.setSelectedValuesets();
+                this.updateTargetType();
+              } else {
+                this.lookupService.findValueset().subscribe(res => {
+                  this.valuesets = res
+                  if (this.valueset) {
+                    this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+                  }
+                  this.setSelectedValuesets();
+                  this.updateTargetType();
+                })
               }
-              this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-              this.updateTargetType();
-            })
-          }
-          this.resolveEntity();
+              this.resolveEntity();
+            } else {
+              this.selectedType = this.types[0];
+            }
+          });
         }
       });
       this.geneValuesets = lookupService.GENE_VALUESETS;
@@ -87,31 +116,25 @@ export class DrugTargetComponent implements OnInit {
 
   ngOnInit() {
     this.formatter = (x: {label: { value: string}}) => x.label ? this.toTitleCase(x.label.value) : null;
-    this.lookupService.findValueset().subscribe(res => {
-      this.valuesets = res
-      if (this.valueset) {
-        this.selectedType = _.filter(this.valuesets, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
-      }
-      this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-      this.updateTargetType();
-    })
+    if (this.datasetConfig) {
+      this.setSelectedValuesets();
+    }
+    this.updateTargetType();
   }
 
   onTermSelect(event) {
     if (event.item && event.item.valueset) {
       this.entity = event.item 
-      this.router.navigate(['/drugtarget', encodeURIComponent(event.item.entity), event.item.valueset]);
+      this.router.navigate(['/dataset', this.datasetId, encodeURIComponent(event.item.entity), event.item.valueset]);
     }
   }
 
   onTypeSelect(event) {
-    this.selectedType = event.target.value;
-    this.selectedValuesets = _.map(_.filter(this.valuesets, (obj) => obj.entity_type == this.selectedType), obj => obj.valueset);
-    this.updateTargetType();
+    this.selectedType = event.target.value;      
+    this.setSelectedValuesets();
   }
 
   findTerm(term) {
-      console.log(this.selectedType, this.targetType, this.selectedValuesets)
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValuesets)
   }
 
@@ -152,10 +175,10 @@ export class DrugTargetComponent implements OnInit {
     }
   }
 
-  openDrugTarget(concept) {
+  openDatasetAnnontation(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
     this.modalService.dismissAll();
-    this.router.navigate(['/drugtarget', concept, valueset]);
+    this.router.navigate(['/dataset', this.datasetId, concept, valueset]);
   }
 
   openHelp(content) {
@@ -165,10 +188,20 @@ export class DrugTargetComponent implements OnInit {
   updateTargetType(){
     this.targetType = this.BASE_PREFIX;
     if (this.selectedType == this.types[0]) {
-      this.targetType = this.targetType + this.types[1]
+      this.targetType = this.associationService.TYPES[this.types[1]]
     } else {
-      this.targetType = this.targetType + this.types[0]
+      this.targetType = this.associationService.TYPES[this.types[0]]
     }
   }
-}
 
+  setSelectedValuesets() {
+    if (this.selectedType != 'Phenotype') {
+      this.selectedValuesets = this.datasetConfig.biomedical_entity_reference_source;
+    } else {
+      this.selectedValuesets = this.datasetConfig.phenotype_reference_source;
+    }
+  }
+
+  normalizeRef = this.associationService.normalizeRef;
+
+}

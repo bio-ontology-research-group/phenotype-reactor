@@ -17,7 +17,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let associationset of associationsets; let assocIndex = index">
-            <td class="w-20"><a [href]="'dataset/' + associationset.associationset.value">{{associationset.label.value}}</a></td>
+            <td class="w-20"><a [href]="'dataset/' + associationset.identifier.value">{{associationset.label.value}}</a></td>
             <td class="w-40">{{associationset.description.value}}</td>
             <td class="w-20"><a [href]="associationset.source.value" target="_blank">{{normalizeRef(associationset.source.value) ? normalizeRef(associationset.source.value) : 'Reference'}}</a></td>
             <td class="w-10"><a [href]="associationset.download.value" target="_blank" *ngIf="associationset.download.value">Download</a></td>

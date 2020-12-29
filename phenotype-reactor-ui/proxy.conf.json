@@ -16,7 +16,7 @@
         "secure": false
     },
     "/sparql": {
-        "target": "http://10.254.146.165:8891",
+        "target": "http://10.254.146.211:8890",
         "secure": false
     }
 }

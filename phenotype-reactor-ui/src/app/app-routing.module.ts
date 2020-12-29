@@ -8,6 +8,7 @@ import { GeneDiseaseComponent } from './gene-disease/gene-disease.component';
 import { ListAssociationsetComponent } from './list-associationset/list-associationset.component';
 import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-host-target.component';
 import { DrugTargetComponent } from './drug-target/drug-target.component';
+import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,8 @@ const routes: Routes = [
   {path: 'pathogenhosttarget',component: PathogenHostTargetComponent},
   {path: 'pathogenhosttarget/:iri',component: PathogenHostTargetComponent},
   {path: 'dataset',component: ListAssociationsetComponent},
+  {path: 'dataset/:identifier',component: ViewAssociationsetComponent},
+  {path: 'dataset/:identifier/:iri/:valueset',component: ViewAssociationsetComponent},
 ];
 
 

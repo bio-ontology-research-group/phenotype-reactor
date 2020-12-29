@@ -2,7 +2,7 @@
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
-    <div class="col-3 mt-2" *ngIf="associationsetsFiltered.length > 1">
+    <div class="col-3 mt-2" *ngIf="!dataset && associationsetsFiltered.length > 1">
         <ng-select
             [items]="associationsetsFiltered"
             [multiple]="true"

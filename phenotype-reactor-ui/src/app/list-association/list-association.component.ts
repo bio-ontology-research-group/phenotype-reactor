@@ -50,6 +50,7 @@ export class ListAssociationComponent implements OnInit {
   @Input() similarEntities = {};
   @Input() valueset = null;
   @Input() valuesetList = [];
+  @Input() dataset = null;
   @Output() annontationQuery = new EventEmitter<any>();
 
   @ViewChildren(ListAssoicationSortableHeader) headers: QueryList<ListAssoicationSortableHeader>;
@@ -85,33 +86,35 @@ export class ListAssociationComponent implements OnInit {
     for (var key in this.associationService.EVIDENCE) {
       this.EVIDENCE.push(this.associationService.EVIDENCE[key])
     }
-
-
-    this.associationService.findAssociationset().subscribe(res => {
-      this.associationsets = res['results']['bindings'];
-      if (this.type.name != 'Phenotype') {
-        this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
-      } else {
-        if (this.valuesetList) {
-          this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
-          this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
-        }
-      }
-      this.sortAssociationset(this.associationsetsFiltered)
-    })
   }
 
   ngOnInit() {
-
+    if (this.dataset == null || this.dataset == undefined) {
+      this.associationService.findAssociationset().subscribe(res => {
+        this.associationsets = res['results']['bindings'];
+        if (this.type.name != 'Phenotype') {
+          this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.type.uri);
+        } else {
+          if (this.valuesetList) {
+            this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
+            this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
+          }
+        }
+        this.sortAssociationset(this.associationsetsFiltered)
+      })
+    }
   }
 
   ngOnChanges(change: SimpleChange) {
-    if(change && change['iri'] && this.iri) {
+    if(this.iri && this.type) {
       this.page = 1;
       this.previousPage = 1;
       this.pageSize = 20;
+      if (this.dataset != null) {
+        this.associationsetFilter = [this.dataset.associationset.value]
+      }
       this.getPage();
-      if (this.valuesetList) {
+      if (this.valuesetList && this.valuesetList.length > 0) {
         this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
       }
@@ -133,7 +136,7 @@ export class ListAssociationComponent implements OnInit {
   }
 
   getPage() {
-    if (this.iri && this.type) { 
+    if (this.iri && this.type != undefined) { 
       var findAssociation = null;
       var offset = 1
       if (this.page > 1) {

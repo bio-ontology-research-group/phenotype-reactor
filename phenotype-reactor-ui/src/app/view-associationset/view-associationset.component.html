@@ -1,0 +1,71 @@
+<div class="content mt-2">
+<div class="card mb-4 wow fadeIn">
+    <div class="card-body justify-content-between">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+            <form class="form-inline w-100">
+                <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
+                    <option *ngFor="let type of types" value="{{type}}" [selected]='selectedType == type'>{{typesDisplay[type]}}</option>
+                </select>
+                <input id="search" type="text" class="form-control ml-3 w-60" (ngModel)="term" #searchInput
+                    [inputFormatter]="formatter" [ngbTypeahead]="search" [placeholder]="'Search for ' + selectedType" [resultTemplate]="rt"
+                    (selectItem)="onTermSelect($event)" (focus)="focus$.next($any($event).target.value)"/>
+                <ng-template #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.label[0]" [term]="t" *ngIf="!geneValuesets.includes(r.valueset)"></ngb-highlight> 
+                <ngb-highlight [result]="r.label[0] + '  ' + r.label[1]" [term]="t" *ngIf="geneValuesets.includes(r.valueset)"></ngb-highlight> 
+                <small *ngIf="selectedValueset == ''" class="font-italic">{{' ' + r.valueset}}</small> <br />
+                <small>{{r.entity}}</small>
+                </ng-template> 
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="dataset && !(iri && valueset)">
+    <div class="card-body justify-content-between p-4">
+        <span class="card-title">{{dataset.label.value}}</span>
+        <div class="row mt-2"> 
+            <div class="col-1"><strong>Description:</strong></div>
+            <div class="col-10">{{dataset.description.value}}</div>
+        </div>
+        <div class="row"> 
+            <div class="col-1"><strong>Reference:</strong></div>
+            <div class="col-10"><a [href]="dataset.source.value" target="_blank">{{normalizeRef(dataset.source.value) ? normalizeRef(dataset.source.value) : 'Reference'}}</a></div>
+        </div>
+        <div class="row"> 
+            <div class="col-1"><strong>Download:</strong></div>
+            <div class="col-10"><span *ngIf="dataset && dataset.download.value"><a [href]="dataset?.download.value" target="_blank">Download</a></span>
+            <span *ngIf="!dataset && !dataset.download.value"> - </span></div>
+        </div>
+    </div>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="dataset && iri && valueset">
+    <div class="card-body justify-content-between">
+    <div class="row">
+        <div class="ml-auto mr-3"><a [href]="'/dataset/' + dataset.identifier.value"><i class="fa fa-arrow-left mr-2"></i><strong>Back</strong></a></div>
+    </div>
+    <a (click)="openInNewTab(entity.entity)" class="text-muted">
+    <span>
+        <span class="card-title" *ngIf="entity && !geneValuesets.includes(entity.valueset)">{{entity.label[0]}}</span> 
+        <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset)">{{entity.label[0] + '  ' + entity.label[1]}}</span> 
+        <span class="card-title" *ngIf="!entity">
+        <div class="spinner-border  loading-spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        </span>  
+    </span>
+    <small class="text-muted ml-2" *ngIf="entity?.identifier">{{entity.identifier}}</small>
+    </a>
+    <h6 class="card-subtitle mt-3">
+        <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
+    </h6> 
+    <app-list-association [iri]="iri" [valueset]="valueset" [type]="targetType" [valuesetList]="valuesets" 
+        [dataset]="dataset" (annontationQuery)="onQueryChange($event)" ></app-list-association>
+</div>
+<div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
+    <div class="card-body justify-content-between">
+        <app-sparql-form [query]="query"></app-sparql-form>
+    </div>
+</div>
