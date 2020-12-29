@@ -266,7 +266,7 @@ ASSOCIATION_SET_CONFIG = {
     },
     "pathopheno_pathogen_phenotypes" : {
         "phenotype_reference_source" : ["HP", "MP"],
-        "biomedical_entity_reference_source" : ["NCBITAXON"]
+        "biomedical_entity_reference_source" : ["NCBITaxon_Pathopheno"]
     },
     "textmined_gene_phenotypes" : {
         "phenotype_reference_source" : ["HP", "MP"],
