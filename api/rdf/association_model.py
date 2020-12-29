@@ -46,7 +46,7 @@ def create_phenotypic_association(store, subject, object):
     return association
 
 def create_associationset(store, identifier, assoicationset, types=[]):
-    associationset = store.resource(str(PHENO.uri) + "associationset/" + str(uuid.uuid4()))
+    associationset = store.resource(str(PHENO.uri) + "ASSOSET_" + identifier)
     associationset.add(RDF.type, PHENO.AssociationSet)
     associationset.add(DC.identifier, Literal(identifier, datatype=XSD.string))
     associationset.add(RDFS.label, Literal(assoicationset['name'], datatype=XSD.string))
