@@ -28,6 +28,7 @@ import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-hos
 import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { DrugTargetComponent } from './drug-target/drug-target.component';
 import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
+import { FindSimilarityComponent } from './find-similarity/find-similarity.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ViewAssociationsetComponent } from './view-associationset/view-associat
     ListSimilarAssociationsComponent,
     PathogenHostTargetComponent,
     DrugTargetComponent,
-    ViewAssociationsetComponent
+    ViewAssociationsetComponent,
+    FindSimilarityComponent
   ],
   imports: [
     BrowserModule,

@@ -111,7 +111,6 @@ export class DrugTargetComponent implements OnInit {
   }
 
   findTerm(term) {
-      console.log(this.selectedType, this.targetType, this.selectedValuesets)
       return this.lookupService.findEntityByLabelStartsWith(term, this.selectedValuesets)
   }
 
