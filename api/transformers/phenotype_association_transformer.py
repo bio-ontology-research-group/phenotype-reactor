@@ -113,7 +113,7 @@ def transform_drug2phenotype():
         association = create_phenotypic_association(store, drug, phenotype)
         association.add(OBO.RO_0002558, OBO.ECO_0007669)
         add_association_provenance(store, association, creator='Sara Althubaiti', created_on='2019-03-12',
-         source="https://www.ncbi.nlm.nih.gov/pubmed/20087340")
+         source="https://pubmed.ncbi.nlm.nih.gov/20087340")
 
     store.serialize('{folder}/drug2phenotype.{extension}'.format(folder=TARGET_DATA_DIR, extension=FORMAT_DIC[FORMAT]), format=FORMAT, max_depth=3)
     print(len(store))
@@ -344,7 +344,7 @@ def transform_hpo_annotations(url, output_filename):
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
-        sources = ['https://www.ncbi.nlm.nih.gov/pubmed/30476213'] 
+        sources = ['https://pubmed.ncbi.nlm.nih.gov/30476213'] 
         for ref in row.reference.split(";"):
             if OMIM.uri in ref or DECIPHER.uri in ref or ORPHA.uri in ref:
                 continue

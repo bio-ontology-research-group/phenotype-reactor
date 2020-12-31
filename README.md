@@ -18,7 +18,7 @@ The datasets aggregated from research studies and cummunity resources are follwo
 - Ontology based text mining of disease-phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
 - Ontology based text mining of disease classes in Mondo Disease ontology to phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
 - Ontology based text mining of metabolites-phenotype associations. [Link](https://pubmed.ncbi.nlm.nih.gov/30809638)
-- Drug-phentype association based on drug side effect resource. [Link](https://www.ncbi.nlm.nih.gov/pubmed/20087340)
+- Drug-phentype association based on drug side effect resource. [Link](https://pubmed.ncbi.nlm.nih.gov/20087340)
 - PathoPhenoDB, linking human pathogens to their phenotypes in support of infectious disease research. [Link](https://pubmed.ncbi.nlm.nih.gov/31160594)
 - DeepPheno: Predicting single gene loss-of-function phenotypes using an ontology-aware hierarchical classifier. [Link](https://www.biorxiv.org/content/10.1101/839332v2)
 

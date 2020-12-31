@@ -53,7 +53,7 @@ class HpoGoldDiseasePhenoDS(RDFSource):
             association = create_phenotypic_association(self.store, disease, phenotype)
             association.add(OBO.RO_0002558, OBO.ECO_0007669)
             add_association_provenance(self.store, association, creator='HPO_GOLD', created_on='2019-03-12',
-            source="https://www.ncbi.nlm.nih.gov/pubmed/20087340")
+            source="https://pubmed.ncbi.nlm.nih.gov/20087340")
             self.add_association(association)
 
     def resolve_display(self):

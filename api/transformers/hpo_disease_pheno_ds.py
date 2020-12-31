@@ -92,7 +92,7 @@ class HPODiseasePhenoDS(RDFSource):
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
-        sources = ['https://www.ncbi.nlm.nih.gov/pubmed/30476213'] 
+        sources = ['https://pubmed.ncbi.nlm.nih.gov/30476213'] 
         for ref in row.reference.split(";"):
             if OMIM.uri in ref or DECIPHER.uri in ref or ORPHA.uri in ref:
                 continue

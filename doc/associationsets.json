@@ -39,7 +39,7 @@
         "includeTypes": ["http://phenomebrowser.net/Metabolite"],
         "description" : "Uses an ontology-based approach in combination with statistical methods to text mine metabolite-phenotype associations from the literature. It extracts metabolite phenotypes form CHEBI, HP and MP ontologies",
         "download":"",
-        "url": "https://www.ncbi.nlm.nih.gov/pubmed/30809638"
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30809638"
     },
     "mgi_gene_phenotypes" : {
         "name" : "mgi gene-phenotypes",
