@@ -70,4 +70,33 @@ GRAPH <http://phenomebrowser.net> {
 }`;
     this.query = query;
   }
+
+  listMatchingPhenotypes() {
+    var query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+  PREFIX pb: <http://phenomebrowser.net/> 
+  PREFIX obo: <http://purl.obolibrary.org/obo/> 
+  
+  SELECT ?phenotype ?phenotypeLabel 
+  FROM <http://phenomebrowser.net> 
+  WHERE { 
+    <http://purl.obolibrary.org/obo/NCBITaxon_64320> obo:RO_0002200 ?phenotype . 
+    <https://www.ncbi.nlm.nih.gov/gene/6773> obo:RO_0002200 ?phenotype . 
+    ?phenotype rdfs:label ?phenotypeLabel . 
+  } ORDER BY asc(?phenotypeLabel)`;
+    this.query = query;
+  }
+
+  listAllPhenotypes() {
+    var query = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+  PREFIX pb: <http://phenomebrowser.net/> 
+  PREFIX obo: <http://purl.obolibrary.org/obo/> 
+  
+  SELECT ?phenotype ?phenotypeLabel 
+  FROM <http://phenomebrowser.net> 
+  WHERE { 
+    <http://purl.obolibrary.org/obo/DOID_1307> obo:RO_0002200 ?phenotype . 
+    ?phenotype rdfs:label ?phenotypeLabel . 
+  } ORDER BY asc(?phenotypeLabel)`;
+    this.query = query;
+  }
 }
