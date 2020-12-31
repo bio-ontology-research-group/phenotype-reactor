@@ -79,6 +79,17 @@ export class LookupService {
     });
   }
 
+  findEntityByIri(iri) {
+    var val = this.findValuesetName(iri);
+    var req;
+    if (val == 'entity') {
+      req = {'iri': [iri]}
+    } else {
+      req = {'iri': [iri], valueset: val}
+    }
+    return this.http.post(`/api/entity/_findbyiri`, req, this.options);
+  }
+
   findValuesetName(uri) {
     var props = Object.keys(this.PREFIX_TO_VALUESET_DICT)
     for (var i = 0; i < props.length; i++) {

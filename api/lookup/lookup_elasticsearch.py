@@ -23,7 +23,9 @@ if not es:
         use_ssl=use_ssl,
         sniff_on_start=True,
         sniff_on_connection_fail=True,
-        sniffer_timeout=60)
+        sniffer_timeout=60,
+        timeout=30)
+  es.cluster.health(wait_for_status='yellow', request_timeout=1)
   logger.info("Connected to elasticesearch server: %s", str(es))
 
 VALUESET_INDEX_NAME = settings.LOOKUP_ES_VALUESET_INDEX_NAME

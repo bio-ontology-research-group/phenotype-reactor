@@ -32,6 +32,7 @@ export class FindSimilarityComponent implements OnInit {
   matchingPhenotypeSuperclasses = [];
   phenotypeLoading = false;
   phenotypeSuperclassesLoading = false;
+  submitted = false;
 
   formatter = (x) => { 
     if (this.geneValuesets.includes(x.valueset)) {
@@ -86,10 +87,11 @@ export class FindSimilarityComponent implements OnInit {
       this.route.params.subscribe( params => {
         this.sourceIri = decodeURIComponent(params.source);
         this.targetIri = decodeURIComponent(params.target);
-        this.selectedSourceType = params.sourceType ? params.sourceType : ''
-        this.selectedTargetType = params.targetType ? params.targetType : ''
+        this.selectedSourceType = params.sourceType ? params.sourceType : '';
+        this.selectedTargetType = params.targetType ? params.targetType : '';
+        this.submitted = false;
         if (this.sourceIri && this.targetIri && this.selectedSourceType && this.selectedTargetType) {
-
+          this.submitted = true;
           this.phenotypeLoading = false;
           this.associationService.findMatchingPhenotypes(this.sourceIri, this.targetIri).subscribe( data => {
             this.matchingPhenotypes = data ? data['results']['bindings'] : [];
@@ -125,6 +127,7 @@ export class FindSimilarityComponent implements OnInit {
   get f() { return this.similarityForm.controls; }
 
   onSubmit() {  
+    this.submitted = true;
     this.router.navigate(['/similarity', encodeURIComponent(this.f.sourceEntity.value.entity), this.selectedSourceType, encodeURIComponent(this.f.targetEntity.value.entity), this.selectedTargetType]);
   }
 
@@ -187,18 +190,22 @@ export class FindSimilarityComponent implements OnInit {
     return `/association/${encodeURIComponent(concept)}/${valueset}`;
   }
 
+  reset() {
+    this.similarityForm.reset();
+    this.f.sourceType.setValue('');
+    this.f.targetType.setValue('');
+  }
+
 
   resolveEntities() {
-    var iris = [this.sourceIri];
     this.sourceEntity = null;
-    this.lookupService.findEntityByIris(iris, data => {
+    this.lookupService.findEntityByIri(this.sourceIri).subscribe(data => {
       this.sourceEntity = data[0];
       this.f.sourceEntity.setValue(this.sourceEntity)
     });
 
-    var iris = [this.targetIri];
     this.targetEntity = null;
-    this.lookupService.findEntityByIris(iris, data => {
+    this.lookupService.findEntityByIri(this.targetIri).subscribe(data => {
       this.targetEntity = data[0];
       this.f.targetEntity.setValue(this.targetEntity)
     });
