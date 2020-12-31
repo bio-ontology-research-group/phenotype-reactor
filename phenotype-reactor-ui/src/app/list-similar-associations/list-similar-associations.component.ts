@@ -180,16 +180,22 @@ export class ListSimilarAssociationsComponent implements OnInit {
       this.mostSimilarConceptsPlusSelectedEntity = Object.assign([], this.mostSimilarConcepts);
       this.similarityQuery.emit(data ? data['query'] : '')
       this.mostSimilarConceptsFiltered = this.conceptfilter(this.filter.value);
-      this.mostSimilarConcepts.forEach(concept => {
-        this.associationService.findMatchingPhenotypes(this.iri, concept.concept.value).subscribe( data => {
-          this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
-          if (this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value].length < 1) {
-            this.associationService.findMatchingPhenotypeSuperClasses(this.iri, concept.concept.value).subscribe( data => {
-              this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? this.sortAberowlClasses(data) : [];
-            });
+
+      if (!['HP','MP'].includes(this.valueset)) {
+        this.mostSimilarConcepts.forEach(concept => {
+          if (concept.type.value == this.associationService.TYPES['Phenotype'].uri) {
+            return;
           }
-        })
-      });
+          this.associationService.findMatchingPhenotypes(this.iri, concept.concept.value).subscribe( data => {
+            this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
+            if (this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value].length < 1) {
+              this.associationService.findMatchingPhenotypeSuperClasses(this.iri, concept.concept.value).subscribe( data => {
+                this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? this.sortAberowlClasses(data) : [];
+              });
+            }
+          })
+        });
+      }
 
       this.associationLoading = false;
       // To get coordinates of entity selected

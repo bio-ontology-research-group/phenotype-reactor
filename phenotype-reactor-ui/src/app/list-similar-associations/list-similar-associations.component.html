@@ -30,13 +30,13 @@
     <thead color="default">
     <tr>
         <th scope="col" sortable="conceptLabel" (sort)="onSort($event)" class="pl-4">Name </th>
-        <th scope="col">Matched Phenotypes</th>
+        <th scope="col" *ngIf="!['HP','MP'].includes(valueset)">Matched Phenotypes</th>
         <th scope="col" sortable="val" (sort)="onSort($event)" class="pl-4 desc">Similarity Score</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
-        <td class="w-40">
+        <td [ngClass]="{'w-40': !['HP','MP'].includes(valueset)}">
             <a [href]="conceptRedirectRef(similarConcept.concept.value)" class="text-muted">
                 <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
             </a>
@@ -45,7 +45,7 @@
             <i class="fas fa-info-circle"></i>
             </button>
         </td>
-        <td class="w-40">
+        <td [ngClass]="{'w-40': !['HP','MP'].includes(valueset)}" *ngIf="!['HP','MP'].includes(valueset)">
             <ul *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
                 <li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
                 <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a>
@@ -61,7 +61,7 @@
             </span>
             <span *ngIf="(conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)
             && (conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)"> no matching phenotypes found</span></td>
-        <td class="w-20">{{similarConcept.val?.value}}<td>
+        <td [ngClass]="{'w-20': !['HP','MP'].includes(valueset)}">{{similarConcept.val?.value}}<td>
     </tr>
     </tbody>
     </table>
