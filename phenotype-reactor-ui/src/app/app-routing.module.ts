@@ -10,6 +10,7 @@ import { PathogenHostTargetComponent } from './pathogen-host-target/pathogen-hos
 import { DrugTargetComponent } from './drug-target/drug-target.component';
 import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
 import { FindSimilarityComponent } from './find-similarity/find-similarity.component';
+import { HelpComponent } from './help/help.component';
 
 
 const routes: Routes = [
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'dataset/:identifier/:iri/:valueset',component: ViewAssociationsetComponent},
   {path: 'similarity',component: FindSimilarityComponent},
   {path: 'similarity/:source/:sourceType/:target/:targetType',component: FindSimilarityComponent},
+  {path: 'help',component: HelpComponent},
 ];
 
 

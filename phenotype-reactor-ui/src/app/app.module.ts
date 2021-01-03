@@ -29,6 +29,7 @@ import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { DrugTargetComponent } from './drug-target/drug-target.component';
 import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
 import { FindSimilarityComponent } from './find-similarity/find-similarity.component';
+import { HelpComponent } from './help/help.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { FindSimilarityComponent } from './find-similarity/find-similarity.compo
     PathogenHostTargetComponent,
     DrugTargetComponent,
     ViewAssociationsetComponent,
-    FindSimilarityComponent
+    FindSimilarityComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,

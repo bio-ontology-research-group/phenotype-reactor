@@ -1,0 +1,162 @@
+<div class="card mb-4 wow fadeIn">
+    <div class="card-body justify-content-between">
+        <h4><strong>Phenomebrowser help guide</strong></h4>
+        <p class="pt-3">Table of contents<p>
+        <ul>
+            <li>
+                <a href="help#searchPhenomebrowser">Searching Phenomebrowser</a>
+                <ul>
+                    <li><a href="help#home-searchbar">Search Bar</a></li>
+                    <li><a href="help#home-simplesearch">Simple Searching</a></li>
+                    <li><a href="help#home-resultscontent">How do I interpret the search results?</a></li>
+                    <li><a href="help#home-filterresults">Filter Search results</a></li>
+                    <li><a href="help#home-resultsview">Viewing Search results</a></li>
+                    <li><a href="help#home-query">Results Query Section</a></li>
+                    <li><a href="help#home-visual">Visualizing Similar Entities</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="">Gene Disease Connections</a>
+            </li>
+            <li>
+                <a href="">Pathogen Host Targets</a>
+            </li>
+            <li>
+                <a href="">Drug Targets</a>
+            </li>
+            <li>
+                <a href="">Datasets</a>
+            </li>
+            <li>
+                <a href="">Similarity Explorer</a>
+            </li>
+            <li>
+                <a href="">SPARQL Query Editor</a>
+            </li>
+        </ul>
+
+        <div id="searchPhenomebrowser" class="pt-4">
+            <h5><strong>Searching Phenomebrowser</strong></h5>
+            <p>Phenomebrowser has a search facility that allows querying phenotype assoications repository using 
+            several databases including NCBI gene and MGI for genes, HP and MP ontology for phenotypes, diseases 
+            from OMIM, DOID, MONDO, Orphanet and decipher, NCBITAXON for pathogens, PUBCHEM for drugs and CHEBI 
+            for metabolites.Please follow this guide to help you querying phenomebrowser effectively.</p>
+        </div>
+        <div id="home-searchbar" class="pt-4">
+            <h6><strong>Search Bar</strong></h6>
+            <p>Search bar is below the main menu bar. It is consists of a dropdown to select a database, user may want to search 
+            concept from and an input box for searching biomedical concepts such as phenotypes, genes etc.</p>
+            <img src="assets/img/help/home-srchbar.png"  alt="..." class="p-2" height="100" />
+            <p>There is a button after the search input box, clicking it will display search examples in the popup window.</p>
+            <img src="assets/img/help/home-srchexamples.png"  alt="..." class="p-2" width="500"/>
+        </div>
+        <div id="home-simplesearch" class="pt-4">
+            <h6><strong>Simple Searching</strong></h6>
+            <p>First, you can select a database from the databases dropdown such as HP for searching human phenotypes. Then, you can
+            start typing the name of the phenotype in the search input box, once you start typing letter the system will provide
+            suggestion based on phenotype names starting with the letters entered in the input box. Once you select one of the 
+            suggested phenotypes, system will display the search results.</p>
+            <img src="assets/img/help/home-simplesrch.png"  alt="..." class="p-2" height="150" />
+            <p>Note that when you select one of gene databases, you can search with both gene symbol and gene name.</p>
+            <p>Search results from the Phenomebrowser repository that match the query term are shown as below</p>
+            <img src="assets/img/help/home-srchresults.png"  alt="..." class="p-2" width="600"/>
+        </div>
+        <div id="home-resultscontent" class="pt-4">
+            <h5><strong>How do I interpret the search results?</strong></h5>
+            <p>Your search results will have two parts 1) description of the term selected and 2) tabs containing associated biomedical concepts. If the term selected is
+            a phenotype type, there will six tabs displayed including diease, drug, gene, metabolite and pathogen association tabs as well as similar entities tab. If the
+            selected term was any other concept then phenotype, it will display 2 tabs phenotype associations and similar entities</p>
+            <p>Association tabs consist of list of concepts associated it with selected term. Each tab will list specific type (such as drug, disease, gene etc) of concept associations. The content of the
+            associated types is described below:</p>
+            <table class="table table-striped col-9 m-3">
+            <thead>
+                <tr>
+                <th scope="col">Field</th>
+                <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">Name</th>
+                <td>Name of the biomedical concept such as cerebral malaria, recurrent fever etc.</td>
+                </tr>
+                <tr>
+                <th scope="row">Evidence</th>
+                <td>A type of information that is used to support an association or relation between the concept and selected term such as <i>author statement from published clinical study</i></td>
+                </tr>
+                <tr>
+                <th scope="row">Dataset</th>
+                <td>Name of the dataset, the association is derived from</td>
+                </tr>
+                <tr>
+                <th scope="row">Source</th>
+                <td>Link to research study</td>
+                </tr>
+                <tr>
+                <th scope="row">Created on</th>
+                <td>Date of creation of the association</td>
+                </tr>
+            </tbody>
+            </table>
+            <p class="pt-4">Similar Entities tab consist of list of similar concepts to the selected term. We used the consine similarity method to compute the similarity between the biomedical concepts. The content of the
+            tab is described below:</p><table class="table table-striped col-9 m-3">
+            <thead>
+                <tr>
+                <th scope="col">Field</th>
+                <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">Name</th>
+                <td>Name of the biomedical concept such as cerebral malaria, recurrent fever etc.</td>
+                </tr>
+                <tr>
+                <th scope="row">Similarity Score</th>
+                <td>Similarity score is calculated using the consine similarity method. The score ranges from 1 to 0 where 1 means exactly the same and 0 
+                indicating no similarity, while in-between values indicate intermediate similarity or low similarity.</td>
+                </tr>
+                <tr>
+                <th scope="row">Matching Phenotypes</th>
+                <td>List of phenotypes common between the selected concept and similar concept. If there is no common or matching phenotypes, the phenomebrowser display the 
+                list of phenotype superclasses that are common between list of phenotypes associated with source (selected concept) and target concept (similar concept). 
+                Note that if the selected term is not a phenotype, only then you will be able to the matching phenotype column. </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <div id="home-filterresults" class="pt-4">
+            <h6><strong>Filter Search results</strong></h6>
+            <p>If your search has returned more results than you expected in association tabs, you can further filter the results by
+            selecting source dataset or/and the type of evidence.</p>
+            <img src="assets/img/help/home-resultsfilter.png"  alt="..." class="p-2" width="600"/>
+            <p>Similarly, in similar entities tab, you can filter the concept by name or/and type of concept.</p>
+            <img src="assets/img/help/home-resultsfilter2.png"  alt="..." class="p-2" width="600"/>
+        </div>
+        <div id="home-resultsview" class="pt-4">
+            <h6><strong>Viewing Search results</strong></h6>
+            <p>Search results can be viewed in a table shown below. The column names having up/down arrows after them are
+            sortable. Clicking on the sortable column names will sort the column in ascending order and clicking twice will sort it in desending order.
+            An up arrow means the column is sorted in ascending order and the down arrow means it is sorted in desending order.</p>
+            <img src="assets/img/help/home-resultview1.png"  alt="..." class="p-2" width="700"/>
+            <p>If the search results are many, you can use pagination at bottom left of the table to navigate through the results. You can also
+            change the table view to show more or less results per page.</p>
+            <img src="assets/img/help/home-resultview2.png"  alt="..." class="p-2" width="700"/>
+        </div>
+        <div id="home-query" class="pt-4">
+            <h6><strong>Results Query Section</strong></h6>
+            <p>There is a query editor below the results table that is shown in below figure. In the query text box, we generate the 
+            equivalent SPARQL query to the results shown in the table. It allows user to access the content of the returned results
+            computationally in number of formats including json, tab delimited, csv etc. You can click on run query to see the results
+            in desired format.</p>
+            <img src="assets/img/help/home-resultquery.png"  alt="..." class="p-2" width="600"/>
+        </div>
+        <div id="home-visual" class="pt-4">
+            <h6><strong>Visualizing Similar Entities</strong></h6>
+            <p>To visualize similarity between the selected term and similar entities, phenomebrowser display a scatter plot below the result 
+            table in <i>Similar Entities</i> tab where more similar entities closer to each other in the plot and less similar are at greater 
+            distance to each other.</p>
+            <img src="assets/img/help/home-resultvisual.png"  alt="..." class="p-2" width="600"/>
+        </div>
+    </div>
+</div>
