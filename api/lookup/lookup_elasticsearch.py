@@ -149,7 +149,7 @@ def delete_valueset(valueset_name):
   except Exception as e:
     logger.exception("message")
 
-def find_entity_by_startswith(term, valueset, page_size=DEFAULT_PAGE_SIZE):
+def find_entity_by_startswith(term, valueset, page_size=None):
   try:
     criteria = None
     if valueset and len(valueset) > 0:
@@ -159,6 +159,9 @@ def find_entity_by_startswith(term, valueset, page_size=DEFAULT_PAGE_SIZE):
             ] 
     else:
       criteria = [ { "prefix": { "label": { "value": term }}} ] 
+
+    if not page_size:
+      page_size = DEFAULT_PAGE_SIZE
     query = {
         "size" : page_size,
         "query": { 
