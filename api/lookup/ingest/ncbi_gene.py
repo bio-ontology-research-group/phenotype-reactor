@@ -122,5 +122,6 @@ class NCBIGeneValueset(Source):
         obj["synonym"] =  synonym
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
+        obj["organism_type"] = getattr(row, 'organism_type')
         obj["identifier"] = getattr(row, 'GeneID')
         return obj

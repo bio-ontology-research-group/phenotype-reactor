@@ -203,7 +203,8 @@ class FindEntityByLabelStartsWith(APIView):
         try:
             term = request.GET.get('term', None)
             valueset = request.GET.getlist('valueset')
-            result = lookup_es.find_entity_by_startswith(term, valueset) 
+            pagesize = request.GET.get('pagesize', None)
+            result = lookup_es.find_entity_by_startswith(term, valueset, pagesize) 
             return Response(result)
         except Exception as e:
             logger.exception("message")
@@ -238,6 +239,32 @@ class FindValueset(APIView):
     def get(self, request, format=None):
         try:
             result = lookup_es.find_all_valueset()
+            return Response(result)
+        except Exception as e:
+            logger.exception("message")
+
+
+class FindGeneBySymbols(APIView):
+    """
+    List associations by given criteria
+    """
+
+    def post(self, request, format=None):
+        try:
+            symbols = request.data['symbols']
+
+            valueset = None
+            if 'valueset' in request.data:
+                valueset = request.data['valueset']
+            
+            organism_type = None
+            if 'organism_type' in request.data:
+                organism_type = request.data['organism_type']
+
+            if not symbols:
+                raise RuntimeException("'symbols' property is required")
+
+            result = lookup_es.find_gene_by_symbols(symbols, valueset, organism_type) 
             return Response(result)
         except Exception as e:
             logger.exception("message")

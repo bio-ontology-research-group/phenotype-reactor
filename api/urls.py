@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from api.views import GetAssociationsetByIdentifier, GetLatestDataArchived, FindDataArchived, FindAssociation, FindEntityByLabelStartsWith, \
     FindEntityByIris, FindValueset, FindMostSimilar, FindAssociationset, FindMatchingPhenotypes, FindMatchingPhenotypesSuperclasses, \
-    GetAssociationsetConfig
+    GetAssociationsetConfig, FindGeneBySymbols
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +34,7 @@ urlpatterns = [
     path('api/associationset/config/settings', GetAssociationsetConfig.as_view()),
     path('api/entity/_startswith', FindEntityByLabelStartsWith.as_view()),
     path('api/entity/_findbyiri', FindEntityByIris.as_view()),
+    path('api/entity/_findgene', FindGeneBySymbols.as_view()),
     path('api/valueset', FindValueset.as_view()),
     path('archive/latest', GetLatestDataArchived.as_view()),
     path('archive', FindDataArchived.as_view()),

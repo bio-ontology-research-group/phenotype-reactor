@@ -149,7 +149,7 @@ def delete_valueset(valueset_name):
   except Exception as e:
     logger.exception("message")
 
-def find_entity_by_startswith(term, valueset):
+def find_entity_by_startswith(term, valueset, page_size=DEFAULT_PAGE_SIZE):
   try:
     criteria = None
     if valueset and len(valueset) > 0:
@@ -160,7 +160,7 @@ def find_entity_by_startswith(term, valueset):
     else:
       criteria = [ { "prefix": { "label": { "value": term }}} ] 
     query = {
-        "size" : DEFAULT_PAGE_SIZE,
+        "size" : page_size,
         "query": { 
           "bool": { 
             "must": criteria
@@ -204,8 +204,29 @@ def find_all_valueset():
   except Exception as e:
       logger.exception("message")
 
-  
 
+
+def find_gene_by_symbols(symbols, valueset, organism_type):
+  try:
+    filter_part = []
+    if organism_type:
+      filter_part.append({ "match": { "organism_type" : organism_type }})
+    elif valueset:
+      filter_part.append({ "term": { "valueset" : valueset }})
+    filter_part.append({ "terms": { "label": symbols } })
+    query = {
+        "size" : 50000,
+        "query": { 
+          "bool": { 
+            "filter": filter_part
+          } 
+        }
+      }
+    result = es.search(index=ENTITY_INDEX_NAME, body=query)
+    return list(map(lambda hit: hit['_source'], result['hits']['hits']))
+  except Exception as e:
+      logger.exception("message")
+  
 logger.info("Creating index '%s' if not exists", VALUESET_INDEX_NAME)
 create(VALUESET_INDEX_NAME, VALUESET_INDEX_SETTINGS)
 
