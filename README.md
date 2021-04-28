@@ -1,12 +1,12 @@
-# Phenotype Reactor
+# Phenomebrowser
 
-The Phenotype Reactor is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to compute phentypic similarity between these concepts. It also provides SPARQL endpoint and a query editor for querying the phenotypes relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited to phentype relations with genes, genotype, disease, drug, pathogens and metabolites.
+The Phenomebrowser is a platform that aggregate phenotype connections with different biomedical concepts and provides ability to compute phentypic similarity between these concepts. It also provides SPARQL endpoint and a query editor for querying the phenotypes relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited to phentype relations with genes, genotype, disease, drug, pathogens and metabolites.
 
 We have integrated phenotype relations from various sources including research studies and community resources such as [HPO phenotype annontations](https://hpo.jax.org/app/download/annotation).
 
 ## Data Model
 
-Phenotype Reactor data model is a common structure for capturing phenotype associations so that discovered phenotype relations from various sources can be aggregated into a single common structure.
+Phenomebrowser data model is a common structure for capturing phenotype associations so that discovered phenotype relations from various sources can be aggregated into a single common structure.
 
 ![Data Model](doc/data-model.png)
 

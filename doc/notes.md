@@ -31,7 +31,7 @@ To train data using deepwalk algorithm with setting  dimensions=128, num of walk
 python manage.py traindeepwalk
 ```
 
-To deploy phenotype reactor backend api follow the following steps:
+To deploy Phenomebrowser backend api follow the following steps:
 Copy the projects uwsgi configuration file 'phenotype-reactor.wsgi.ini' to apps-enabled of uwsgi.
 Change the paths in uwsgi configuration file to project according to server settings.
 Restart the uwsgi service. 

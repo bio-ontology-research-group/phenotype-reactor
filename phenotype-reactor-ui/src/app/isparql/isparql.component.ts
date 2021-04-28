@@ -99,4 +99,8 @@ GRAPH <http://phenomebrowser.net> {
   } ORDER BY asc(?phenotypeLabel)`;
     this.query = query;
   }
+
+  downloadArchivedFile(filename: string) {
+    window.open(`/archive/${filename}`);
+  }
 }

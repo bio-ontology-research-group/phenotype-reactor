@@ -1,6 +1,8 @@
 <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark info-color-dark ie-nav" [containerInside]="false">
     <mdb-navbar-brand>
-        <a class="logo navbar-brand" href="#"><strong>Phenotype Reactor</strong></a>
+        <a class="logo navbar-brand" href="#">
+        <img src="favicon.ico" width="40" class="mr-1" />
+        <strong>Phenomebrowser</strong></a>
     </mdb-navbar-brand>
     <links>
         <ul class="navbar-nav mr-auto">
@@ -35,6 +37,7 @@
                 <div ngbDropdownMenu>
                     <button ngbDropdownItem (click)="openInNewTab('http://ddiem.phenomebrowser.net')">DDIEM</button>
                     <button ngbDropdownItem (click)="openInNewTab('http://patho.phenomebrowser.net')">PathoPhenoDB</button>
+                    <button ngbDropdownItem (click)="openInNewTab('http://pavs.phenomebrowser.net')">PAVS</button>
                     <button ngbDropdownItem (click)="openInNewTab('http://vsim.phenomebrowser.net')">VSIM</button>
                     <button ngbDropdownItem (click)="openInNewTab('http://owas.phenomebrowser.net')">OWAS</button>
                     <button ngbDropdownItem (click)="openInNewTab('http://ukb.phenomebrowser.net/')">UKB phenomebrowser</button>
@@ -70,7 +73,7 @@
   <div class="footer-copyright text-center py-3">
     <div class="mt-2">
       <p>
-      Phenotype Reactor is developed by researchers from <b>KAUST BORG</b>. 
+      Phenomebrowser is developed by researchers from <b>KAUST BORG</b>. 
       <br /> 
       This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
         <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>

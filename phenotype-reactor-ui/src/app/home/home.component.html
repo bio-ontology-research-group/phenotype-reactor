@@ -7,8 +7,8 @@
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="!(iri && valueset)">
     <div class="card-body justify-content-between p-4">
-        <span class="card-title">About the Phenotype Reactor project</span>
-        <p class="mt-3">The Phenotype Reactor is a platform that aggregates phenotype connections with biomedical concepts and provides the ability to 
+        <span class="card-title">About the Phenomebrowser project</span>
+        <p class="mt-3">The Phenomebrowser is a platform that aggregates phenotype connections with biomedical concepts and provides the ability to 
         compute phentypic similarity between these concepts. It provides a SPARQL endpoint and a query editor for querying the phenotype 
         relations knowledge base. The aggregated knowledge base covers diverse categories of biomedical concepts including but not limited 
         to phentype relations with genes, genotype, disease, drug, pathogens and metabolites. <br />
@@ -18,7 +18,7 @@
 </div>
 <div class="content mt-2" *ngIf="!(iri && valueset)">
     <div class="card-deck mb-3 text-center">
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm max-w-30">
         <div class="card-header">
         <h4 class="my-0 font-weight-normal">Explore Gene Disease Connections</h4>
         </div>
@@ -28,7 +28,7 @@
         <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/genedisease')">Explore Gene Disease Connections Browser</button>
         </div>
     </div>
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm max-w-30">
         <div class="card-header">
         <h4 class="my-0 font-weight-normal">Explore Pathogen Host Targets</h4>
         </div>
@@ -38,7 +38,7 @@
         <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/pathogenhosttarget')" >Explore Pathogen Host Targets Browser</button>
         </div>
     </div>
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm max-w-30">
         <div class="card-header">
         <h4 class="my-0 font-weight-normal">Explore Drug Targets</h4>
         </div>
@@ -46,6 +46,26 @@
         <p class="browse-card-content">Drug targets browser is designed to provide a target discovery (to find potential targets) for a drug based on phenotypic similarity between the
         gene that encodes for protein and the drug.</p>
         <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/drugtarget')">Explore Drug Targets Browser</button>
+        </div>
+    </div>
+    </div>
+    <div class="card-deck mb-3 text-center">
+    <div class="card mb-4 shadow-sm max-w-30">
+        <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Similarity Explorer</h4>
+        </div>
+        <div class="card-body">
+        <p class="browse-card-content">Similarity Explorer provides the ability to search for similarity between the two biomedical concepts based on their matching phenotypes and matching superclasses of their phenotypes</p>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/similarity')">Try Similarity Explorer</button>
+        </div>
+    </div>
+    <div class="card mb-4 shadow-sm max-w-30">
+        <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Explore Datasets</h4>
+        </div>
+        <div class="card-body">
+        <p class="browse-card-content">This module allows user to see list of datasets aggregated in Phenomebrowser and the ability to browse phenotype annotations in datasets.</p>
+        <button type="button" class="btn btn-lg btn-block btn-primary" (click)="open('/dataset')">Explore Datasets Browser</button>
         </div>
     </div>
     </div>

@@ -10,11 +10,12 @@ logger = logging.getLogger(__name__)
 
 class AberowlValueset(Source):
 
-    def __init__(self, name, entity_type):
+    def __init__(self, name, entity_type, custom=None):
         super().__init__(name, entity_type)
         self.valueset = None
         self.entities = None
         self.ontolgy = None
+        self.custom = custom
 
     def fetch(self):
         logger.info("Started fetching data for valueset %s", self.name)
@@ -32,7 +33,8 @@ class AberowlValueset(Source):
                 "description" : self.ontology['description'],
                 "entity_type" : self.entity_type
             }
-    
+        if self.custom:
+            self.valueset['custom'] = self.custom
         self.entities = list(filter(lambda entity: entity, map(lambda entity:self.map_entity(entity), self.data)))
 
     def write(self):

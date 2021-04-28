@@ -38,3 +38,9 @@ class CHEBI(AberowlValueset):
 class ECO(AberowlValueset):
     def __init__(self):
         super().__init__("ECO", "Evidence")
+class NCIT(AberowlValueset):
+    def __init__(self):
+        super().__init__("NCIT", "Cancer_terms")
+class GO(AberowlValueset):
+    def __init__(self):
+        super().__init__("GO", "Functions", True)

@@ -1,6 +1,6 @@
 ## Data Model
 
-Phenotype Reactor data model is a common structure for capturing phenotype associations so that discovered phenotype relations from various sources can be aggregated into a single common structure.
+Phenomebrowser data model is a common structure for capturing phenotype associations so that discovered phenotype relations from various sources can be aggregated into a single common structure.
 
 ![Data Model](data-model.png)
 

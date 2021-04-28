@@ -29,7 +29,8 @@ sources_map = {
         'eco': ECO(), 
         'mgi': MGIValueset(), 
         'omim': OMIMValueset(), 
-        'ncbigene': NCBIGeneValueset()
+        'ncbigene': NCBIGeneValueset(), 
+        'go': GO()
     }
 
 class Command(BaseCommand):
