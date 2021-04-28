@@ -3,7 +3,7 @@ rdflib==4.2.2
 pandas==0.24.2
 requests==2.22.0
 pykeen==0.0.26
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 django-cors-headers==3.2.1
 elasticsearch==7.9.1
 networkx >= 2.3
