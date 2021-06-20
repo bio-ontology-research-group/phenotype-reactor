@@ -48,6 +48,7 @@ ENTREZ_GENE = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/gene/"), 
 DECIPHER = ClosedNamespace(uri=URIRef("https://decipher.sanger.ac.uk/syndrome/"), terms=[])
 OMIM = ClosedNamespace(uri=URIRef("https://omim.org/entry/"), terms=[])
 ORPHA = ClosedNamespace(uri=URIRef("http://www.orpha.net/ORDO/Orphanet_"), terms=[])
+UNIPROT = ClosedNamespace(uri=URIRef("http://uniprot.org/uniprot/"), terms=[])
 PMID = ClosedNamespace(uri=URIRef("https://www.ncbi.nlm.nih.gov/pubmed/"), terms=[])
 ISBN = ClosedNamespace(uri=URIRef("https://isbnsearch.org/isbn/"), terms=[])
 

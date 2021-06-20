@@ -12,6 +12,7 @@ from api.lookup.ingest.mgi import MGIValueset
 from api.lookup.ingest.omim import OMIMValueset
 from api.lookup.ingest.ncbi_gene import NCBIGeneValueset
 from api.lookup.ingest.ncbitaxon_pathopheno import NCBITaxonPathophenoValueset
+from api.lookup.ingest.uniport import UniProtValueset
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,8 @@ sources_map = {
         'mgi': MGIValueset(), 
         'omim': OMIMValueset(), 
         'ncbigene': NCBIGeneValueset(), 
-        'go': GO()
+        'go': GO(), 
+        'uniprot': UniProtValueset()
     }
 
 class Command(BaseCommand):
