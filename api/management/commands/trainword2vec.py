@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
         try:
             annontation_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1])]
-            if not ontology:
+            if len(ontology) < 1:
                 axiom_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('.lst' in splitext(file)[1])]
             else:
                 axiom_files = [join(TRAINING_SET_DIR, name + '.owl.lst') for name in ontology]
