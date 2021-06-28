@@ -65,7 +65,7 @@ class Command(BaseCommand):
             if not ontology:
                 axiom_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('.lst' in splitext(file)[1])]
             else:
-                axiom_files = [join(TRAINING_SET_DIR, name + '.lst') for name in ontology]
+                axiom_files = [join(TRAINING_SET_DIR, name + '.owl.lst') for name in ontology]
 
             outdir = join(KGE_DIR, 'word2vec' + '-' + testset_name + '-' + (exp_name + '-' if exp_name else '') + str(datetime.date.today())) 
             cwd = os.getcwd()
