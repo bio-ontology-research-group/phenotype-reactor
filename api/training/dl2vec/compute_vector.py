@@ -135,8 +135,8 @@ def compute_vector_with_word2vec(walkfile, representation_size, epochs, workers,
     model.save(join(outdir, "embeddings.pkl"))
     return model
 
-def compute_vector_with_fasttext(walkfile, dim, epochs, workers, outdir):
+def compute_vector_with_fasttext(walkfile, dim, epochs, lr, workers, outdir):
     print("start to train the fasttext models")
-    model = fasttext.train_unsupervised(walkfile, model='skipgram', thread=workers, dim=dim, epoch=epochs)
+    model = fasttext.train_unsupervised(walkfile, model='skipgram', thread=workers, dim=dim, epoch=epochs, lr=lr, minn=0, maxn=0)
     model.save_model(join(outdir, "embeddings.bin"))
     return model

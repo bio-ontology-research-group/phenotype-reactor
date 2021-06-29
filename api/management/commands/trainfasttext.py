@@ -41,6 +41,7 @@ class Command(BaseCommand):
         parser.add_argument('-w', '--workers', type=int, default=32, help='Number of worker threads while training', )
         parser.add_argument('-wl', '--walk_length', type=int, default=100, help='Random walk length', )
         parser.add_argument('-n', '--number_walks', type=int, default=20, help='Number of walks', )
+        parser.add_argument('-lr', '--learning_rate', type=int, default=0.05, help='Learning rate by default it is set to 0.05', )
         parser.add_argument('-ep', '--epochs', type=int, default=5, help='number of iterations', )
         parser.add_argument('-tn', '--testset_name', type=str, default='', help='testset name', ) 
         parser.add_argument('-e', '--exp_name', type=str, default='', help='experiment name', ) 
@@ -56,6 +57,7 @@ class Command(BaseCommand):
         directed = options['directed']
         exp_name = options['exp_name']
         epochs = options['epochs']
+        learning_rate = options['learning_rate']
 
         try:
             annontation_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1])]
@@ -98,7 +100,7 @@ class Command(BaseCommand):
             
             # node_file = open("nodes.json", "r") 
             # node_dict = json.load(node_file)
-            model = compute_vector_with_fasttext(walkfile, representation_size, epochs, workers, outdir)
+            model = compute_vector_with_fasttext(walkfile, representation_size, epochs, learning_rate, workers, outdir)
             # model = fasttext.load_model(join(outdir, "embeddings.bin"))
             self.generate_bio2vec_frmt(model, node_dict, outdir)
             run_evaluation(outdir, join(TEST_SET_DIR, testset_name + '.tsv'), testset_name)
