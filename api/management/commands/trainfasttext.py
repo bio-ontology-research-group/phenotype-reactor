@@ -46,6 +46,7 @@ class Command(BaseCommand):
         parser.add_argument('-tn', '--testset_name', type=str, default='', help='testset name', ) 
         parser.add_argument('-e', '--exp_name', type=str, default='', help='experiment name', ) 
         parser.add_argument('-dg', '--directed', nargs='?', const=True, default=False, help='directed or undirected graph by default the graph is undirected', ) 
+        parser.add_argument('-ont', '--ontology', type=str, default='', help='phenotype ontologies to include', ) 
     
     def handle(self, *args, **options):
         model = options['model']
@@ -58,10 +59,14 @@ class Command(BaseCommand):
         exp_name = options['exp_name']
         epochs = options['epochs']
         learning_rate = options['learning_rate']
+        ontology = options['ontology']
 
         try:
             annontation_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('nt' in splitext(file)[1])]
-            axiom_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('.ls' in splitext(file)[1])]
+            if not ontology:
+                axiom_files = [join(TRAINING_SET_DIR, file) for file in os.listdir(TRAINING_SET_DIR + '/.') if (file) and ('.lst' in splitext(file)[1])]
+            else:
+                axiom_files = [join(TRAINING_SET_DIR, name + '.owl.lst') for name in ontology.split(',')]
 
             outdir = join(KGE_DIR, 'fasttext' + '-' + testset_name + '-' + (exp_name + '-' if exp_name else '') + str(datetime.date.today())) 
             cwd = os.getcwd()
