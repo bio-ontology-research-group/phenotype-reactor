@@ -196,7 +196,7 @@ class FindDataArchived(APIView):
 
 class FindEntityByLabelStartsWith(APIView):
     """
-    List associations by given criteria
+    List entities by given criteria
     """
 
     def get(self, request, format=None):
@@ -212,7 +212,7 @@ class FindEntityByLabelStartsWith(APIView):
 
 class FindEntityByIris(APIView):
     """
-    List associations by given criteria
+    List entities by given criteria
     """
 
     def post(self, request, format=None):
@@ -233,7 +233,7 @@ class FindEntityByIris(APIView):
 
 class FindValueset(APIView):
     """
-    List associations by given criteria
+    List valuesets by given criteria
     """
 
     def get(self, request, format=None):
@@ -246,7 +246,7 @@ class FindValueset(APIView):
 
 class FindGeneBySymbols(APIView):
     """
-    List associations by given criteria
+    List gene by given criteria
     """
 
     def post(self, request, format=None):
