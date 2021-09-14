@@ -10,3 +10,5 @@ COPY manage.py /code/
 COPY api /code/api
 
 RUN pip install -r requirements.txt
+
+EXPOSE 9200

@@ -25,7 +25,7 @@ services:
       - ./doc:/code/doc
       - ~/Documents/developer/phenotype-reactor:/data
     ports:
-      - "9300:9300"
+      - 9300:9300
     networks:
       - esnet
     depends_on:
