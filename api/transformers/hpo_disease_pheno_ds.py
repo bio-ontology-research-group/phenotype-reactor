@@ -11,13 +11,13 @@ import pandas as pd
 
 
 logger = logging.getLogger(__name__)
-HPO_PIPELINE_BASE_URL = 'http://purl.obolibrary.org/obo/hp/hpoa/'
+HPO_PIPELINE_BASE_URL = 'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/lastSuccessfulBuild/artifact/rare-diseases/misc/'
 
 class HPODiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
         super().__init__('hpo_disease_phenotypes', target_dir)
-        self.url = f'{HPO_PIPELINE_BASE_URL}phenotype.hpoa'
+        self.url = f'{HPO_PIPELINE_BASE_URL}phenotype_annotation.tab'
         self.df = None
         self.rdf_filename = "hpo_diseasephenotype"
         self.pheno_disease_dict = {}
