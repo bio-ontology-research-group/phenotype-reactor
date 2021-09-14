@@ -5,6 +5,7 @@ WORKDIR /code
 
 COPY requirements.txt /code/
 COPY phenotype-reactor.ini /code/
+COPY default_phenotype-reactor.ini /code/
 COPY manage.py /code/
 COPY api /code/api
 
