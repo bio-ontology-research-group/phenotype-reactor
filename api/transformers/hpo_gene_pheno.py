@@ -11,7 +11,7 @@ import pandas as pd
 
 
 logger = logging.getLogger(__name__)
-HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/lastSuccessfulBuild/artifact/util/annotation/'
+HPO_PIPELINE_BASE_URL = 'http://purl.obolibrary.org/obo/hp/hpoa/'
 
 class HPOGenePhenoDS(RDFSource):
 
@@ -23,7 +23,7 @@ class HPOGenePhenoDS(RDFSource):
 
     def fetch(self):
         logger.info("Started reading dataset: %s", self.name)
-        self.df = pd.read_csv(self.url, sep='\t', skiprows=1, names=['entrez_gene_id', 'entrez-gene-symbol', 'hpo_term_id', 'hpo_term_id', 
+        self.df = pd.read_csv(self.url, sep='\t', skiprows=1, names=['entrez_gene_id', 'entrez-gene-symbol', 'hpo_term_id', 'hpo_term_name', 
         'frequency_raw', 'frequency_hpo', 'additional_info_from_gd_source', 'gd_source', 'disease_id'])
         logger.info("Finished reading dataset: assoications=%d", self.df.size)
 
