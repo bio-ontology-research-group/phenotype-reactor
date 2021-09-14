@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3.3"
 services:
   db:
     build: ./core/support/virtuoso
@@ -16,6 +16,20 @@ services:
     networks:
       - esnet
     restart: unless-stopped
+  backend: 
+    build: .
+    command: python manage.py runserver 0.0.0.0:9300
+    volumes:
+      - ./static:/code/static
+      - ./schema:/code/schema
+      - ./doc:/code/doc
+      - ~/Documents/developer/phenotype-reactor:/data
+    ports:
+      - "9300:9300"
+    networks:
+      - esnet
+    depends_on:
+      - db
   phenotype-reactor-ui:
     build: ./phenotype-reactor-ui
     container_name: phenotype-reactor-ui
@@ -26,6 +40,7 @@ services:
       - esnet
     depends_on: 
       - db
+      - backend
     restart: unless-stopped
 networks:
   esnet:
