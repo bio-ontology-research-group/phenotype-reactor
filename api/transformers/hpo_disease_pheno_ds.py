@@ -11,7 +11,7 @@ import pandas as pd
 
 
 logger = logging.getLogger(__name__)
-HPO_PIPELINE_BASE_URL = 'http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/'
+HPO_PIPELINE_BASE_URL = 'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/lastSuccessfulBuild/artifact/rare-diseases/misc/'
 
 class HPODiseasePhenoDS(RDFSource):
 
