@@ -14,6 +14,7 @@ COPY default_phenotype-reactor.ini /code/
 COPY manage.py /code/
 COPY api /code/api
 COPY doc /code/doc
+COPY schema /code/schema
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN python manage.py collectstatic --noinput
