@@ -11,38 +11,38 @@ import pandas as pd
 
 
 logger = logging.getLogger(__name__)
-HPO_PIPELINE_BASE_URL = 'https://ci.monarchinitiative.org/view/hpo/job/hpo.annotations/lastSuccessfulBuild/artifact/rare-diseases/misc/'
+HPO_PIPELINE_BASE_URL = 'http://purl.obolibrary.org/obo/hp/hpoa/'
 
 class HPODiseasePhenoDS(RDFSource):
 
     def __init__(self, target_dir):
         super().__init__('hpo_disease_phenotypes', target_dir)
-        self.url = f'{HPO_PIPELINE_BASE_URL}phenotype_annotation.tab'
+        self.url = f'{HPO_PIPELINE_BASE_URL}phenotype.hpoa'
         self.df = None
         self.rdf_filename = "hpo_diseasephenotype"
         self.pheno_disease_dict = {}
 
     def fetch(self):
         logger.info("Started reading dataset: %s", self.name)
-        self.df = pd.read_csv(self.url, sep='\t')
+        self.df = pd.read_csv(self.url, sep='\t', skiprows=4)
         logger.info("Finished reading dataset: assoications=%d", self.df.size)
 
     def map(self):
-        self.df['HPO-ID'] = self.df['HPO-ID'].replace(regex=[':'], value='_')
-        self.df['disease-identifier'] = self.df['disease-identifier'].astype(str)
-        self.df['disease_iri'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
-        self.df['disease_iri'] = self.df['disease_iri'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
-        self.df['disease_iri'] = self.df['disease_iri'].replace(regex=['OMIM:'], value=OMIM.uri)
-        self.df['disease_iri'] = self.df['disease_iri'].replace(regex=['ORPHA:'], value=ORPHA.uri)
+        # self.df['HPO_ID'] = self.df['HPO_ID'].replace(regex=[':'], value='_')
+        # self.df['disease-identifier'] = self.df['disease-identifier'].astype(str)
+        # self.df['disease_iri'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
+        self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
+        self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['OMIM:'], value=OMIM.uri)
+        self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['ORPHA:'], value=ORPHA.uri)
 
-        self.df.reference = self.df.reference.replace(regex=['DECIPHER:'], value=DECIPHER.uri)
-        self.df.reference = self.df.reference.replace(regex=['OMIM:'], value=OMIM.uri)
-        self.df.reference = self.df.reference.replace(regex=['ORPHA:'], value=ORPHA.uri)
-        self.df.reference = self.df.reference.replace(regex=['PMID:'], value=PMID.uri)
-        self.df.reference = self.df.reference.replace(regex=['ISBN-13:'], value=ISBN.uri)
-        self.df.reference = self.df.reference.replace(regex=['ISBN-10:'], value=ISBN.uri)
-        self.df.reference = self.df.reference.astype(str).replace(regex=['nan'], value='')
-        self.df.curators = self.df.curators.astype(str)
+        self.df.Reference = self.df.Reference.replace(regex=['DECIPHER:'], value=DECIPHER.uri)
+        self.df.Reference = self.df.Reference.replace(regex=['OMIM:'], value=OMIM.uri)
+        self.df.Reference = self.df.Reference.replace(regex=['ORPHA:'], value=ORPHA.uri)
+        self.df.Reference = self.df.Reference.replace(regex=['PMID:'], value=PMID.uri)
+        self.df.Reference = self.df.Reference.replace(regex=['ISBN-13:'], value=ISBN.uri)
+        self.df.Reference = self.df.Reference.replace(regex=['ISBN-10:'], value=ISBN.uri)
+        self.df.Reference = self.df.Reference.astype(str).replace(regex=['nan'], value='')
+        self.df.Biocuration = self.df.Biocuration.astype(str)
         logger.info('head: %s', self.df.head())
 
         for index, row in self.df.iterrows():
@@ -58,25 +58,25 @@ class HPODiseasePhenoDS(RDFSource):
         logger.info("Finished rdf writting for %s with size:%d", self.name, len(self.store))
 
     def map_association(self, row):
-        phenotype = self.store.resource(str(OBO.uri) + row['HPO-ID'])
+        phenotype = self.store.resource(str(OBO.uri) + row['HPO_ID'])
         phenotype.add(RDF.type, PHENO.Phenotype)
 
-        diseaseRes = self.store.resource(row['disease_iri'])
+        diseaseRes = self.store.resource(row['#DatabaseID'])
         diseaseRes.add(RDF.type, PHENO.Disease)
         
-        dict_key = row['HPO-ID'] + ":" + row['disease_iri']
+        dict_key = row['HPO_ID'] + ":" + row['#DatabaseID']
         association = None
         if dict_key not in self.pheno_disease_dict:
             association = create_phenotypic_association(self.store, diseaseRes, phenotype)
 
             evidence = None
-            if 'IEA' in row['evidence-code']:
+            if 'IEA' in row['Evidence']:
                 evidence = OBO.ECO_0000501
-            elif 'PCS' in row['evidence-code']:
+            elif 'PCS' in row['Evidence']:
                 evidence = OBO.ECO_0006016
-            elif 'ICS' in row['evidence-code']:
+            elif 'ICS' in row['Evidence']:
                 evidence = OBO.ECO_0006018
-            elif 'TAS' in row['evidence-code']:
+            elif 'TAS' in row['Evidence']:
                 evidence = OBO.ECO_0000033
 
             association.add(OBO.RO_0002558, evidence)
@@ -84,16 +84,16 @@ class HPODiseasePhenoDS(RDFSource):
         else:
             association = self.pheno_disease_dict[dict_key]
 
-        row.curators = row.curators.split(';')
+        row.Biocuration = row.Biocuration.split(';')
         creator = []
         created_on = None
 
-        for creator_field in row.curators:
+        for creator_field in row.Biocuration:
             creator = (creator_field if creator_field.find('[') == -1 else creator_field[:creator_field.find('[')])
             created_on = (creator_field[creator_field.find('[') + 1: len(creator_field) - 1] if creator_field.find('[') > -1 else None)
 
         sources = ['https://pubmed.ncbi.nlm.nih.gov/30476213'] 
-        for ref in row.reference.split(";"):
+        for ref in row.Reference.split(";"):
             if OMIM.uri in ref or DECIPHER.uri in ref or ORPHA.uri in ref:
                 continue
             sources.append(ref)
