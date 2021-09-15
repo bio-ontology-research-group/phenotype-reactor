@@ -222,7 +222,8 @@ OMIM_KEY = config['omim']['key']
 OMIM_DIR = config['omim']['dir']
 
 STATICFILES_DIRS = [
-    ("schema", "schema")
+    ("schema", "schema"),
+    ("doc", "doc")
 ]
 
 ASSOCIATION_SET_CONFIG = {

@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.7
 
 # Create a group and user to run our app
 # ARG APP_USER=pheno
@@ -13,6 +13,7 @@ COPY phenotype-reactor.ini /code/
 COPY default_phenotype-reactor.ini /code/
 COPY manage.py /code/
 COPY api /code/api
+COPY doc /code/doc
 
 RUN pip install -r requirements.txt
 RUN python manage.py collectstatic --noinput
