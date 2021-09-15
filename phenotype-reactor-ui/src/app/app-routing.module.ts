@@ -11,6 +11,7 @@ import { DrugTargetComponent } from './drug-target/drug-target.component';
 import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
 import { FindSimilarityComponent } from './find-similarity/find-similarity.component';
 import { HelpComponent } from './help/help.component';
+import { ApiComponent } from './api/api.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path: 'similarity',component: FindSimilarityComponent},
   {path: 'similarity/:source/:sourceType/:target/:targetType',component: FindSimilarityComponent},
   {path: 'help',component: HelpComponent},
+  {path: 'docs',component: ApiComponent},
 ];
 
 

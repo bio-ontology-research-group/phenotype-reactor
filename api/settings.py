@@ -14,18 +14,16 @@ import os, shutil, configparser
 from os.path import join
 
 # Reading setup properties from configuration file
-config_dir = os.path.expanduser("~") + "/.config"
-configFile = config_dir + "/phenotype-reactor.ini"
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+configFile = BASE_DIR + "/phenotype-reactor.ini"
 
 if not os.path.isfile(configFile):
-    os.makedirs(config_dir, exist_ok=True)
     shutil.copyfile("default_phenotype-reactor.ini", configFile)
 
 config = configparser.RawConfigParser()
 config.read(configFile)
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production

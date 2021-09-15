@@ -30,6 +30,7 @@ import { DrugTargetComponent } from './drug-target/drug-target.component';
 import { ViewAssociationsetComponent } from './view-associationset/view-associationset.component';
 import { FindSimilarityComponent } from './find-similarity/find-similarity.component';
 import { HelpComponent } from './help/help.component';
+import { ApiComponent } from './api/api.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { HelpComponent } from './help/help.component';
     DrugTargetComponent,
     ViewAssociationsetComponent,
     FindSimilarityComponent,
-    HelpComponent
+    HelpComponent,
+    ApiComponent
   ],
   imports: [
     BrowserModule,
