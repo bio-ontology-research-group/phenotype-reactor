@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Associations:
-    MIME_TYPE_JSON = "application/json"
+    MIME_TYPE_JSON = "application/sparql-results+json"
 
     def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iris=None, limit=10, offset=None, order_by=None):
         if not concept_iri and not phenotype_iri:

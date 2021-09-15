@@ -7,7 +7,7 @@ import api.rdf.virtuoso as virt
 logger = logging.getLogger(__name__)
 
 class Associationsets:
-    MIME_TYPE_JSON = "application/json"
+    MIME_TYPE_JSON = "application/sparql-results+json"
     ASSOCIATIONSETS = {}
 
     def __init__(self) :

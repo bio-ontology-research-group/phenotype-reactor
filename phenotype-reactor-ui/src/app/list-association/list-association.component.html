@@ -28,7 +28,7 @@
     </div>
 </div>
 <div class="row" *ngIf="associations.length > 0">
-    <table class="table table-striped">
+    <table class="table table-striped table-sm">
     <thead color="default">
     <tr>
         <th scope="col" sortable="name" (sort)="onSort($event)" class="pl-4">Name</th>
@@ -40,7 +40,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let association of associations; let assocIndex = index">
-        <td *ngIf="valueset == 'HP' || valueset=='MP'"  class="w-30">
+        <td *ngIf="valueset == 'HP' || valueset=='MP'"  class="w-30 pl-2">
             <a (click)="open(association.concept.value)" class="text-muted">
             <h6>{{association.conceptLabel.value}}</h6><small class="text-muted">{{association.concept.value}}</small>
             </a>
