@@ -15,9 +15,8 @@ COPY manage.py /code/
 COPY api /code/api
 COPY doc /code/doc
 
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 RUN python manage.py collectstatic --noinput
-
 
 EXPOSE 9300
 EXPOSE 9200
