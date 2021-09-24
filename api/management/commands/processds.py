@@ -38,7 +38,8 @@ class Command(BaseCommand):
         parser.add_argument('-d', '--process_data', type=str, help='data set preprocessing if already done', ) 
         parser.add_argument('-o', '--process_ontology', type=str, help='data set preprocessing if already done', ) 
         parser.add_argument('-t', '--process_testset', type=str, help='test set preprocessing if already done', ) 
-        parser.add_argument('-c', '--clean', type=str, help='clean directory before data set preprocessing', ) 
+        parser.add_argument('-c', '--clean', type=str, help='clean directory before data set preprocessing', )
+        parser.add_argument('-od', '--ontology_subdirectory', type=str, default='', help='directory in ontology archive directory', )  
     
     def stop_subprocesses(self, signum, frame):
         if self.proc.poll() is None:
@@ -50,6 +51,7 @@ class Command(BaseCommand):
         process_ontology = options['process_ontology']
         process_testset = options['process_testset']
         clean = options['clean']
+        ontology_subdirectory = options['ontology_subdirectory']
 
         try:
             if clean and 'true' in clean:
@@ -68,7 +70,7 @@ class Command(BaseCommand):
             if process_data and 'true' in process_data:
                 dp.process_dataset()
             elif process_ontology and 'true' in process_ontology:
-                dp.process_ontology()
+                dp.process_ontology(ontology_subdirectory)
             elif process_testset and 'true' in process_testset:
                 dp.process_testset()
             else: 

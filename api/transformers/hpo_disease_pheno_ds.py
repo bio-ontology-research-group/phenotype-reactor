@@ -58,10 +58,10 @@ class HPODiseasePhenoDS(RDFSource):
         logger.info("Finished rdf writting for %s with size:%d", self.name, len(self.store))
 
     def map_association(self, row):
-        phenotype = self.store.resource(str(OBO.uri) + row['HPO_ID'])
+        phenotype = self.store.resource(str(OBO.uri) + row['HPO_ID'].strip())
         phenotype.add(RDF.type, PHENO.Phenotype)
 
-        diseaseRes = self.store.resource(row['#DatabaseID'])
+        diseaseRes = self.store.resource(row['#DatabaseID'].strip())
         diseaseRes.add(RDF.type, PHENO.Disease)
         
         dict_key = row['HPO_ID'] + ":" + row['#DatabaseID']

@@ -59,7 +59,8 @@ def rdf2nt(ds_path):
         
 
 def process_dataset():
-    url = 'http://phenomebrowser.net/archive/latest'
+    # url = 'http://phenomebrowser.net/archive/latest'
+    url = 'http://localhost/archive/latest'
     response = requests.get(url, stream=True)
     filename = None
     if response.status_code == 200:
@@ -106,12 +107,12 @@ def process_testset():
     mousegene_disease.write()
 
 
-def process_ontology():
+def process_ontology(ontology_subdir=''):
     os.chdir('load')
-    files = [file for file in os.listdir(ONTOLOGY_DIR)]
+    files = [file for file in os.listdir(join(ONTOLOGY_DIR, ontology_subdir))]
     for entry in files:
         logger.info("Processing ontology '%s'", entry)
-        args = join(ONTOLOGY_DIR, entry) + ", elk," + TRAINING_SET_DIR
+        args = join(ONTOLOGY_DIR, ontology_subdir, entry) + ", elk," + TRAINING_SET_DIR
         logger.info("Running process ontology with arguments '%s'", args)
         process = subprocess.Popen("gradle processontology '-PcliArgs=" + args + "'", stdout=subprocess.PIPE, shell=True)
         for line in process.stdout:
