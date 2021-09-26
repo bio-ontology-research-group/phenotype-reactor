@@ -52,6 +52,7 @@ export class ListAssociationComponent implements OnInit {
   @Input() valuesetList = [];
   @Input() dataset = null;
   @Output() annontationQuery = new EventEmitter<any>();
+  @Output() endpoint = new EventEmitter<any>();
 
   @ViewChildren(ListAssoicationSortableHeader) headers: QueryList<ListAssoicationSortableHeader>;
 
@@ -65,6 +66,7 @@ export class ListAssociationComponent implements OnInit {
   EVIDENCE = [];
   evidenceFilter = [];
   associationsetFilter = [];
+  subclassFilter = false;
   popEntity = null;
   geneValuesets=[]
   associationsets : any = []
@@ -135,6 +137,13 @@ export class ListAssociationComponent implements OnInit {
     this.getPage();
   }
 
+  onSubclassChecked(event) {
+    this.similarEntities = {};
+    this.page = 1;
+    this.endpoint.emit(this.subclassFilter ? 'aberowl' : '')
+    this.getPage();
+  }
+
   getPage() {
     if (this.iri && this.type != undefined) { 
       var findAssociation = null;
@@ -144,9 +153,9 @@ export class ListAssociationComponent implements OnInit {
       }
 
       if (this.type.name == 'Phenotype') {
-        findAssociation = this.associationService.find(this.iri, null, null, this.evidenceFilter, this.associationsetFilter, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(this.iri, null, null, this.evidenceFilter, this.associationsetFilter,  this.subclassFilter, this.pageSize, offset, this.orderBy)
       } else {
-        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.associationsetFilter, this.pageSize, offset, this.orderBy)
+        findAssociation = this.associationService.find(null, this.iri, this.type.uri, this.evidenceFilter, this.associationsetFilter, this.subclassFilter, this.pageSize, offset, this.orderBy)
       }
       
 

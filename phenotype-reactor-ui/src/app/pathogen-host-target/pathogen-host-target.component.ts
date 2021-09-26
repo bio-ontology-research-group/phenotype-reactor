@@ -27,6 +27,7 @@ export class PathogenHostTargetComponent implements OnInit {
   entity = null;
   sourceType = this.BASE_PREFIX + 'Pathogen';
   query = '';
+  endpoint = '';
 
   active = 1;
 
@@ -111,6 +112,12 @@ export class PathogenHostTargetComponent implements OnInit {
   onQueryChange(query) {
     if (query) {
       this.query = query;
+    }
+  }
+
+  onEndpointChange(endpoint) {
+    if (endpoint) {
+      this.endpoint = endpoint;
     }
   }
 }

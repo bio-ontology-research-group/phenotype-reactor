@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
   types = [];
   active = 1;
   query='';
+  endpoint='';
   annontationQuery='';
   similarityQuery='';
   geneValuesets = [];
@@ -72,6 +73,10 @@ export class HomeComponent implements OnInit {
     if (query) {
       this.query = query;
     }
+  }
+
+  onEndpointChange(endpoint) {
+    this.endpoint = endpoint;
   }
 
   onSimilarQueryChange(query) {

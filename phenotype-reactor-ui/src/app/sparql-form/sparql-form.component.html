@@ -1,5 +1,5 @@
 <div>
-<form ngNoForm #htmlForm action="sparql" method="get" target="_blank">
+<form ngNoForm #htmlForm [action]="endpoint ? ABEROWL_URL :'sparql'" method="get" target="_blank">
     <label for="query">Query:</label><br />
     <textarea #sparqlEle [ngModel]="query" class="form-control" aria-label="SPARQL" rows="10" name="query" id="query" ></textarea>		
     <br />

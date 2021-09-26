@@ -62,10 +62,10 @@
         <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
     </h6> 
     <app-list-association [iri]="iri" [valueset]="valueset" [type]="targetType" [valuesetList]="valuesets" 
-        [dataset]="dataset" (annontationQuery)="onQueryChange($event)" ></app-list-association>
+        [dataset]="dataset" (annontationQuery)="onQueryChange($event)" (endpoint)="onEndpointChange($event)" ></app-list-association>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
-        <app-sparql-form [query]="query"></app-sparql-form>
+        <app-sparql-form [query]="query" [endpoint]="endpoint"></app-sparql-form>
     </div>
 </div>

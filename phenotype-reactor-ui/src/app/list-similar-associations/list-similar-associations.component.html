@@ -1,21 +1,20 @@
 <div class="row" *ngIf="!associationLoading">
-    <div class="col-1 p-2 pt-3 ml-3">
+    <div class="col-1 p-1 pt-2 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
-    <div class="col-2 p-2">
+    <div class="col-2 p-1">
     <form>
         <div class="form-group form-inline">
             <input class="form-control ml-2" type="text" [formControl]="filter" placeholder="search for name"/>
         </div>
     </form>
     </div>
-    <div class="col-2 p-2" *ngIf="showTypeFilter">
+    <div class="col-2 p-1" *ngIf="showTypeFilter">
         <select class="browser-default custom-select default ml-3" color="default" (change)="onTypeSelect($event)">
             <option value="">Select Type</option>
             <option *ngFor="let type of TYPES" value="{{type.uri}}" [selected]='typeFilter == type.uri'>{{type.name}}</option>
         </select>
     </div>
-
 </div>
 <div class="text-center py-md-5" *ngIf="associationLoading">
     <div class="spinner-border  loading-spinner" style="width: 3rem; height: 3rem;" role="status">
@@ -37,12 +36,12 @@
     <tbody>
     <tr *ngFor="let similarConcept of similarConceptsPage; trackBy: index">
         <td [ngClass]="{'w-40': !['HP','MP'].includes(valueset)}" class="pl-2">
-            <a [href]="conceptRedirectRef(similarConcept.concept.value)" class="text-muted">
-                <h6 *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">{{similarConcept.conceptLabel.value}}</h6><small class="text-muted">{{similarConcept.concept.value}}</small>
+            <a [href]="conceptRedirectRef(similarConcept.concept.value)" class="text-muted" *ngIf="similarConcept.conceptLabel && similarConcept.conceptLabel.value">
+                {{similarConcept.conceptLabel.value}}<!--</h6><small class="text-muted">{{similarConcept.concept.value}}</small> -->
             </a>
             <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
                     [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
-            <i class="fas fa-info-circle"></i>
+            <i class="fas fa-info-circle" style="color:grey"></i>
             </button>
         </td>
         <td [ngClass]="{'w-40': !['HP','MP'].includes(valueset)}" *ngIf="!['HP','MP'].includes(valueset)">

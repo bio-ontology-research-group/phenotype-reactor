@@ -1,38 +1,33 @@
+from api.rdf.namespace import find_valueset
+from api.lookup.lookup_elasticsearch import find_entity_by_iris
 import requests
 import api.rdf.virtuoso as virt
+import api.rdf.aberowl as aberowl
 import logging
 
 logger = logging.getLogger(__name__)
 
 class Associations:
     MIME_TYPE_JSON = "application/sparql-results+json"
+    PHENOME_SERVICE_URL = "http://phenomebrowser.net/sparql"
 
-    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iris=None, limit=10, offset=None, order_by=None):
+    def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iris=None, include_subclass=False, limit=10, offset=None, order_by=None):
         if not concept_iri and not phenotype_iri:
            raise RuntimeException("atleast one of concept and phenotype field is required")
         
-        phenotype_stmt = ('\n    ?association rdf:predicate obo:RO_0002200 . \
-            \n    ?association rdf:object <' + phenotype_iri + '> . \
-            \n    <' + phenotype_iri + '>  rdfs:label ?phenotypeLabel . \
-            \n    ?association rdf:subject ?concept . \
-            \n    ?concept rdfs:label ?conceptLabel .') if phenotype_iri and not concept_iri else ''
-
-        concept_stmt = ('\n    ?association rdf:subject <' + concept_iri + '> . \
-            \n    <' + concept_iri + '>  rdfs:label ?conceptLabel . \
-            \n    ?association rdf:predicate obo:RO_0002200 . \
-            \n    ?association rdf:object ?phenotype . \
-            \n    ?phenotype rdfs:label ?phenotypeLabel .') if concept_iri and not phenotype_iri else ''
+        phenotype_stmt = self.create_phenotype_filter(phenotype_iri, concept_iri, include_subclass)
+        concept_stmt = self.create_concept_filter(concept_iri, phenotype_iri)
         
         type_subj = '?concept' if not concept_iri else '<{iri}>'.format(iri=concept_iri)
         type_stmt = (type_subj + ' rdf:type <' + concept_type_iri + '> .' ) if concept_type_iri else type_subj + ' rdf:type  ?conceptType .'
 
-
         concept_var = '?concept' if not concept_iri else '(<{iri}> as ?concept)'.format(iri=concept_iri)
         type_var = '?conceptType' if not concept_type_iri else '(<{iri}> as ?conceptType)'.format(iri=concept_type_iri)
-        phenotype_var = '?phenotype' if not phenotype_iri else '(<{iri}> as ?phenotype)'.format(iri=phenotype_iri)
+        phenotype_var = '?phenotype' if not phenotype_iri and not include_subclass else '(<{iri}> as ?phenotype)'.format(iri=phenotype_iri)
 
         order_clause = self.create_orderby_clause(order_by)
         page = order_clause + ' LIMIT ' + str(limit) + " OFFSET " + str(offset) if offset else ''
+
         graph_pattern = 'WHERE { \
                 \n    ?association rdf:type rdf:Statement . \
                     ' + phenotype_stmt + ' \
@@ -47,6 +42,7 @@ class Associations:
                 \n    ?prov dcterms:source ?source . \
                 \n    OPTIONAL { ?prov dcterms:created ?created . } \
                 \n}'
+
         query = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 \nPREFIX pb: <http://phenomebrowser.net/> \
                 \nPREFIX obo: <http://purl.obolibrary.org/obo/> \
@@ -68,7 +64,48 @@ class Associations:
         logger.debug("Executing query for search criteria: concept_iri=" 
             + str(concept_iri) + "|phenotype_iri=" + str(phenotype_iri) + "|concept_type_iri=" + str(concept_type_iri))
         # logger.debug("Query : %s", query)  
-        return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+        if not include_subclass:
+            return (virt.execute_sparql(query, self.MIME_TYPE_JSON), query)
+        else:
+            return (aberowl.execute_sparql(query, self.MIME_TYPE_JSON), query)
+
+    def create_phenotype_filter(self, phenotype_iri, concept_iri, include_subclass):
+        if phenotype_iri and include_subclass and not concept_iri:
+            ontology = find_valueset(phenotype_iri)
+            result = find_entity_by_iris([phenotype_iri], ontology)
+            label = result[0]['label'][0]
+            label = "'" + label + "'" if len(label.split(' ')) > 1 else label 
+            label = label.lower()
+            return ("\n    ?association rdf:predicate obo:RO_0002200 . \
+                \n     VALUES ?phenotype { \
+                \n		OWL subeq <" + self.PHENOME_SERVICE_URL + "> <" + ontology + "> { \
+	            \n		    " + label + " \
+                \n		} \
+                \n	} . \
+                \n    ?association rdf:object ?phenotype . \
+                \n    ?phenotype rdfs:label ?phenotypeLabel . \
+                \n    ?association rdf:subject ?concept . \
+                \n    ?concept rdfs:label ?conceptLabel .") 
+
+
+        elif phenotype_iri and not concept_iri:
+            return ('\n    ?association rdf:predicate obo:RO_0002200 . \
+                \n    ?association rdf:object <' + phenotype_iri + '> . \
+                \n    <' + phenotype_iri + '>  rdfs:label ?phenotypeLabel . \
+                \n    ?association rdf:subject ?concept . \
+                \n    ?concept rdfs:label ?conceptLabel .') 
+        else:
+            return ''
+
+    def create_concept_filter(self, concept_iri, phenotype_iri):
+        if concept_iri and not phenotype_iri: 
+            return ('\n    ?association rdf:subject <' + concept_iri + '> . \
+            \n    <' + concept_iri + '>  rdfs:label ?conceptLabel . \
+            \n    ?association rdf:predicate obo:RO_0002200 . \
+            \n    ?association rdf:object ?phenotype . \
+            \n    ?phenotype rdfs:label ?phenotypeLabel .') 
+        else:
+            return ''
 
     def find_similar_concepts(self, concept_iri, type_iri, order_by, limit = 100):
         order_clause = self.create_orderby_clause(order_by)

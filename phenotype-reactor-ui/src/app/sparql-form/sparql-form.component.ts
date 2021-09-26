@@ -26,6 +26,9 @@ export class SparqlFormComponent implements OnInit {
   sparqlEle: ElementRef;
 
   @Input() query = ''
+  @Input() endpoint = ''
+
+  ABEROWL_URL = "http://aber-owl.net/api/sparql"
 
   constructor() { }
 

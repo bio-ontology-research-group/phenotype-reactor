@@ -35,6 +35,7 @@ export class ViewAssociationsetComponent implements OnInit {
   valueset = null;
   entity = null;
   query = '';
+  endpoint='';
   dataset = null;
   datasetConfig = null;
 
@@ -172,6 +173,12 @@ export class ViewAssociationsetComponent implements OnInit {
   onQueryChange(query) {
     if (query) {
       this.query = query;
+    }
+  }
+
+  onEndpointChange(endpoint) {
+    if (endpoint) {
+      this.endpoint = endpoint;
     }
   }
 
