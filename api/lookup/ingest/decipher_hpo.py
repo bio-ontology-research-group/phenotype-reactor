@@ -15,12 +15,12 @@ class DecipherValueset(Source):
         super().__init__('DECIPHER', 'Disease')
         self.valueset = None
         self.entities = None
-        self.url = 'http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/phenotype_annotation.tab'
+        self.url = 'http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa'
         self.df = None
 
     def fetch(self):
         logger.info("Started fetching data for valueset %s", self.name)
-        self.df = pd.read_csv(self.url, sep='\t') 
+        self.df = pd.read_csv(self.url, sep='\t', skiprows=4)
         logger.info("Finished fetching data: entities=%d", self.df.size)
 
     def map(self):
@@ -30,9 +30,8 @@ class DecipherValueset(Source):
             "entity_type" : self.entity_type
         }
 
-        self.df =  self.df[self.df['#disease-db'] == self.name]
-        self.df['disease-identifier'] = self.df['disease-identifier'].astype(str)
-        self.df['disease_oboid'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
+        self.df =  self.df[self.df['#DatabaseID'].str.contains(self.name)]
+        self.df['disease_oboid'] = self.df['#DatabaseID'].str.strip()
         self.df['disease_iri'] = self.df['disease_oboid'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
         logger.info('head: %s', self.df.head())
         self.entities = list(map(lambda row:self.map_entity(row), self.df.itertuples()))
@@ -56,8 +55,9 @@ class DecipherValueset(Source):
     def map_entity(self, row):
         obj = {}
         obj["entity"] =  getattr(row, 'disease_iri')
-        obj["label"] =  [getattr(row, '_3')]
+        obj["label"] =  [getattr(row, 'DiseaseName')]
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
         obj["identifier"] = getattr(row, 'disease_oboid')
+        print(obj)
         return obj
