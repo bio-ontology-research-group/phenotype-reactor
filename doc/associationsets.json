@@ -24,14 +24,14 @@
         "name" : "hpo disease-phenotypes",
         "includeTypes": ["http://phenomebrowser.net/Disease"],
         "description" : "HPO phenotype annontations contains manual and semi-automated annotations created by the HPO-team. These are annotations of OMIM-, Orphanet-, and DECIPHER-entries",
-        "download":"http://compbio.charite.de/jenkins/job/hpo.annotations/lastStableBuild/artifact/misc/phenotype_annotation.tab",
+        "download":"http://purl.obolibrary.org/obo/hp/hpoa/phenotype.hpoa",
         "url": "https://pubmed.ncbi.nlm.nih.gov/30476213"
     },
     "hpo_gene_phenotypes" : {
         "name" : "hpo gene-phenotypes",
         "includeTypes": ["http://phenomebrowser.net/Gene"],
         "description" : "HPO gene phenotype annontations a link between genes and HPO terms. All phenotype terms associated with any disease that is associated with variants in a gene are assigned to that gene in this file.",
-        "download":"http://compbio.charite.de/jenkins/job/hpo.annotations/lastSuccessfulBuild/artifact/util/annotation/genes_to_phenotype.txt",
+        "download":"http://purl.obolibrary.org/obo/hp/hpoa/genes_to_phenotype.txt",
         "url": "https://pubmed.ncbi.nlm.nih.gov/30476213"
     },
     "textmined_metabolite_phenotypes" : {

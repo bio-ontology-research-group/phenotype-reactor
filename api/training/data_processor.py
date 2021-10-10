@@ -1,3 +1,4 @@
+from api.training.data_ingestion.mgi_genedisease import MGIHumanMouseGeneDiseaseAssoc
 import tarfile
 import os
 import glob
@@ -105,6 +106,11 @@ def process_testset():
     mousegene_disease.fetch()
     mousegene_disease.map()
     mousegene_disease.write()
+
+    human_mouse_genedisease = MGIHumanMouseGeneDiseaseAssoc()
+    human_mouse_genedisease.fetch()
+    human_mouse_genedisease.map()
+    human_mouse_genedisease.write()
 
 
 def process_ontology(ontology_subdir=''):

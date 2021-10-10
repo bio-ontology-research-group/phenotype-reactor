@@ -23,6 +23,8 @@ def run_evaluation(outdir, test_file, testset_name):
         evaluate_omimdisgene(outdir, test_file, testset_name)
     elif "MouseGoldDiseaseGeneAssociations" in test_file:
         evaluate_mousegold_disgene(outdir, test_file, testset_name)
+    elif "MGIHumanMouseGeneDiseaseAssociations" in test_file:
+        evaluate_mgi_humanmouse_disgene(outdir, test_file, testset_name)
 
 
 def evaluate_curated_disgenet(outdir, test_file, testset_name):
@@ -31,9 +33,9 @@ def evaluate_curated_disgenet(outdir, test_file, testset_name):
     disease_embeddings = {}
 
     for key in embds_dict.keys(): 
-        if 'https://www.ncbi.nlm.nih.gov/gene/' in key:
+        if 'https://www.ncbi.nlm.nih.gov/gene/' in str(key):
             gene_embeddings[key] = [float(i) for i in embds_dict[key]]
-        if 'DOID' in key:
+        if 'DOID' in str(key):
             disease_embeddings[key] = embds_dict[key]
 
     print("gene embedding:", len(gene_embeddings.keys()))
@@ -133,6 +135,39 @@ def evaluate_omimdisgene(outdir, test_file, testset_name):
         if 'https://www.ncbi.nlm.nih.gov/gene/' in key:
             gene_embeddings[key] = [float(i) for i in embds_dict[key]]
         if 'https://omim.org/entry/' in key:
+            disease_embeddings[key] = embds_dict[key]
+
+    print("gene", len(gene_embeddings.keys()))
+    print("disease", len(disease_embeddings.keys()))
+
+    disease_gene_df = pd.read_csv(test_file, sep = '\t', names=['disease', 'relation', 'gene'])
+    disease_genes = {}
+    diseases = set()
+    genes = set()
+    for index, row in disease_gene_df.iterrows():
+        if row.disease in disease_genes:
+            disease_genes[row.disease].append(row.gene)
+        else:
+            disease_genes[row.disease]=[row.gene]
+
+        diseases.add(row.disease)
+        genes.add(row.gene)
+
+    print("disease:", len(diseases))
+    print("gene:", len(genes))
+
+    (auc_data2, auc) = evaluate(disease_genes, disease_embeddings, gene_embeddings)
+    np.savetxt(join(outdir, testset_name + '_evaluation.txt'), auc_data2, fmt = "%s")
+
+def evaluate_mgi_humanmouse_disgene(outdir, test_file, testset_name):
+    embds_dict = get_embeddings(outdir)
+    gene_embeddings = {}
+    disease_embeddings = {}
+
+    for key in embds_dict.keys(): 
+        if 'https://www.ncbi.nlm.nih.gov/gene/' in str(key):
+            gene_embeddings[key] = [float(i) for i in embds_dict[key]]
+        if 'http://purl.obolibrary.org/obo/DOID_' in str(key):
             disease_embeddings[key] = embds_dict[key]
 
     print("gene", len(gene_embeddings.keys()))

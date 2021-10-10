@@ -54,7 +54,7 @@ class MGIGenePhenoDS(RDFSource):
             association = create_phenotypic_association(self.store, gene, phenotype)
             association.add(OBO.RO_0002558, OBO.ECO_0000501)
         
-            created_on = ''
+            created_on = '25-Mar-2020'
             sources = 'http://www.informatics.jax.org/downloads/reports/index.html#pheno'
             creator = 'MGI'
             add_association_provenance(self.store, association, creator=creator, created_on=created_on, source=sources)
