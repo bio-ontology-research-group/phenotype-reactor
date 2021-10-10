@@ -59,5 +59,4 @@ class DecipherValueset(Source):
         obj["valueset"] =  self.name
         obj["entity_type"] = self.entity_type
         obj["identifier"] = getattr(row, 'disease_oboid')
-        print(obj)
         return obj
