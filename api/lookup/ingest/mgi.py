@@ -1,4 +1,5 @@
 import logging 
+import datetime
 
 from api.ingest.source import Source
 from api.rdf.namespace import MGI
@@ -27,7 +28,8 @@ class MGIValueset(Source):
         self.valueset = {
             "valueset" : self.name,
             "name" : "Mouse Genome Informatics",
-            "entity_type" : self.entity_type
+            "entity_type" : self.entity_type,
+            "created_on" : datetime.datetime.now()
         }
 
         self.df['mgi_uri'] = self.df['MGI Accession ID'].replace(regex=['MGI:'], value=MGI.uri + 'MGI:')

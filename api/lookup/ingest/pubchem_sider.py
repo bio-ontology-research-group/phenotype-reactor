@@ -1,4 +1,5 @@
 import logging 
+import datetime
 
 from api.ingest.source import Source
 from api.rdf.namespace import PUBCHEM
@@ -27,7 +28,8 @@ class PubchemValueset(Source):
         self.valueset = {
             "valueset" : self.name,
             "name" : self.name,
-            "entity_type" : self.entity_type
+            "entity_type" : self.entity_type,
+            "created_on" : datetime.datetime.now()
         }
 
         self.df['uri'] = self.df['id'].replace(regex=['CID'], value=PUBCHEM.uri)

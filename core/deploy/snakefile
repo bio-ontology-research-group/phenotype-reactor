@@ -8,12 +8,18 @@ configfile: "config.yaml"
 wildcard_constraints:
     num_pat="\d+"
 
+rule index_data:
+    output: touch("index_data.done")
+    shell:
+        "cd ../../;"
+        "venv/bin/python manage.py indexdata -s hp,mp,ordo,ncbitaxon,ncbitaxon_pathopheno,doid,mondo,chebi,decipher,pubchem,eco,mgi,omim"
 rule virtuoso:
     output: touch("virtuoso.done")
     shell:"./start-virtuoso.sh {VIRTUOSO_CONTAINER}"
 
 rule t_doid_dp:
     input:
+        "index_data.done", 
         expand("{source_dir}/doid_phenotypes_sara.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/doid_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
@@ -22,6 +28,8 @@ rule t_doid_dp:
         "venv/bin/python manage.py transform -s doid_dp"
 
 rule t_hpo_dp:
+    input:
+        "index_data.done"
     output: 
         expand("{target_dir}/data-{date}/hpo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
@@ -30,6 +38,7 @@ rule t_hpo_dp:
 
 rule t_mondo_dp:
     input:
+        "index_data.done",
         expand("{source_dir}/mondo-pheno_shenay.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/mondo_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
@@ -39,6 +48,7 @@ rule t_mondo_dp:
 
 rule t_patho_dp:
     input:
+        "index_data.done",
         expand("{source_dir}/patho_diseases_phenotypes.json", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/patho_diseasephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
@@ -48,6 +58,7 @@ rule t_patho_dp:
 
 rule t_pubchem_dp:
     input:
+        "index_data.done",
         expand("{source_dir}/drug_phenotypes_sara.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/drugphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
@@ -57,6 +68,7 @@ rule t_pubchem_dp:
 
 rule t_txtmind_gp:
     input:
+        "index_data.done",
         expand("{source_dir}/genephenotypes_textmined_senay.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/textmined_genephenotype-1.rdf", target_dir=config["target_dir"], date=str(datetime.date.today())),
@@ -68,6 +80,7 @@ rule t_txtmind_gp:
 
 rule t_deep_gp:
     input:
+        "index_data.done",
         expand("{source_dir}/deeppheno_maxat.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/deep_genephenotype-{filenum}.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()), filenum=DEEPPHENO_FILE_NUMS)
@@ -76,13 +89,17 @@ rule t_deep_gp:
         "venv/bin/python manage.py transform -s deep_gp"
 
 rule t_hpo_gp:
-    output: 
+    input:
+        "index_data.done"
+    output:
         expand("{target_dir}/data-{date}/hpo_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
         "cd ../../;"
         "venv/bin/python manage.py transform -s hpo_gp"
 
 rule t_mgi_gp:
+    input:
+        "index_data.done"
     output: 
         expand("{target_dir}/data-{date}/mgi_genephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
     shell:
@@ -91,6 +108,7 @@ rule t_mgi_gp:
 
 rule t_patho_pp:
     input:
+        "index_data.done",
         expand("{source_dir}/pathogens_phenotypes_shenay.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/pathogenphenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))
@@ -100,6 +118,7 @@ rule t_patho_pp:
 
 rule t_mp:
     input:
+        "index_data.done",
         expand("{source_dir}/metabolite_pheno_shenay.txt", source_dir=config["source_dir"])
     output: 
         expand("{target_dir}/data-{date}/metabolitephenotype.rdf", target_dir=config["target_dir"], date=str(datetime.date.today()))

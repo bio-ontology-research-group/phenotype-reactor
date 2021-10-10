@@ -1,5 +1,5 @@
 import logging 
-import time
+import datetime
 import xmltodict
 import urllib
 
@@ -35,7 +35,8 @@ class UniProtValueset(Source):
             "valueset" : self.name,
             "name" : "UNIPROT SWISS Human",
             "entity_type" : self.entity_type,
-            "custom": True
+            "custom": True,
+            "created_on" : datetime.datetime.now()
         }
         
         logger.info('head: %s', str(self.entities[0]))

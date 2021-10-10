@@ -1,4 +1,5 @@
 import logging 
+import datetime
 
 from api.ingest.source import Source
 from api.rdf.namespace import PUBCHEM
@@ -29,7 +30,8 @@ class NCBITaxonPathophenoValueset(Source):
             "valueset" : self.name,
             "name" : self.name,
             "entity_type" : self.entity_type,
-            "custom": True
+            "custom": True,
+            "created_on" : datetime.datetime.now()
         }
         logger.info('head: %s', self.df.head())
         

@@ -1,5 +1,5 @@
 import logging 
-import time
+import datetime
 
 from django.conf import settings
 from api.ingest.source import Source
@@ -60,7 +60,8 @@ class NCBIGeneValueset(Source):
         self.valueset = {
             "valueset" : self.name,
             "name" : "NCBI Gene",
-            "entity_type" : self.entity_type
+            "entity_type" : self.entity_type,
+            "created_on" : datetime.datetime.now()
         }
         self.map_gene(self.df_homo, self.organism_type[0])
         self.map_gene(self.df_mus, self.organism_type[1])

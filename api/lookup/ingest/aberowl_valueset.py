@@ -1,4 +1,5 @@
 import logging 
+import datetime
 
 from api.ingest.source import Source
 
@@ -31,7 +32,8 @@ class AberowlValueset(Source):
                 "valueset" : self.ontology['ontology'],
                 "name" : self.ontology['name'],
                 "description" : self.ontology['description'],
-                "entity_type" : self.entity_type
+                "entity_type" : self.entity_type,
+                "created_on" : datetime.datetime.now()
             }
         if self.custom:
             self.valueset['custom'] = self.custom

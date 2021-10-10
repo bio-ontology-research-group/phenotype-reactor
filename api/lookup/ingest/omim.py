@@ -1,4 +1,5 @@
-import logging 
+import logging
+import datetime 
 
 from django.conf import settings
 from api.ingest.source import Source
@@ -29,7 +30,8 @@ class OMIMValueset(Source):
         self.valueset = {
             "valueset" : self.name,
             "name" : "Online Mendelian Inheritance in Man",
-            "entity_type" : self.entity_type
+            "entity_type" : self.entity_type,
+            "created_on" : datetime.datetime.now()
         }
 
         self.df =  self.df[self.df['prefix'] != "Caret"]
