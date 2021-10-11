@@ -79,7 +79,8 @@
         <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
         <span *ngIf="!entity">Definition</span>  
     </h6> 
-    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <div class="d-flex">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active"  class="nav-pills col-2" orientation="vertical">
         <li [ngbNavItem]="1">
             <a ngbNavLink><span *ngIf="valusetEntityType() == 'Gene'">Disease Associations</span>
                 <span *ngIf="valusetEntityType() == 'Disease'">Gene Associations</span>  
@@ -96,12 +97,13 @@
             </ng-template>
         </li>
     </ul>
-    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    <div [ngbNavOutlet]="nav" class="mt-2 ml-2 col-10"></div>
+    </div>
     </div>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
-        <app-sparql-form [query]="query" [endpoint]="endpoint"></app-sparql-form>
+        <app-sparql-form [query]="query"></app-sparql-form>
     </div>
 </div>
 <ng-template #rt let-r="result" let-t="term">

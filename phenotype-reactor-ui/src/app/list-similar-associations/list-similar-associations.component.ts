@@ -187,11 +187,26 @@ export class ListSimilarAssociationsComponent implements OnInit {
             return;
           }
           this.associationService.findMatchingPhenotypes(this.iri, concept.concept.value).subscribe( data => {
-            this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? data['results']['bindings'] : [];
-            if (this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value].length < 1) {
+            var result = data ? data['results']['bindings'] : [];
+
+            if (result.length < 1) {
+              this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = null;
               this.associationService.findMatchingPhenotypeSuperClasses(this.iri, concept.concept.value).subscribe( data => {
-                this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = data ? this.sortAberowlClasses(data) : [];
+                var matchingSuperclassResult = data ? this.sortAberowlClasses(data) : [];
+                if (matchingSuperclassResult.length < 1) {
+                  this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = null;
+                } else {
+                  this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value] = {};
+                  this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value]['truncated'] = matchingSuperclassResult.slice(0,3);
+                  this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value]['seeLess'] = true;
+                  this.conceptSuperclassPhenotypesMap[this.iri + '|' + concept.concept.value]['full'] = matchingSuperclassResult;
+                }
               });
+            } else {
+              this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value] = {};
+              this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value]['truncated'] = result.slice(0,3);
+              this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value]['seeLess'] = true;
+              this.conceptPhenotypesMap[this.iri + '|' + concept.concept.value]['full'] = result;
             }
           })
         });

@@ -1,3 +1,6 @@
+<div class="row">
+    <div class="col-12"><p><strong>{{page}} to {{associations.length }} of {{collectionSize}} {{type.name}} Associations</strong></p></div>
+</div>
 <div class="row"> 
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
@@ -54,7 +57,7 @@
             </a>
             <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
                     [ngbPopover]="popContent" [popoverTitle]="popTitle" (click)="displayConcept(association.concept.value)">
-            <i class="fas fa-info-circle" style="color:grey"></i>
+            <i class="fas fa-info-circle info-icon-color-dark"></i>
             </button>
         </td>
         <td *ngIf="valueset != 'HP' && valueset!='MP'"  class="w-25">
@@ -63,14 +66,14 @@
             </a>
             <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
                     [ngbPopover]="popContent" [popoverTitle]="popTitle" (click)="displayConcept(association.phenotype.value)">
-            <i class="fas fa-info-circle"></i>
+            <i class="fas fa-info-circle info-icon-color-dark"></i>
             </button>
         </td>
         <td class="w-20"><a (click)="openInNewTab(association.evidence.value)" class="text-muted">{{association.evidenceLabel.value}}</a></td>
         <td class="w-25" *ngIf="type.name != 'Phenotype'"><a (click)="openInNewTab(association.phenotype.value)" class="text-muted w-20">{{association.phenotypeLabel.value}}</a></td>
         <td class="w-10">{{association.associationsetLabel.value}}</td>
         <td class="w-10"><ul class="list-unstyled"><li *ngFor="let source of association.sources.value.split(','); let sourceIndex = index">
-            <a (click)="openInNewTab(source)" class="text-primary"> <i class="fa fa-link" aria-hidden="true"></i> Link {{ association.sources.value.split(',').length > 1 ? sourceIndex + 1 : ''}}</a>
+            <a (click)="openInNewTab(source)" class="text-primary"> <i class="fa fa-link info-icon-color-dark" aria-hidden="true"></i> Link {{ association.sources.value.split(',').length > 1 ? sourceIndex + 1 : ''}}</a>
             </li></ul>
         </td>
         <td class="w-10">{{association.created ? association.created.value : ''}}</td>

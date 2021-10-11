@@ -162,3 +162,29 @@ th[sortable].desc:after {
 .loading-spinner {
     color: #84B1D9
 }
+.nav-pills {
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+}
+.nav-pills li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+  }
+  
+  /* Change the link color on hover */
+.nav-pills li a:hover {
+    background-color: #555;
+    color: white;
+  }
+
+.nav-pills .active {
+background-color: #0099cc !important;
+color: white;
+}
+
+.info-icon-color-dark {
+    color: #0099cc;
+}

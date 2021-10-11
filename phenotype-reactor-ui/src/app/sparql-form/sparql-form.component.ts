@@ -26,7 +26,7 @@ export class SparqlFormComponent implements OnInit {
   sparqlEle: ElementRef;
 
   @Input() query = ''
-  @Input() endpoint = ''
+  endpoint = ''
 
   ABEROWL_URL = "http://aber-owl.net/api/sparql"
   ABEROWL_QUERY_PATTERN = "(OWL|owl){1}[\\s]*(superclass|subclass|equivalent|supeq|subeq|realize){1}[\\s]*\\<([\\w]+:\\/\\/[\\w\\.\\/]+)>[\\s]+[\\r\\n\\s]*\\<([\\w-]*)\\>[\\s]+[\\r\\n\\s]*\\{[\\r\\n\\s]+([\\w\\s\']+)[\\r\\n\\s]+\\}[\\s]*[\\.]*"

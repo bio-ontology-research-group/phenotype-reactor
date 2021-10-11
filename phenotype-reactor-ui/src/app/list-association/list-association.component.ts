@@ -146,6 +146,7 @@ export class ListAssociationComponent implements OnInit {
 
   getPage() {
     if (this.iri && this.type != undefined) { 
+      this.associations  = [];
       var findAssociation = null;
       var offset = 1
       if (this.page > 1) {

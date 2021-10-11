@@ -102,12 +102,12 @@
             <span *ngIf="entity">{{entity.definition ? entity.definition[0]: ''}}</span> 
             <span *ngIf="!entity">Definition</span>  
         </h6>    
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs" (navChange)="onNavChange($event)">
+        <div class="d-flex">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills col-2" orientation="vertical" (navChange)="onNavChange($event)">
              <li [ngbNavItem]="typeIdx + 1" *ngFor="let type of types; let typeIdx = index">
-                <a ngbNavLink>{{type.name}} Association</a>
+                <a ngbNavLink>{{type.name}}</a>
                 <ng-template ngbNavContent>
-                    <app-list-association [iri]="iri" [valueset]="valueset" [type]="type"  [valuesetList]="valuesets" [dataset]="null" 
-                    (annontationQuery)="onQueryChange($event)" (endpoint)="onEndpointChange($event)" ></app-list-association>
+                    <app-list-association [iri]="iri" [valueset]="valueset" [type]="type"  [valuesetList]="valuesets" [dataset]="null"></app-list-association>
                 </ng-template>
             </li>
             <li [ngbNavItem]="types.length + 1">
@@ -117,13 +117,14 @@
                 </ng-template>
             </li>
         </ul>
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        <div [ngbNavOutlet]="nav" class="mt-2 ml-2 col-10"></div>
+        </div>
     </div>
 </div>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">
-        <app-sparql-form [query]="query" [endpoint]="endpoint"></app-sparql-form>
+        <app-sparql-form [query]="query"></app-sparql-form>
     </div>
 </div>
 <app-bind-schema [entity]="entity"></app-bind-schema>

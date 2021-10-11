@@ -1,4 +1,7 @@
 <div class="row" *ngIf="!associationLoading">
+    <div class="col-12"><p><strong>{{page}} to {{similarConceptsPage.length }} of {{collectionSize}} most similar Entities</strong></p></div>
+</div>
+<div class="row" *ngIf="!associationLoading">
     <div class="col-1 p-1 pt-2 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
@@ -41,25 +44,47 @@
             </a>
             <button type="button" class="btn btn-link mr-2" placement="right" [autoClose]="'outside'"
                     [ngbPopover]="similarPopContent" [popoverTitle]="similarPopTitle" (click)="displayConcept(similarConcept.concept.value)">
-            <i class="fas fa-info-circle" style="color:grey"></i>
+            <i class="fas fa-info-circle info-icon-color-dark"></i>
             </button>
         </td>
         <td [ngClass]="{'w-40': !['HP','MP'].includes(valueset)}" *ngIf="!['HP','MP'].includes(valueset)">
-            <ul *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
+            <ul *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]" class = "list-unstyled">
+                <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess">
+                <li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].truncated;">
+                    <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a>
+                </li>
+                <button type="button"  *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].full.length > 3" (click)="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess=false;" class="btn btn-link info-icon-color-dark p-0 mb-1">See More...</button>
+                </span>
+                <span *ngIf="!conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess">
+                <li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].full;">
+                    <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a>
+                </li>
+                <button type="button" (click)="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess=true;" class="btn btn-link info-icon-color-dark p-0 mb-1">See Less</button>
+                </span>
+            </ul>
+            <!--<ul *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
                 <li *ngFor="let commonPhenotype of conceptPhenotypesMap[iri + '|' + similarConcept.concept.value]">
                 <a [href]="conceptRef(commonPhenotype.phenotype.value)" class="text-muted">{{commonPhenotype.phenotypeLabel.value}} <small> <i>{{commonPhenotype.phenotype.value.split('/').pop().replace('_', ':')}}</i></small></a>
                 </li>
-            </ul>
-            <span *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].length >1">
+            </ul>-->
+            <span *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value]">
                 <strong>Matched Phenotype super classes</strong><br />
-                <ul>
-                    <li *ngFor="let commonPhenotype of conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value]">
-                    <a [href]="conceptRef(commonPhenotype.class)" class="text-muted">{{commonPhenotype.label}} <small> <i>{{commonPhenotype.class.split('/').pop().replace('_', ':')}}</i></small></a>
-                    </li>
-                </ul>
+                    <ul *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value]" class = "list-unstyled">
+                        <span *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess">
+                        <li *ngFor="let commonPhenotype of conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].truncated;">
+                            <a [href]="conceptRef(commonPhenotype.class)" class="text-muted">{{commonPhenotype.label}} <small> <i>{{commonPhenotype.class.split('/').pop().replace('_', ':')}}</i></small></a>
+                        </li>
+                        <button type="button"  *ngIf="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].full.length > 3" (click)="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess=false;" class="btn btn-link info-icon-color-dark p-0 mb-1">See More...</button>
+                        </span>
+                        <span *ngIf="!conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess">
+                        <li *ngFor="let commonPhenotype of conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].full;">
+                            <a [href]="conceptRef(commonPhenotype.class)" class="text-muted">{{commonPhenotype.label}} <small> <i>{{commonPhenotype.class.split('/').pop().replace('_', ':')}}</i></small></a>
+                        </li>
+                        <button type="button" (click)="conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].seeLess=true;" class="btn btn-link info-icon-color-dark p-0 mb-1">See Less</button>
+                        </span>
+                    </ul>
             </span>
-            <span *ngIf="(conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)
-            && (conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value].length < 1)"> no matching phenotypes found</span></td>
+            <span *ngIf="conceptPhenotypesMap[iri + '|' + similarConcept.concept.value] && conceptSuperclassPhenotypesMap[iri + '|' + similarConcept.concept.value]"> no matching phenotypes found</span></td>
         <td [ngClass]="{'w-20': !['HP','MP'].includes(valueset)}" class="pl-2">{{similarConcept.val?.value}}<td>
     </tr>
     </tbody>
