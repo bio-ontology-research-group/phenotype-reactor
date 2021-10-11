@@ -52,7 +52,6 @@ export class ListAssociationComponent implements OnInit {
   @Input() valuesetList = [];
   @Input() dataset = null;
   @Output() annontationQuery = new EventEmitter<any>();
-  @Output() endpoint = new EventEmitter<any>();
 
   @ViewChildren(ListAssoicationSortableHeader) headers: QueryList<ListAssoicationSortableHeader>;
 
@@ -140,7 +139,6 @@ export class ListAssociationComponent implements OnInit {
   onSubclassChecked(event) {
     this.similarEntities = {};
     this.page = 1;
-    this.endpoint.emit(this.subclassFilter ? 'aberowl' : '')
     this.getPage();
   }
 

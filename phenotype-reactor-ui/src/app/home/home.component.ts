@@ -75,10 +75,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onEndpointChange(endpoint) {
-    this.endpoint = endpoint;
-  }
-
   onSimilarQueryChange(query) {
     if (query) {
       this.similarityQuery = query;

@@ -150,12 +150,6 @@ export class GeneDiseaseComponent implements OnInit {
     }
   }
 
-  onEndpointChange(endpoint) {
-    if (endpoint) {
-      this.endpoint = endpoint;
-    }
-  }
-
   openGeneDisease(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
     this.modalService.dismissAll();

@@ -93,7 +93,7 @@
             <a ngbNavLink>Phenotype Associations</a>
             <ng-template ngbNavContent>
                 <app-list-association [iri]="iri" [valueset]="valueset" [type]="{'name': 'Phenotype', 'uri': BASE_PREFIX + 'Phenotype'}"  
-                [valuesetList]="valuesets" [dataset]="null" (annontationQuery)="onQueryChange($event)" (endpoint)="onEndpointChange($event)" ></app-list-association>
+                [valuesetList]="valuesets" [dataset]="null" (annontationQuery)="onQueryChange($event)"></app-list-association>
             </ng-template>
         </li>
     </ul>

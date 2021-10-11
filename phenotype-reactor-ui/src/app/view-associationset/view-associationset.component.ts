@@ -176,12 +176,6 @@ export class ViewAssociationsetComponent implements OnInit {
     }
   }
 
-  onEndpointChange(endpoint) {
-    if (endpoint) {
-      this.endpoint = endpoint;
-    }
-  }
-
   openDatasetAnnontation(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
     this.modalService.dismissAll();

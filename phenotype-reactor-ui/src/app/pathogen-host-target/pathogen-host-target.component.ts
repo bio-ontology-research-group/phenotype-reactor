@@ -114,10 +114,4 @@ export class PathogenHostTargetComponent implements OnInit {
       this.query = query;
     }
   }
-
-  onEndpointChange(endpoint) {
-    if (endpoint) {
-      this.endpoint = endpoint;
-    }
-  }
 }

@@ -107,7 +107,7 @@
              <li [ngbNavItem]="typeIdx + 1" *ngFor="let type of types; let typeIdx = index">
                 <a ngbNavLink>{{type.name}}</a>
                 <ng-template ngbNavContent>
-                    <app-list-association [iri]="iri" [valueset]="valueset" [type]="type"  [valuesetList]="valuesets" [dataset]="null"></app-list-association>
+                    <app-list-association [iri]="iri" [valueset]="valueset" [type]="type"  [valuesetList]="valuesets" [dataset]="null" (annontationQuery)="onQueryChange($event)" ></app-list-association>
                 </ng-template>
             </li>
             <li [ngbNavItem]="types.length + 1">

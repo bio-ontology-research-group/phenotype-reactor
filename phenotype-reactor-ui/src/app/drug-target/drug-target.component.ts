@@ -152,12 +152,6 @@ export class DrugTargetComponent implements OnInit {
     }
   }
 
-  onEndpointChange(endpoint) {
-    if (endpoint) {
-      this.endpoint = endpoint;
-    }
-  }
-
   openDrugTarget(concept) {
     var valueset = this.lookupService.findValuesetName(concept)
     this.modalService.dismissAll();
