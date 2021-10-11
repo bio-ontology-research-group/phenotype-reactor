@@ -29,6 +29,7 @@ export class SparqlFormComponent implements OnInit {
   @Input() endpoint = ''
 
   ABEROWL_URL = "http://aber-owl.net/api/sparql"
+  ABEROWL_QUERY_PATTERN = "(OWL|owl){1}[\\s]*(superclass|subclass|equivalent|supeq|subeq|realize){1}[\\s]*\\<([\\w]+:\\/\\/[\\w\\.\\/]+)>[\\s]+[\\r\\n\\s]*\\<([\\w-]*)\\>[\\s]+[\\r\\n\\s]*\\{[\\r\\n\\s]+([\\w\\s\']+)[\\r\\n\\s]+\\}[\\s]*[\\.]*"
 
   constructor() { }
 
@@ -36,6 +37,12 @@ export class SparqlFormComponent implements OnInit {
   }
 
   submit(){
+    let match = this.sparqlEle.nativeElement.value.match(this.ABEROWL_QUERY_PATTERN);
+    if (match && match.length > 0) {
+      this.endpoint = this.ABEROWL_QUERY_PATTERN;
+    } else {
+      this.endpoint = ''
+    }
     this.htmlForm.nativeElement.submit();
   }
 
