@@ -28,9 +28,7 @@ class HPODiseasePhenoDS(RDFSource):
         logger.info("Finished reading dataset: assoications=%d", self.df.size)
 
     def map(self):
-        # self.df['HPO_ID'] = self.df['HPO_ID'].replace(regex=[':'], value='_')
-        # self.df['disease-identifier'] = self.df['disease-identifier'].astype(str)
-        # self.df['disease_iri'] = self.df[['#disease-db', 'disease-identifier']].apply(lambda x: ':'.join(x), axis=1)
+        self.df['HPO_ID'] = self.df['HPO_ID'].replace(regex=[':'], value='_')
         self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['DECIPHER:'], value=DECIPHER.uri)
         self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['OMIM:'], value=OMIM.uri)
         self.df['#DatabaseID'] = self.df['#DatabaseID'].replace(regex=['ORPHA:'], value=ORPHA.uri)
