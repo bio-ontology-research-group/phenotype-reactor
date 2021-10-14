@@ -1,11 +1,11 @@
 <div class="row">
-    <div class="col-12"><p><strong>{{page}} to {{associations.length }} of {{collectionSize}} {{type.name}} Associations</strong></p></div>
+    <div class="col-12"><p><strong>{{page}} to {{associations.length }} of {{collectionSize}} {{type ? type.name + ' Associations' : ''}} </strong></p></div>
 </div>
 <div class="row"> 
     <div class="col-1 p-2 pt-3 ml-3">
         <label><strong>Filter By:</strong></label>
     </div>
-    <div class="form-check col-2 p-2 pt-3" *ngIf="type.name != 'Phenotype'">
+    <div class="form-check col-2 p-2 pt-3" *ngIf="iri && type && type.name != 'Phenotype'">
         <input class="form-check-input" type="checkbox" id="subclassFilter"
             [(ngModel)]="subclassFilter" (change)="onSubclassChecked($event.target)">
         <label class="form-check-label" for="defaultCheck1">Include Subclass Phenotypes</label>
@@ -51,7 +51,7 @@
     </thead>
     <tbody>
     <tr *ngFor="let association of associations; let assocIndex = index">
-        <td *ngIf="valueset == 'HP' || valueset=='MP'"  class="w-25 pl-2">
+        <td *ngIf="valueset == 'HP' || valueset=='MP' || type.name != 'Phenotype'"  class="w-25 pl-2">
             <a (click)="open(association.concept.value)" class="text-muted">
             {{association.conceptLabel.value}}<!--</h6><small class="text-muted">{{association.concept.value}}</small>-->
             </a>
@@ -60,7 +60,7 @@
             <i class="fas fa-info-circle info-icon-color-dark"></i>
             </button>
         </td>
-        <td *ngIf="valueset != 'HP' && valueset!='MP'"  class="w-25">
+        <td *ngIf="valueset != 'HP' && valueset!='MP' && type.name == 'Phenotype'"  class="w-25">
             <a (click)="open(association.phenotype.value)" class="text-muted">
             <h6>{{association.phenotypeLabel.value}}</h6><small class="text-muted">{{association.phenotype.value}}</small>
             </a>

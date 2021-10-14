@@ -41,13 +41,13 @@
         </div>
     </div>
 </div>
-<div class="card mb-4 wow fadeIn" *ngIf="dataset && iri && valueset">
+<div class="card mb-4 wow fadeIn" *ngIf="dataset">
     <div class="card-body justify-content-between">
     <div class="row">
         <div class="ml-auto mr-3"><a [href]="'/dataset/' + dataset.identifier.value"><i class="fa fa-arrow-left mr-2"></i><strong>Back</strong></a></div>
     </div>
     <a (click)="openInNewTab(entity.entity)" class="text-muted">
-    <span>
+    <span *ngIf="(iri && valueset)">
         <span class="card-title" *ngIf="entity && !geneValuesets.includes(entity.valueset)">{{entity.label[0]}}</span> 
         <span class="card-title" *ngIf="entity && geneValuesets.includes(entity.valueset)">{{entity.label[0] + '  ' + entity.label[1]}}</span> 
         <span class="card-title" *ngIf="!entity">
@@ -63,6 +63,7 @@
     </h6> 
     <app-list-association [iri]="iri" [valueset]="valueset" [type]="targetType" [valuesetList]="valuesets" 
         [dataset]="dataset" (annontationQuery)="onQueryChange($event)"></app-list-association>
+</div>
 </div>
 <div class="card mb-4 wow fadeIn" *ngIf="iri && valueset">
     <div class="card-body justify-content-between">

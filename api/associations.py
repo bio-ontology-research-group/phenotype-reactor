@@ -12,9 +12,6 @@ class Associations:
     PHENOME_SERVICE_URL = "http://phenomebrowser.net/sparql"
 
     def find(self, concept_iri, phenotype_iri, concept_type_iri=None, evidence_iris=[], associationset_iris=None, include_subclass=False, limit=10, offset=None, order_by=None):
-        if not concept_iri and not phenotype_iri:
-           raise RuntimeException("atleast one of concept and phenotype field is required")
-        
         phenotype_stmt = self.create_phenotype_filter(phenotype_iri, concept_iri, include_subclass)
         concept_stmt = self.create_concept_filter(concept_iri, phenotype_iri)
         
@@ -94,7 +91,13 @@ class Associations:
                 \n    <' + phenotype_iri + '>  rdfs:label ?phenotypeLabel . \
                 \n    ?association rdf:subject ?concept . \
                 \n    ?concept rdfs:label ?conceptLabel .') 
-        else:
+        elif not phenotype_iri and not concept_iri:
+            return ('\n    ?association rdf:predicate obo:RO_0002200 . \
+                \n    ?association rdf:object ?phenotype. \
+                \n    ?phenotype  rdfs:label ?phenotypeLabel . \
+                \n    ?association rdf:subject ?concept . \
+                \n    ?concept rdfs:label ?conceptLabel .') 
+        else :
             return ''
 
     def create_concept_filter(self, concept_iri, phenotype_iri):

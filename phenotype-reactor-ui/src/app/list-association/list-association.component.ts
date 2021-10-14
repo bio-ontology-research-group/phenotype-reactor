@@ -107,7 +107,7 @@ export class ListAssociationComponent implements OnInit {
   }
 
   ngOnChanges(change: SimpleChange) {
-    if(this.iri && this.type) {
+    if(this.type) {
       this.page = 1;
       this.previousPage = 1;
       this.pageSize = 20;
@@ -115,7 +115,7 @@ export class ListAssociationComponent implements OnInit {
         this.associationsetFilter = [this.dataset.associationset.value]
       }
       this.getPage();
-      if (this.valuesetList && this.valuesetList.length > 0) {
+      if (this.valuesetList && this.valuesetList.length > 0 && this.valueset) {
         this.valuesetEntityType = _.filter(this.valuesetList, (obj) => obj.valueset.toLowerCase() == this.valueset.toLowerCase())[0].entity_type;
         this.associationsetsFiltered = _.filter(this.associationsets, (obj) => obj['type']['value'] == this.BASE_PREFIX + this.valuesetEntityType);
       }
@@ -143,7 +143,7 @@ export class ListAssociationComponent implements OnInit {
   }
 
   getPage() {
-    if (this.iri && this.type != undefined) { 
+    if (this.type != undefined) { 
       this.associations  = [];
       var findAssociation = null;
       var offset = 1

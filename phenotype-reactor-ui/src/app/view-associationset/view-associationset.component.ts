@@ -64,8 +64,8 @@ export class ViewAssociationsetComponent implements OnInit {
     private titlecasePipe:TitleCasePipe,
     private modalService: NgbModal) { 
       this.route.params.subscribe( params => {
-        this.datasetId = params.identifier ? params.identifier : ''
-        this.iri = decodeURIComponent(params.iri);
+        this.datasetId = params.identifier ? params.identifier : '';
+        this.iri = params.iri ? decodeURIComponent(params.iri) : null;
         this.valueset = params.valueset ? params.valueset : ''
 
         if (params.identifier) {
