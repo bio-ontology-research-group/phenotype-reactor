@@ -66,9 +66,9 @@ def evaluate_mousegold_disgene(outdir, test_file, testset_name):
     disease_embeddings = {}
 
     for key in embds_dict.keys(): 
-        if 'http://www.informatics.jax.org/marker/MGI:' in key:
+        if 'http://www.informatics.jax.org/marker/MGI:' in str(key):
             gene_embeddings[key] = [float(i) for i in embds_dict[key]]
-        if 'https://omim.org/entry/' in key:
+        if 'https://omim.org/entry/' in str(key):
             disease_embeddings[key] = [float(i) for i in embds_dict[key]]
 
     print("gene embedding:", len(gene_embeddings.keys()))
