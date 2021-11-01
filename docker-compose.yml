@@ -30,6 +30,7 @@ services:
       - esnet
     depends_on:
       - db
+    restart: unless-stopped
   phenotype-reactor-ui:
     build: ./phenotype-reactor-ui
     container_name: phenotype-reactor-ui
